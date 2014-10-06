@@ -11,7 +11,22 @@ package ch.zhaw.paraglider.physics;
 public class GeneralPhysics {
 
 	private int WEIGHT_OF_PILOT = 85;
-	private int WEIGHT_OF_EQUIPMENT = 20;
+	private int WEIGHT_OF_EQUIPMENT = 20;	
+	
+	private double GLIDE_RATIO = 9;
+	private double RESISTANCE_RATIO = 0.6;
+	
+	/* Air Density in kg/m^3 */
+	private double AIR_DENSITY = 1.225;
+	
+	/* Ground speed + head wind in m/s  */
+	private double RELATIVE_SPEED = 10;
+	
+	/* Projected */
+	private double PROJECTED_UPSTREAMFLOW_AREA = 6;
+	
+	/* Projected wing area in m^2 */
+	private double PROJECTED_WING_AREA = 6;
 	private final double gravitationalForce = 9.81f;
 	private static GeneralPhysics instance;
 	
@@ -39,8 +54,8 @@ public class GeneralPhysics {
 	 * @return double
 	 */
 	public double getFa() {
-		//TODO: math formula for Fa
-		return 0;
+		//TODO: doublecheck formula
+		return (GLIDE_RATIO * AIR_DENSITY * Math.pow(RELATIVE_SPEED, 2) * PROJECTED_WING_AREA)/2.0; 
 	}
 	
 	/**
@@ -48,8 +63,17 @@ public class GeneralPhysics {
 	 * @return double
 	 */
 	public double getFr() {
-		//TODO: math formula for Fr
-		return 0;
+		//TODO: doublecheck formula for Fr Angeströmte fläche
+		return getDynamicPressure() * PROJECTED_UPSTREAMFLOW_AREA * RESISTANCE_RATIO;
+	}
+	
+	/**
+	 * Returns the dynamic pressure.
+	 * @return double
+	 */
+	public double getDynamicPressure()
+	{
+		return (AIR_DENSITY * Math.pow(RELATIVE_SPEED, 2))/2.0;
 	}
 
 	public int getWEIGHT_OF_PILOT() {
