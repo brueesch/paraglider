@@ -7,8 +7,11 @@
 package ch.zhaw.paraglider.view;
 
 
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javafx.scene.shape.Polygon;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -38,7 +41,7 @@ public class Main extends JPanel implements ActionListener {
 		Main main = new Main();
 		JFrame frame = new JFrame();
 		frame.add(main);
-		frame.setSize(800, 800);
+		frame.setSize(1300, 1000);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
@@ -46,6 +49,30 @@ public class Main extends JPanel implements ActionListener {
 	
 	public Main() {
 		init();
+	}
+
+	public void paintComponent(Graphics g) {
+		drawLeftView(g);
+		drawRightView(g);
+		
+		
+		
+	}
+
+	private void drawRightView(Graphics g) {
+		g.drawRect(40, 40, 580, 800);
+		g.fillOval(310, 640, 40, 40);
+		
+		int[] xPoints = {230, 330, 430};
+		int[] yPoints = {240, 180, 240};
+		g.fillPolygon(xPoints,yPoints,3);
+		
+		g.drawLine(330, 660, 330, 240);
+	}
+
+
+	private void drawLeftView(Graphics g) {
+		g.drawRect(640, 40, 580, 800);
 	}
 
 
