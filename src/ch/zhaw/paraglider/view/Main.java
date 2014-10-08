@@ -6,6 +6,7 @@
  */
 package ch.zhaw.paraglider.view;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -46,23 +47,35 @@ public class Main extends JPanel implements ActionListener {
 	}
 
 	public void paintComponent(Graphics g) {
-		drawRightView(g);
 		drawLeftView(g);
+		drawRightView(g);
+		
 
 	}
 
 	private void drawLeftView(Graphics g) {
+		Color color = g.getColor();
 		g.drawRect(40, 40, 580, 800);
 		g.fillOval(310, 640, 40, 40);
-
-		int[] xPoints = { 230, 330, 430 };
-		int[] yPoints = { 240, 180, 240 };
-		g.fillPolygon(xPoints, yPoints, 3);
-
 		g.drawLine(330, 660, 330, 240);
+		g.drawLine(330, 660, 270, 240);
+		g.drawLine(330, 660, 390, 240);
+
+		g.setColor(Color.RED);
+		int[] xPointsParaglider = { 230, 330, 430 };
+		int[] yPointsParaglider = { 240, 180, 240 };
+		g.fillPolygon(xPointsParaglider, yPointsParaglider, 3);
+
+		g.setColor(Color.BLUE);
+		int[] xPointsArrow = {80, 120, 120, 140, 120, 120, 80};
+		int[] yPointsArrow = {80, 80, 70, 90, 110, 100, 100};
+		g.fillPolygon(xPointsArrow, yPointsArrow, xPointsArrow.length);
+		g.setColor(color);
 	}
 
 	private void drawRightView(Graphics g) {
+		Color color = g.getColor();
+		g.setColor(Color.BLACK);
 		g.drawRect(640, 40, 580, 800);
 		g.fillOval(910, 640, 40, 40);
 		g.drawLine(930, 660, 720, 240);
@@ -71,9 +84,11 @@ public class Main extends JPanel implements ActionListener {
 		g.drawLine(930, 660, 1035, 240);
 		g.drawLine(930, 660, 1140, 240);
 
+		g.setColor(Color.RED);
 		int[] xPoints = { 680, 846, 1012, 1180 };
 		int[] yPoints = { 240, 180, 180, 240 };
 		g.fillPolygon(xPoints, yPoints, 4);
+		g.setColor(color);
 	}
 
 	private void init() {
