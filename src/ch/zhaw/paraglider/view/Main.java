@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import ch.zhaw.paraglider.physics.Pilot;
 import ch.zhaw.paraglider.physics.Wing;
 
 import com.sun.istack.internal.logging.Logger;
@@ -25,11 +26,13 @@ public class Main extends JPanel implements ActionListener {
 	 * 
 	 */
 	private static final long serialVersionUID = -1624980403895301036L;
-
+	private static final int FRAME_HEIGHT = 1000;
+	private static final int FRAME_WIDTH = 1300;
 	private static Logger log = Logger.getLogger(Main.class.getName(),
 			Main.class);
 
 	private Wing wing;
+	private Pilot pilot;
 
 	private JButton test;
 
@@ -37,7 +40,7 @@ public class Main extends JPanel implements ActionListener {
 		Main main = new Main();
 		JFrame frame = new JFrame();
 		frame.add(main);
-		frame.setSize(1300, 1000);
+		frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
@@ -47,6 +50,8 @@ public class Main extends JPanel implements ActionListener {
 	}
 
 	public void paintComponent(Graphics g) {
+		g.setColor(Color.WHITE);
+		g.fillRect(0, 0, FRAME_WIDTH,FRAME_HEIGHT);
 		drawLeftView(g);
 		drawRightView(g);
 		
@@ -54,12 +59,14 @@ public class Main extends JPanel implements ActionListener {
 	}
 
 	private void drawLeftView(Graphics g) {
+		int diameter = 40;
 		Color color = g.getColor();
+		g.setColor(Color.black);
 		g.drawRect(40, 40, 580, 800);
-		g.fillOval(310, 640, 40, 40);
-		g.drawLine(330, 660, 330, 240);
-		g.drawLine(330, 660, 270, 240);
-		g.drawLine(330, 660, 390, 240);
+		g.fillOval((int)pilot.getCurrentXPosition(), (int)pilot.getCurrentYPosition(), diameter, diameter);
+		g.drawLine((int)pilot.getCurrentXPosition()+diameter/2, (int)pilot.getCurrentYPosition()+diameter/2, 270, 240);
+		g.drawLine((int)pilot.getCurrentXPosition()+diameter/2, (int)pilot.getCurrentYPosition()+diameter/2, 330, 240);
+		g.drawLine((int)pilot.getCurrentXPosition()+diameter/2, (int)pilot.getCurrentYPosition()+diameter/2, 390, 240);
 
 		g.setColor(Color.RED);
 		int[] xPointsParaglider = { 230, 330, 430 };
@@ -92,7 +99,7 @@ public class Main extends JPanel implements ActionListener {
 	}
 
 	private void init() {
-
+		pilot = new Pilot();
 		wing = new Wing("Left");
 		test = new JButton("test");
 		this.add(test);
@@ -104,6 +111,8 @@ public class Main extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == test) {
 			wing.changeCurrentSpeed(2);
+			pilot.calculateNewPositionOfPilot(2);
+			repaint();
 			log.info("Horizontal Speed: " + wing.getHorizontalSpeed()
 					+ " km/h  Vertical Speed: " + wing.getVerticalSpeed()
 					+ " m/s  Glide Ratio: " + wing.getCurrentGlideRatio());
