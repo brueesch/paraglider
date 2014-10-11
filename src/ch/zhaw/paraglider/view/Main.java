@@ -35,7 +35,7 @@ public class Main extends JPanel implements ActionListener {
 	private Wing wing;
 	private Pilot pilot;
 
-	private JButton test;
+	private JButton increaseSpeed, decreaseSpeed;
 
 	public static void main(String[] args) {
 		Main main = new Main();
@@ -52,10 +52,9 @@ public class Main extends JPanel implements ActionListener {
 
 	public void paintComponent(Graphics g) {
 		g.setColor(Color.WHITE);
-		g.fillRect(0, 0, FRAME_WIDTH,FRAME_HEIGHT);
+		g.fillRect(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
 		drawLeftView(g);
 		drawRightView(g);
-		
 
 	}
 
@@ -64,10 +63,19 @@ public class Main extends JPanel implements ActionListener {
 		Color color = g.getColor();
 		g.setColor(Color.black);
 		g.drawRect(40, 40, 580, 800);
-		g.fillOval((int)pilot.getCurrentXPosition(), (int)pilot.getCurrentYPosition(), diameter, diameter);
-		g.drawLine((int)pilot.getCurrentXPosition()+diameter/2, (int)pilot.getCurrentYPosition()+diameter/2, 270, 240);
-		g.drawLine((int)pilot.getCurrentXPosition()+diameter/2, (int)pilot.getCurrentYPosition()+diameter/2, 330, 240);
-		g.drawLine((int)pilot.getCurrentXPosition()+diameter/2, (int)pilot.getCurrentYPosition()+diameter/2, 390, 240);
+		g.drawString("Geschwindigkeit: " + wing.getHorizontalSpeed(), 50, 125);
+		g.drawString("Horizontalgeschwindigkeit: " + wing.getVerticalSpeed(),
+				50, 140);
+		g.drawString("Gleitrate: " + wing.getCurrentGlideRatio(), 50, 155);
+
+		g.fillOval((int) pilot.getCurrentXPosition(),
+				(int) pilot.getCurrentYPosition(), diameter, diameter);
+		g.drawLine((int) pilot.getCurrentXPosition() + diameter / 2,
+				(int) pilot.getCurrentYPosition() + diameter / 2, 270, 240);
+		g.drawLine((int) pilot.getCurrentXPosition() + diameter / 2,
+				(int) pilot.getCurrentYPosition() + diameter / 2, 330, 240);
+		g.drawLine((int) pilot.getCurrentXPosition() + diameter / 2,
+				(int) pilot.getCurrentYPosition() + diameter / 2, 390, 240);
 
 		g.setColor(Color.RED);
 		int[] xPointsParaglider = { 230, 330, 430 };
@@ -75,8 +83,8 @@ public class Main extends JPanel implements ActionListener {
 		g.fillPolygon(xPointsParaglider, yPointsParaglider, 3);
 
 		g.setColor(Color.BLUE);
-		int[] xPointsArrow = {80, 120, 120, 140, 120, 120, 80};
-		int[] yPointsArrow = {80, 80, 70, 90, 110, 100, 100};
+		int[] xPointsArrow = { 80, 120, 120, 140, 120, 120, 80 };
+		int[] yPointsArrow = { 80, 80, 70, 90, 110, 100, 100 };
 		g.fillPolygon(xPointsArrow, yPointsArrow, xPointsArrow.length);
 		g.setColor(color);
 	}
@@ -102,27 +110,42 @@ public class Main extends JPanel implements ActionListener {
 	private void init() {
 		pilot = Pilot.getInstance();
 		wing = new Wing("Left");
-		test = new JButton("test");
-		this.add(test);
-		test.addActionListener(this);
+		increaseSpeed = new JButton("+ 2 km/h");
+		this.add(increaseSpeed);
+		decreaseSpeed = new JButton("- 2 km/h");
+		this.add(decreaseSpeed);
+		increaseSpeed.addActionListener(this);
+		decreaseSpeed.addActionListener(this);
 		RunGame runGame = new RunGame(this);
 		new Thread(runGame).start();
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == test) {
-			wing.changeCurrentSpeed(-5);
-			pilot.calculateNewEndposition(-1);
-			pilot.setInMovement(true);
-			log.info("Horizontal Speed: " + wing.getHorizontalSpeed()
-					+ " km/h  Vertical Speed: " + wing.getVerticalSpeed()
-					+ " m/s  Glide Ratio: " + wing.getCurrentGlideRatio());
+		if (e.getSource() == increaseSpeed) {
+			if (wing.getHorizontalSpeed() <= 55) {
+				wing.changeCurrentSpeed(2);
+				pilot.calculateNewEndposition(2);
+				pilot.setInMovement(true);
+				log.info("Horizontal Speed: " + wing.getHorizontalSpeed()
+						+ " km/h  Vertical Speed: " + wing.getVerticalSpeed()
+						+ " m/s  Glide Ratio: " + wing.getCurrentGlideRatio());
+			}
+
+		}
+		
+		if (e.getSource() == decreaseSpeed) {
+			if (wing.getHorizontalSpeed() >= 28.6) {
+				wing.changeCurrentSpeed(-2);
+				pilot.calculateNewEndposition(-2);
+				pilot.setInMovement(true);
+				log.info("Horizontal Speed: " + wing.getHorizontalSpeed()
+						+ " km/h  Vertical Speed: " + wing.getVerticalSpeed()
+						+ " m/s  Glide Ratio: " + wing.getCurrentGlideRatio());
+			}
 
 		}
 
+
 	}
-
 }
-
-
