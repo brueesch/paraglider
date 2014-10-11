@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import ch.zhaw.paraglider.controller.RunGame;
 import ch.zhaw.paraglider.physics.Pilot;
 import ch.zhaw.paraglider.physics.Wing;
 
@@ -99,20 +100,21 @@ public class Main extends JPanel implements ActionListener {
 	}
 
 	private void init() {
-		pilot = new Pilot();
+		pilot = Pilot.getInstance();
 		wing = new Wing("Left");
 		test = new JButton("test");
 		this.add(test);
 		test.addActionListener(this);
-
+		RunGame runGame = new RunGame(this);
+		new Thread(runGame).start();
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == test) {
-			wing.changeCurrentSpeed(2);
-			pilot.calculateNewPositionOfPilot(2);
-			repaint();
+			wing.changeCurrentSpeed(-5);
+			pilot.calculateNewEndposition(-1);
+			pilot.setInMovement(true);
 			log.info("Horizontal Speed: " + wing.getHorizontalSpeed()
 					+ " km/h  Vertical Speed: " + wing.getVerticalSpeed()
 					+ " m/s  Glide Ratio: " + wing.getCurrentGlideRatio());
@@ -122,3 +124,5 @@ public class Main extends JPanel implements ActionListener {
 	}
 
 }
+
+
