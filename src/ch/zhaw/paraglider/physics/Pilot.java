@@ -3,12 +3,9 @@ package ch.zhaw.paraglider.physics;
 import java.util.ArrayList;
 
 import ch.zhaw.paraglider.controller.RunGame;
-import ch.zhaw.paraglider.view.Main;
-
-import com.sun.istack.internal.logging.Logger;
 
 /**
- * This Class handels the physics and the position of the pilot. In addition it
+ * This Class handles the physics and the position of the pilot. In addition it
  * includes a method which animates the pilot.
  * 
  * @author Christian Brüesch
@@ -16,8 +13,6 @@ import com.sun.istack.internal.logging.Logger;
  */
 public final class Pilot {
 
-	private static Logger log = Logger.getLogger(Main.class.getName(),
-			Main.class);
 	/**
 	 * Variable that defines the Weight of the Pilot.
 	 */
@@ -68,14 +63,6 @@ public final class Pilot {
 	 */
 	private double currentPositionY = ZERO_Y_POSITION;
 	/**
-	 * End position of a movement. x-axis.
-	 */
-	private double endPositionX = ZERO_X_POSITION;
-	/**
-	 * End position of a movement. y-axis.
-	 */
-	private double endPositionY = ZERO_Y_POSITION;
-	/**
 	 * Boolean which defines in which direction the movement is.
 	 */
 	private boolean movesForward = true;
@@ -83,14 +70,31 @@ public final class Pilot {
 	 * Boolean which defines if there is a movement happening.
 	 */
 	private boolean inMovement = false;
+	/**
+	 * ArrayList filled with the change Values for the x-axis. The values are
+	 * calculated as follows: speed * sin(current Position on the sinus curve) *
+	 * time * Converted from pixel to meter
+	 */
 	ArrayList<Double> changeInX = new ArrayList<Double>();
+	/**
+	 * ArrayList filled with the change Values for the y-axis. The values are
+	 * calculated as follows: vertical speed * sin(current Position on the sinus
+	 * curve) * time * Converted from pixel to meter
+	 */
 	ArrayList<Double> changeInY = new ArrayList<Double>();
 	/**
 	 * Pilot instance for the Singleton pattern.
 	 */
 	private static Pilot instance;
 
+	/**
+	 * Variable with the current speed change.
+	 */
 	private double speed;
+
+	/**
+	 * Variable with the current vertical speed change.
+	 */
 	private double verticalSpeed;
 
 	/**
@@ -133,67 +137,14 @@ public final class Pilot {
 	}
 
 	/**
-	 * Calculates the new end position, where the pilot goes in the x and
-	 * y-axis.
+	 * Sets the new speed change.
 	 * 
 	 * @param speed
 	 * @param verticalSpeed
 	 */
-	public void calculateNewEndposition(double speed, double verticalSpeed) {
+	public void setNewSpeedChangeParameters(double speed, double verticalSpeed) {
 		this.speed = speed;
 		this.verticalSpeed = verticalSpeed;
-		boolean negativeSpeed = false;
-		if (speed < 0) {
-			speed = -speed;
-			negativeSpeed = true;
-		}
-
-		speed = speed * CONVERT_KMH_INTO_MS;
-		double changeInY = Math.pow(speed, 2) / (2 * GRAVITATIONAL_FORCE);
-		double acceleration = speed / TIME_FROM_0_TO_TOP;
-		double diagonalLength = (speed * TIME_FROM_0_TO_TOP)
-				- ((acceleration * Math.pow(TIME_FROM_0_TO_TOP, 2)) / 2);
-		double changeInX = getChangeInX(changeInY, diagonalLength);
-
-		calculateNewXPosition(negativeSpeed, changeInX);
-		endPositionY -= changeInY * ONE_METER_IN_PIXEL;
-
-		log.info("Change for X: " + changeInX + " Change for Y: " + changeInY
-				+ " Speed: " + speed + " Diagonal Length: " + diagonalLength);
-	}
-
-	/**
-	 * Calculates the new Position on the x-axis.
-	 * 
-	 * @param negative
-	 * @param changeInX
-	 */
-	private void calculateNewXPosition(final boolean negative,
-			final double changeInX) {
-		if (negative) {
-			endPositionX += changeInX * ONE_METER_IN_PIXEL;
-		} else {
-			endPositionX -= changeInX * ONE_METER_IN_PIXEL;
-		}
-	}
-
-	/**
-	 * Returns the value of the change in the x-axis.
-	 * 
-	 * @param changeInY
-	 * @param diagonalLength
-	 * @return double
-	 */
-	private double getChangeInX(double changeInY, double diagonalLength) {
-		double changeInX;
-		if (changeInY < diagonalLength) {
-			changeInX = Math.sqrt(Math.pow(diagonalLength, 2)
-					- Math.pow(changeInY, 2));
-		} else {
-			changeInX = Math.sqrt(Math.pow(changeInY, 2)
-					- Math.pow(diagonalLength, 2));
-		}
-		return changeInX;
 	}
 
 	/**
@@ -233,37 +184,43 @@ public final class Pilot {
 	}
 
 	/**
-	 * Calculates the next step of the animation of the pilot.
+	 * Calculates the next step of the animation of the pilot and sets the
+	 * current position of the x and y - axis to the calculated values.
 	 */
 	public void makeNextStep() {
-		// TODO: Erhöhe Animationsgenauigkeit
-
 		double nintyDegreesInRadian = 1.57079633;
-		double steps = TIME_FROM_0_TO_TOP * CONVERT_S_AND_MS
+		double numberOfStepsToTake = TIME_FROM_0_TO_TOP * CONVERT_S_AND_MS
 				/ RunGame.REFRESHRATE;
-		double sinSteps = nintyDegreesInRadian / steps;
-		
+		double sizeOfSinStep = nintyDegreesInRadian / numberOfStepsToTake;
+
 		if (changeInX.size() == 0) {
-			for (int i = 0; i < steps; i++) {
-				changeInX.add(speed * Math.sin(sinSteps * i)
+			for (int i = 0; i < numberOfStepsToTake; i++) {
+				changeInX.add(speed * CONVERT_KMH_INTO_MS
+						* Math.sin(sizeOfSinStep * i)
 						* (RunGame.REFRESHRATE / CONVERT_S_AND_MS)
 						* ONE_METER_IN_PIXEL);
-				changeInY.add(verticalSpeed * Math.sin(sinSteps * i)
+				changeInY.add(verticalSpeed * Math.sin(sizeOfSinStep * i)
 						* (RunGame.REFRESHRATE / CONVERT_S_AND_MS)
 						* ONE_METER_IN_PIXEL);
 			}
 		}
 
 		if (movesForward) {
-			moveForward(steps, sinSteps);
+			moveForward();
 		} else {
-			moveBackward(steps, sinSteps);
+			moveBackward();
 
 		}
 	}
 
-	private void moveForward(double steps, double sinSteps) {
-		
+	/**
+	 * Sets the currentPosition of the x and y - axis when the pilot is in a
+	 * forward movement.
+	 * 
+	 * @param steps
+	 * @param sinSteps
+	 */
+	private void moveForward() {
 		currentPositionX -= changeInX.remove(changeInX.size() - 1);
 		currentPositionY -= changeInY.remove(changeInY.size() - 1);
 
@@ -272,17 +229,14 @@ public final class Pilot {
 		}
 	}
 
-	private void moveBackward(double steps, double sinSteps) {
-//		if (changeInX.size() == 0) {
-//			for (int i = (int) (steps - 1); i >= 0; i--) {
-//				changeInX.add(speed * Math.sin(sinSteps * i)
-//						* (RunGame.REFRESHRATE / CONVERT_S_AND_MS)
-//						* ONE_METER_IN_PIXEL);
-//				changeInY.add(verticalSpeed * Math.sin(sinSteps * i)
-//						* (RunGame.REFRESHRATE / CONVERT_S_AND_MS)
-//						* ONE_METER_IN_PIXEL);
-//			}
-//		}
+	/**
+	 * Sets the currentPosition of the x and y - axis when the pilot is in a
+	 * backward movment.
+	 * 
+	 * @param steps
+	 * @param sinSteps
+	 */
+	private void moveBackward() {
 		currentPositionX += changeInX.remove(0);
 		currentPositionY += changeInY.remove(0);
 
@@ -290,7 +244,6 @@ public final class Pilot {
 			movesForward = true;
 			setInMovement(false);
 		}
-
 	}
 
 }

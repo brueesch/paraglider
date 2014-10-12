@@ -1,26 +1,55 @@
 package ch.zhaw.paraglider.physics;
 
-
+/**
+ * The wing class contains the physical basics for the wing movements. It
+ * calculates the absolute speed, the vertical speed and the glide ratio. This
+ * is calculated with the help of a polar.
+ * 
+ * @author Christian Brüesch
+ * 
+ */
 public class Wing {
 
+	/**
+	 * Constant for the optimal glide ratio. Default = 9;
+	 */
 	private final double OPTIMAL_GLIDE_RATIO = 9;
-	private final double SPEED_BEST_GLIDING = 35; // km/h
-
-	private double constant1 = 1 / (2 * Math.pow(SPEED_BEST_GLIDING, 2) * OPTIMAL_GLIDE_RATIO);
-	private double constant2 = Math.pow(SPEED_BEST_GLIDING, 2)
+	/**
+	 * Constant for the speed when flying with the optimal glide ratio. Default
+	 * = 35 km/h
+	 */
+	private final double SPEED_OPTIMAL_GLIDING = 35;
+	/**
+	 * Mathematical constant for calculations.
+	 */
+	private double constant1 = 1 / (2 * Math.pow(SPEED_OPTIMAL_GLIDING, 2) * OPTIMAL_GLIDE_RATIO);
+	/**
+	 * Mathematical constant for calculations.
+	 */
+	private double constant2 = Math.pow(SPEED_OPTIMAL_GLIDING, 2)
 			/ (2 * OPTIMAL_GLIDE_RATIO);
-	private double currentSpeed = SPEED_BEST_GLIDING;
+	/**
+	 * Variable for the current speed. Initialized with the speed by optimal
+	 * gliding.
+	 */
+	private double currentSpeed = SPEED_OPTIMAL_GLIDING;
 
+	/**
+	 * Variable contains the Name of the wing. Wing name either: left or right
+	 */
 	private String name;
 
+	/**
+	 * Constructor. Sets the name of the Wing.
+	 * 
+	 * @param name
+	 */
 	public Wing(String name) {
-		this.setName(name);
-
+		this.name = name;
 	}
 
 	/**
-	 * This Method calculates and returns the current speed to the ground. 
-	 * In km/h.
+	 * This Method returns the current speed to the ground. In km/h
 	 * 
 	 * @return double speed
 	 */
@@ -36,19 +65,14 @@ public class Wing {
 	public double getVerticalSpeed() {
 
 		return (1 / (2 * OPTIMAL_GLIDE_RATIO))
-				* (Math.pow(getHorizontalSpeed() / SPEED_BEST_GLIDING, 2) + Math
-						.pow(SPEED_BEST_GLIDING / getHorizontalSpeed(), 2))
+				* (Math.pow(getHorizontalSpeed() / SPEED_OPTIMAL_GLIDING, 2) + Math
+						.pow(SPEED_OPTIMAL_GLIDING / getHorizontalSpeed(), 2))
 				* getHorizontalSpeed() / 3.6;
-	}
-
-	public void setCurrentSpeed(double currentSpeed) {
-		this.currentSpeed = currentSpeed;
 	}
 
 	/**
 	 * This method changes the speed. With a positive Indicator the speed
-	 * increases which will reduce the angle. With a negative Indicator the
-	 * opposite will happen.
+	 * increases. With a negative Indicator the opposite will happen.
 	 * 
 	 * @param change
 	 */
@@ -56,16 +80,22 @@ public class Wing {
 		this.currentSpeed += change;
 	}
 
+	/**
+	 * Returns the current glide ratio.
+	 * 
+	 * @return double
+	 */
 	public double getCurrentGlideRatio() {
 		return 1 / ((constant1 * Math.pow(currentSpeed, 2)) + (constant2 / Math
 				.pow(currentSpeed, 2)));
 	}
-	
+
+	/**
+	 * returns the name of the glider.
+	 * 
+	 * @return String
+	 */
 	public String getName() {
 		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 }

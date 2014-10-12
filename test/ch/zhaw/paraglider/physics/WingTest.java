@@ -25,13 +25,13 @@ public class WingTest {
 	
 	@Test
 	public void testVerticalSpeedByLeastRateOfDescent() {
-		wing.setCurrentSpeed(35*0.76);
+		wing.changeCurrentSpeed(-8.4);
 		assertEquals(0.94, wing.getVerticalSpeed(),0.01);
 	}
 	
 	@Test
 	public void testCurrentGlideRatioByLeastRateOfDescent() {
-		wing.setCurrentSpeed(35*0.76);
+		wing.changeCurrentSpeed(-8.4);
 		assertEquals(7.79, wing.getCurrentGlideRatio(), 0.01);
 	}
 	

@@ -1,9 +1,3 @@
-/**
- * @author Christian Brüesch
- *
- *This is the Main Classe, it opens and shows a View.
- *
- */
 package ch.zhaw.paraglider.view;
 
 import java.awt.Color;
@@ -21,22 +15,53 @@ import ch.zhaw.paraglider.physics.Wing;
 
 import com.sun.istack.internal.logging.Logger;
 
+/**
+ * Main Class. Extends JPanel to draw the paraglider into the JFrame. Implements
+ * ActionListener to receive the inputs of the user.
+ * 
+ * @author Christian Brüesch
+ * 
+ */
 public class Main extends JPanel implements ActionListener {
 
 	/**
-	 * 
+	 * Generated serial version UID.
 	 */
 	private static final long serialVersionUID = -1624980403895301036L;
+	/**
+	 * Constant to define the height of the frame.
+	 */
 	private static final int FRAME_HEIGHT = 1000;
+	/**
+	 * Constant to define the width of the frame.
+	 */
 	private static final int FRAME_WIDTH = 1300;
+	/**
+	 * Standard Logger variable.
+	 */
 	private static Logger log = Logger.getLogger(Main.class.getName(),
 			Main.class);
 
+	/**
+	 * Variable for the wing instance.
+	 */
 	private Wing wing;
+	/**
+	 * Variable for the pilot instance.
+	 */
 	private Pilot pilot;
 
+	/**
+	 * JButtons for the View. - increaseSpeed - decreaseSpeed
+	 */
 	private JButton increaseSpeed, decreaseSpeed;
 
+	/**
+	 * Starting Point of the program. Creates JFrame and adds the main panel on
+	 * it.
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		Main main = new Main();
 		JFrame frame = new JFrame();
@@ -46,10 +71,25 @@ public class Main extends JPanel implements ActionListener {
 		frame.setVisible(true);
 	}
 
+	/**
+	 * Constructor. Initializes various objects and starts the runGame Thread.
+	 */
 	public Main() {
-		init();
+		pilot = Pilot.getInstance();
+		wing = new Wing("Left");
+		increaseSpeed = new JButton("+ 1 km/h");
+		this.add(increaseSpeed);
+		decreaseSpeed = new JButton("- 1 km/h");
+		this.add(decreaseSpeed);
+		increaseSpeed.addActionListener(this);
+		decreaseSpeed.addActionListener(this);
+		RunGame runGame = new RunGame(this);
+		new Thread(runGame).start();
 	}
 
+	/**
+	 * Main paint method. Paints all components on the view.
+	 */
 	public void paintComponent(Graphics g) {
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
@@ -58,6 +98,12 @@ public class Main extends JPanel implements ActionListener {
 
 	}
 
+	/**
+	 * The method draws the left view of the program. It contains the paraglider
+	 * from the side view.
+	 * 
+	 * @param g
+	 */
 	private void drawLeftView(Graphics g) {
 		int diameter = 40;
 		Color color = g.getColor();
@@ -89,6 +135,12 @@ public class Main extends JPanel implements ActionListener {
 		g.setColor(color);
 	}
 
+	/**
+	 * The method draws the left view of the program. It contains the paraglider
+	 * from the front view.
+	 * 
+	 * @param g
+	 */
 	private void drawRightView(Graphics g) {
 		Color color = g.getColor();
 		g.setColor(Color.BLACK);
@@ -107,25 +159,17 @@ public class Main extends JPanel implements ActionListener {
 		g.setColor(color);
 	}
 
-	private void init() {
-		pilot = Pilot.getInstance();
-		wing = new Wing("Left");
-		increaseSpeed = new JButton("+ 2 km/h");
-		this.add(increaseSpeed);
-		decreaseSpeed = new JButton("- 2 km/h");
-		this.add(decreaseSpeed);
-		increaseSpeed.addActionListener(this);
-		decreaseSpeed.addActionListener(this);
-		RunGame runGame = new RunGame(this);
-		new Thread(runGame).start();
-	}
-
+	/**
+	 * ActionPerformed method implements the two JButton and their actions.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		double oldVerticalSpeed = wing.getVerticalSpeed();
 		if (e.getSource() == increaseSpeed) {
 			if (wing.getHorizontalSpeed() <= 55) {
-				wing.changeCurrentSpeed(2);
-				pilot.calculateNewEndposition(2, wing.getVerticalSpeed());
+				wing.changeCurrentSpeed(1);
+				pilot.setNewSpeedChangeParameters(1, wing.getVerticalSpeed()
+						- oldVerticalSpeed);
 				pilot.setInMovement(true);
 				log.info("Horizontal Speed: " + wing.getHorizontalSpeed()
 						+ " km/h  Vertical Speed: " + wing.getVerticalSpeed()
@@ -133,11 +177,12 @@ public class Main extends JPanel implements ActionListener {
 			}
 
 		}
-		
+
 		if (e.getSource() == decreaseSpeed) {
 			if (wing.getHorizontalSpeed() >= 28.6) {
-				wing.changeCurrentSpeed(-2);
-				pilot.calculateNewEndposition(-2, wing.getVerticalSpeed());
+				wing.changeCurrentSpeed(-1);
+				pilot.setNewSpeedChangeParameters(-1, wing.getVerticalSpeed()
+						- oldVerticalSpeed);
 				pilot.setInMovement(true);
 				log.info("Horizontal Speed: " + wing.getHorizontalSpeed()
 						+ " km/h  Vertical Speed: " + wing.getVerticalSpeed()
@@ -145,7 +190,6 @@ public class Main extends JPanel implements ActionListener {
 			}
 
 		}
-
 
 	}
 }
