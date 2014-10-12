@@ -1,5 +1,7 @@
 package ch.zhaw.paraglider.physics;
 
+import java.util.ArrayList;
+
 import ch.zhaw.paraglider.controller.RunGame;
 import ch.zhaw.paraglider.view.Main;
 
@@ -39,7 +41,7 @@ public final class Pilot {
 	/**
 	 * Constant to konvert secounds into milisecounds.
 	 */
-	private final double CONVERT_S_INTO_MS = 1000;
+	private final double CONVERT_S_AND_MS = 1000;
 	/**
 	 * Period time of the "pilot pendulum".
 	 */
@@ -81,10 +83,15 @@ public final class Pilot {
 	 * Boolean which defines if there is a movement happening.
 	 */
 	private boolean inMovement = false;
+	ArrayList<Double> changeInX = new ArrayList<Double>();
+	ArrayList<Double> changeInY = new ArrayList<Double>();
 	/**
 	 * Pilot instance for the Singleton pattern.
 	 */
 	private static Pilot instance;
+
+	private double speed;
+	private double verticalSpeed;
 
 	/**
 	 * Private constructor - Singleton Pattern.
@@ -94,9 +101,9 @@ public final class Pilot {
 	}
 
 	/**
-	 * Methode returns the instance of the Pilot.
-	 * If there is no Pilot initiated
+	 * Methode returns the instance of the Pilot. If there is no Pilot initiated
 	 * yet, it will be done.
+	 * 
 	 * @return Pilot
 	 */
 	public static Pilot getInstance() {
@@ -109,6 +116,7 @@ public final class Pilot {
 
 	/**
 	 * Returns the current position of the pilot on the x-axis.
+	 * 
 	 * @return double
 	 */
 	public double getCurrentXPosition() {
@@ -117,6 +125,7 @@ public final class Pilot {
 
 	/**
 	 * Returns the current position of the pilot on the y-axis.
+	 * 
 	 * @return double
 	 */
 	public double getCurrentYPosition() {
@@ -126,9 +135,13 @@ public final class Pilot {
 	/**
 	 * Calculates the new end position, where the pilot goes in the x and
 	 * y-axis.
+	 * 
 	 * @param speed
+	 * @param verticalSpeed
 	 */
-	public void calculateNewEndposition(double speed) {
+	public void calculateNewEndposition(double speed, double verticalSpeed) {
+		this.speed = speed;
+		this.verticalSpeed = verticalSpeed;
 		boolean negativeSpeed = false;
 		if (speed < 0) {
 			speed = -speed;
@@ -136,24 +149,22 @@ public final class Pilot {
 		}
 
 		speed = speed * CONVERT_KMH_INTO_MS;
-		double changeInY = Math.pow(speed, 2) 
-				/ (2 * GRAVITATIONAL_FORCE);
+		double changeInY = Math.pow(speed, 2) / (2 * GRAVITATIONAL_FORCE);
 		double acceleration = speed / TIME_FROM_0_TO_TOP;
 		double diagonalLength = (speed * TIME_FROM_0_TO_TOP)
-				- ((acceleration 
-						* Math.pow(TIME_FROM_0_TO_TOP, 2)) / 2);
+				- ((acceleration * Math.pow(TIME_FROM_0_TO_TOP, 2)) / 2);
 		double changeInX = getChangeInX(changeInY, diagonalLength);
 
 		calculateNewXPosition(negativeSpeed, changeInX);
 		endPositionY -= changeInY * ONE_METER_IN_PIXEL;
 
-		log.info("Change for X: " + changeInX + 
-				" Change for Y: " + changeInY + 
-				" Speed: " + speed + 
-				" Diagonal Length: " + diagonalLength);
+		log.info("Change for X: " + changeInX + " Change for Y: " + changeInY
+				+ " Speed: " + speed + " Diagonal Length: " + diagonalLength);
 	}
+
 	/**
 	 * Calculates the new Position on the x-axis.
+	 * 
 	 * @param negative
 	 * @param changeInX
 	 */
@@ -168,6 +179,7 @@ public final class Pilot {
 
 	/**
 	 * Returns the value of the change in the x-axis.
+	 * 
 	 * @param changeInY
 	 * @param diagonalLength
 	 * @return double
@@ -186,6 +198,7 @@ public final class Pilot {
 
 	/**
 	 * Returns the weight of the pilot.
+	 * 
 	 * @return int
 	 */
 	public int getWeightOfPilot() {
@@ -194,6 +207,7 @@ public final class Pilot {
 
 	/**
 	 * Sets the new weight of the pilot.
+	 * 
 	 * @param weight
 	 */
 	public void setWeightOfPilot(int weight) {
@@ -202,6 +216,7 @@ public final class Pilot {
 
 	/**
 	 * Returns a boolean which tells if the pilot is in movement.
+	 * 
 	 * @return boolean
 	 */
 	public boolean isInMovement() {
@@ -210,66 +225,70 @@ public final class Pilot {
 
 	/**
 	 * Sets the variable inMovment.
+	 * 
 	 * @param inMovement
 	 */
 	public void setInMovement(final boolean inMovement) {
 		this.inMovement = inMovement;
 	}
-	
+
 	/**
 	 * Calculates the next step of the animation of the pilot.
 	 */
 	public void makeNextStep() {
 		// TODO: Erhöhe Animationsgenauigkeit
 
-		if (endPositionX > ZERO_X_POSITION) {
-			double differenz = endPositionX - ZERO_X_POSITION;
-			double step = differenz
-					/ (TIME_FROM_0_TO_TOP * CONVERT_S_INTO_MS 
-							/ RunGame.REFRESHRATE);
-
-			if (movesForward) {
-				currentPositionX += step;
-				currentPositionY -= step / 2;
-
-				if (currentPositionX >= endPositionX) {
-					movesForward = false;
-				}
-			} else {
-
-				currentPositionX -= step;
-				currentPositionY += step / 2;
-
-				if (currentPositionX <= ZERO_X_POSITION) {
-					setInMovement(false);
-					movesForward = true;
-					endPositionX = ZERO_X_POSITION;
-				}
+		double nintyDegreesInRadian = 1.57079633;
+		double steps = TIME_FROM_0_TO_TOP * CONVERT_S_AND_MS
+				/ RunGame.REFRESHRATE;
+		double sinSteps = nintyDegreesInRadian / steps;
+		
+		if (changeInX.size() == 0) {
+			for (int i = 0; i < steps; i++) {
+				changeInX.add(speed * Math.sin(sinSteps * i)
+						* (RunGame.REFRESHRATE / CONVERT_S_AND_MS)
+						* ONE_METER_IN_PIXEL);
+				changeInY.add(verticalSpeed * Math.sin(sinSteps * i)
+						* (RunGame.REFRESHRATE / CONVERT_S_AND_MS)
+						* ONE_METER_IN_PIXEL);
 			}
+		}
+
+		if (movesForward) {
+			moveForward(steps, sinSteps);
 		} else {
-			double differenz = ZERO_X_POSITION - endPositionX;
-			double step = differenz
-					/ (TIME_FROM_0_TO_TOP * CONVERT_S_INTO_MS
-							/ RunGame.REFRESHRATE);
+			moveBackward(steps, sinSteps);
 
-			if (movesForward) {
-				currentPositionX -= step;
-				currentPositionY -= step / 2;
+		}
+	}
 
-				if (currentPositionX <= endPositionX) {
-					movesForward = false;
-				}
-			} else {
+	private void moveForward(double steps, double sinSteps) {
+		
+		currentPositionX -= changeInX.remove(changeInX.size() - 1);
+		currentPositionY -= changeInY.remove(changeInY.size() - 1);
 
-				currentPositionX += step;
-				currentPositionY += step / 2;
+		if (changeInX.size() == 0) {
+			movesForward = false;
+		}
+	}
 
-				if (currentPositionX >= ZERO_X_POSITION) {
-					setInMovement(false);
-					movesForward = true;
-					endPositionX = ZERO_X_POSITION;
-				}
-			}
+	private void moveBackward(double steps, double sinSteps) {
+//		if (changeInX.size() == 0) {
+//			for (int i = (int) (steps - 1); i >= 0; i--) {
+//				changeInX.add(speed * Math.sin(sinSteps * i)
+//						* (RunGame.REFRESHRATE / CONVERT_S_AND_MS)
+//						* ONE_METER_IN_PIXEL);
+//				changeInY.add(verticalSpeed * Math.sin(sinSteps * i)
+//						* (RunGame.REFRESHRATE / CONVERT_S_AND_MS)
+//						* ONE_METER_IN_PIXEL);
+//			}
+//		}
+		currentPositionX += changeInX.remove(0);
+		currentPositionY += changeInY.remove(0);
+
+		if (changeInX.size() == 0) {
+			movesForward = true;
+			setInMovement(false);
 		}
 
 	}

@@ -125,7 +125,7 @@ public class Main extends JPanel implements ActionListener {
 		if (e.getSource() == increaseSpeed) {
 			if (wing.getHorizontalSpeed() <= 55) {
 				wing.changeCurrentSpeed(2);
-				pilot.calculateNewEndposition(2);
+				pilot.calculateNewEndposition(2, wing.getVerticalSpeed());
 				pilot.setInMovement(true);
 				log.info("Horizontal Speed: " + wing.getHorizontalSpeed()
 						+ " km/h  Vertical Speed: " + wing.getVerticalSpeed()
@@ -137,7 +137,7 @@ public class Main extends JPanel implements ActionListener {
 		if (e.getSource() == decreaseSpeed) {
 			if (wing.getHorizontalSpeed() >= 28.6) {
 				wing.changeCurrentSpeed(-2);
-				pilot.calculateNewEndposition(-2);
+				pilot.calculateNewEndposition(-2, wing.getVerticalSpeed());
 				pilot.setInMovement(true);
 				log.info("Horizontal Speed: " + wing.getHorizontalSpeed()
 						+ " km/h  Vertical Speed: " + wing.getVerticalSpeed()
