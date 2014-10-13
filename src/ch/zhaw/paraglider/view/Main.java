@@ -112,8 +112,8 @@ public class Main extends JPanel implements ActionListener {
 		Color color = g.getColor();
 		g.setColor(Color.black);
 		g.drawRect(40, 40, 580, 800);
-		g.drawString("Geschwindigkeit: " + wing.getHorizontalSpeed(), 50, 125);
-		g.drawString("Horizontalgeschwindigkeit: " + wing.getVerticalSpeed(),
+		g.drawString("Geschwindigkeit: " + wing.getHorizontalSpeed()+ " km/h", 50, 125);
+		g.drawString("Vertikalgeschwindigkeit: " + wing.getVerticalSpeed()+" m/s",
 				50, 140);
 		g.drawString("Gleitrate: " + wing.getCurrentGlideRatio(), 50, 155);
 
@@ -171,8 +171,7 @@ public class Main extends JPanel implements ActionListener {
 		if (e.getSource() == increaseSpeed) {
 			if (wing.getHorizontalSpeed() <= 55) {
 				wing.changeCurrentSpeed(1);
-				pilot.setNewSpeedChangeParameters(1, wing.getVerticalSpeed()
-						- oldVerticalSpeed);
+				pilot.setNewSpeedChangeParameters(1);
 				pilot.setInMovement(true);
 				log.info("Horizontal Speed: " + wing.getHorizontalSpeed()
 						+ " km/h  Vertical Speed: " + wing.getVerticalSpeed()
@@ -184,8 +183,7 @@ public class Main extends JPanel implements ActionListener {
 		if (e.getSource() == decreaseSpeed) {
 			if (wing.getHorizontalSpeed() >= 28.6) {
 				wing.changeCurrentSpeed(-1);
-				pilot.setNewSpeedChangeParameters(-1, wing.getVerticalSpeed()
-						- oldVerticalSpeed);
+				pilot.setNewSpeedChangeParameters(-1);
 				pilot.setInMovement(true);
 				log.info("Horizontal Speed: " + wing.getHorizontalSpeed()
 						+ " km/h  Vertical Speed: " + wing.getVerticalSpeed()
@@ -197,7 +195,7 @@ public class Main extends JPanel implements ActionListener {
 		if (e.getSource() == decreaseSpeedBythree) {
 			if (wing.getHorizontalSpeed() >= 28.6) {
 				wing.changeCurrentSpeed(-3);
-				pilot.setNewSpeedChangeParameters(-3, wing.getVerticalSpeed());
+				pilot.setNewSpeedChangeParameters(-3);
 				pilot.setInMovement(true);
 				log.info("Horizontal Speed: " + wing.getHorizontalSpeed()
 						+ " km/h  Vertical Speed: " + wing.getVerticalSpeed()

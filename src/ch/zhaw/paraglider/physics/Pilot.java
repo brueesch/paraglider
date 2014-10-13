@@ -20,7 +20,7 @@ public final class Pilot {
 	/**
 	 * Constant to convert pixel into meter.
 	 */
-	private final double ONE_METER_IN_PIXEL = 20;
+	private final double CONVERT_METER_AND_PIXEL = 20;
 	/**
 	 * Constant which defines the Lenght of the paraglider cord.
 	 */
@@ -81,7 +81,7 @@ public final class Pilot {
 	 * calculated as follows: vertical speed * sin(current Position on the sinus
 	 * curve) * time * Converted from pixel to meter
 	 */
-	ArrayList<Double> changeInY = new ArrayList<Double>();
+	ArrayList<Double> newYPosition = new ArrayList<Double>();
 	/**
 	 * Pilot instance for the Singleton pattern.
 	 */
@@ -93,11 +93,6 @@ public final class Pilot {
 	private double speed;
 
 	/**
-	 * Variable with the current vertical speed change.
-	 */
-	private double verticalSpeed;
-
-	/**
 	 * Private constructor - Singleton Pattern.
 	 */
 	private Pilot() {
@@ -105,7 +100,7 @@ public final class Pilot {
 	}
 
 	/**
-	 * Methode returns the instance of the Pilot. If there is no Pilot initiated
+	 * Method returns the instance of the Pilot. If there is no Pilot initiated
 	 * yet, it will be done.
 	 * 
 	 * @return Pilot
@@ -140,11 +135,9 @@ public final class Pilot {
 	 * Sets the new speed change.
 	 * 
 	 * @param speed
-	 * @param verticalSpeed
 	 */
-	public void setNewSpeedChangeParameters(double speed, double verticalSpeed) {
+	public void setNewSpeedChangeParameters(double speed) {
 		this.speed = speed;
-		this.verticalSpeed = verticalSpeed;
 	}
 
 	/**
@@ -195,13 +188,10 @@ public final class Pilot {
 
 		if (changeInX.size() == 0) {
 			for (int i = 0; i < numberOfStepsToTake; i++) {
-				changeInX.add(speed * CONVERT_KMH_INTO_MS
+				double x = speed * CONVERT_KMH_INTO_MS
 						* Math.sin(sizeOfSinStep * i)
-						* (RunGame.REFRESHRATE / CONVERT_S_AND_MS)
-						* ONE_METER_IN_PIXEL);
-				changeInY.add(verticalSpeed * Math.sin(sizeOfSinStep * i)
-						* (RunGame.REFRESHRATE / CONVERT_S_AND_MS)
-						* ONE_METER_IN_PIXEL);
+						* (RunGame.REFRESHRATE / CONVERT_S_AND_MS);
+				changeInX.add(x * CONVERT_METER_AND_PIXEL);
 			}
 		}
 
@@ -221,9 +211,21 @@ public final class Pilot {
 	 * @param sinSteps
 	 */
 	private void moveForward() {
-		currentPositionX -= changeInX.remove(changeInX.size() - 1);
-		currentPositionY -= changeInY.remove(changeInY.size() - 1);
+		double x = (currentPositionX - ZERO_X_POSITION)
+				/ CONVERT_METER_AND_PIXEL;
 
+		if (x < LENGTH_OF_CORD - 0.05) {
+			currentPositionX -= changeInX.remove(changeInX.size() - 1);
+		}
+		else {
+			while(changeInX.size()!= 0){
+				changeInX.remove(0);
+			}
+		}
+
+		double y = Math.sqrt(Math.pow(LENGTH_OF_CORD, 2) - Math.pow(x, 2));
+		currentPositionY = (y * CONVERT_METER_AND_PIXEL) + 240;
+		
 		if (changeInX.size() == 0) {
 			movesForward = false;
 		}
@@ -237,10 +239,18 @@ public final class Pilot {
 	 * @param sinSteps
 	 */
 	private void moveBackward() {
-		currentPositionX += changeInX.remove(0);
-		currentPositionY += changeInY.remove(0);
-
-		if (changeInX.size() == 0) {
+		double x = (currentPositionX - ZERO_X_POSITION)
+				/ CONVERT_METER_AND_PIXEL;
+			currentPositionX += changeInX.remove(0);
+	
+		double y = Math.sqrt(Math.pow(LENGTH_OF_CORD, 2) - Math.pow(x, 2));
+		currentPositionY = (y * CONVERT_METER_AND_PIXEL) + 240;
+		if ((int)currentPositionX == ZERO_X_POSITION) {
+			while(changeInX.size() != 0) {
+				changeInX.remove(0);
+			}
+			currentPositionX = ZERO_X_POSITION;
+			currentPositionY = ZERO_Y_POSITION;
 			movesForward = true;
 			setInMovement(false);
 		}
