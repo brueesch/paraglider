@@ -54,7 +54,7 @@ public class Main extends JPanel implements ActionListener {
 	/**
 	 * JButtons for the View. - increaseSpeed - decreaseSpeed
 	 */
-	private JButton increaseSpeed, decreaseSpeed;
+	private JButton increaseSpeed, decreaseSpeed, decreaseSpeedBythree;
 
 	/**
 	 * Starting Point of the program. Creates JFrame and adds the main panel on
@@ -81,8 +81,11 @@ public class Main extends JPanel implements ActionListener {
 		this.add(increaseSpeed);
 		decreaseSpeed = new JButton("- 1 km/h");
 		this.add(decreaseSpeed);
+		decreaseSpeedBythree = new JButton("- 3 km/h");
+		this.add(decreaseSpeedBythree);
 		increaseSpeed.addActionListener(this);
 		decreaseSpeed.addActionListener(this);
+		decreaseSpeedBythree.addActionListener(this);
 		RunGame runGame = new RunGame(this);
 		new Thread(runGame).start();
 	}
@@ -183,6 +186,18 @@ public class Main extends JPanel implements ActionListener {
 				wing.changeCurrentSpeed(-1);
 				pilot.setNewSpeedChangeParameters(-1, wing.getVerticalSpeed()
 						- oldVerticalSpeed);
+				pilot.setInMovement(true);
+				log.info("Horizontal Speed: " + wing.getHorizontalSpeed()
+						+ " km/h  Vertical Speed: " + wing.getVerticalSpeed()
+						+ " m/s  Glide Ratio: " + wing.getCurrentGlideRatio());
+			}
+
+		}
+		
+		if (e.getSource() == decreaseSpeedBythree) {
+			if (wing.getHorizontalSpeed() >= 28.6) {
+				wing.changeCurrentSpeed(-3);
+				pilot.setNewSpeedChangeParameters(-3, wing.getVerticalSpeed());
 				pilot.setInMovement(true);
 				log.info("Horizontal Speed: " + wing.getHorizontalSpeed()
 						+ " km/h  Vertical Speed: " + wing.getVerticalSpeed()
