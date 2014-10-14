@@ -41,7 +41,7 @@ public final class Pilot {
 	 * Period time of the "pilot pendulum".
 	 */
 	private final double TIME_OF_PERIOD = (2 * Math.PI * Math
-			.sqrt(LENGTH_OF_CORD / GRAVITATIONAL_FORCE));
+		.sqrt(LENGTH_OF_CORD / GRAVITATIONAL_FORCE));
 	/**
 	 * Constant for the time from the start point to the highest point.
 	 */
@@ -194,7 +194,9 @@ public final class Pilot {
 				changeInX.add(x * CONVERT_METER_AND_PIXEL);
 			}
 		}
-
+		
+		System.out.println(TIME_FROM_0_TO_TOP);
+		
 		if (movesForward) {
 			moveForward();
 		} else {
@@ -252,7 +254,8 @@ public final class Pilot {
 			currentPositionX = ZERO_X_POSITION;
 			currentPositionY = ZERO_Y_POSITION;
 			movesForward = true;
-			setInMovement(false);
+			//setInMovement(false);
+			speed = -speed;
 		}
 	}
 
