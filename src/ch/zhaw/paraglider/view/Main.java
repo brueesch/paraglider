@@ -167,6 +167,7 @@ public class Main extends JPanel implements ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		double oldVerticalSpeed = wing.getVerticalSpeed();
 		if (e.getSource() == increaseSpeed) {
 			if (wing.getHorizontalSpeed() <= 55) {
 				wing.changeCurrentSpeed(1);
