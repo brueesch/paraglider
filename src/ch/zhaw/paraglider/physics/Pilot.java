@@ -86,12 +86,25 @@ public final class Pilot {
 	 * Pilot instance for the Singleton pattern.
 	 */
 	private static Pilot instance;
+	
+	private double count = 0;
 
 	/**
 	 * Variable with the current speed change.
 	 */
 	private double speed;
-
+	/**
+	 * Contant for 90 degrees in radian.
+	 * Used for calculation in the sinus for the speed.
+	 */
+	//private final double NINTY_DEGREES_IN_RADIAN = 1.57079633;
+	
+	/**
+	 * Variable of a step in the sinus curve.
+	 */
+	//private double sizeOfSinStep = NINTY_DEGREES_IN_RADIAN / (TIME_FROM_0_TO_TOP * CONVERT_S_AND_MS / RunGame.REFRESHRATE);
+	
+	
 	/**
 	 * Private constructor - Singleton Pattern.
 	 */
@@ -137,7 +150,7 @@ public final class Pilot {
 	 * @param speed
 	 */
 	public void setNewSpeedChangeParameters(double speed) {
-		this.speed = speed;
+		this.speed = speed * CONVERT_KMH_INTO_MS;
 	}
 
 	/**
@@ -181,21 +194,24 @@ public final class Pilot {
 	 * current position of the x and y - axis to the calculated values.
 	 */
 	public void makeNextStep() {
-		double nintyDegreesInRadian = 1.57079633;
 		double numberOfStepsToTake = TIME_FROM_0_TO_TOP * CONVERT_S_AND_MS
 				/ RunGame.REFRESHRATE;
+		double nintyDegreesInRadian = 1.57079633;
 		double sizeOfSinStep = nintyDegreesInRadian / numberOfStepsToTake;
-
-		if (changeInX.size() == 0) {
-			for (int i = 0; i < numberOfStepsToTake; i++) {
-				double x = speed * CONVERT_KMH_INTO_MS
-						* Math.sin(sizeOfSinStep * i)
+		
+		
+		double attenuationForce = (currentPositionX - ZERO_X_POSITION) * (0.6 * 1.2 * 0.84 / 85);
+		double attenuationSpeed = (attenuationForce/85) * (RunGame.REFRESHRATE / CONVERT_S_AND_MS);
+		
+		speed -= attenuationSpeed;
+		
+		double speedInSinus = speed * Math.sin(sizeOfSinStep*count);
+		count++;
+		
+		System.out.println(attenuationSpeed + "     " + speed + "     " + speedInSinus);
+		double x = speedInSinus
 						* (RunGame.REFRESHRATE / CONVERT_S_AND_MS);
 				changeInX.add(x * CONVERT_METER_AND_PIXEL);
-			}
-		}
-		
-		System.out.println(TIME_FROM_0_TO_TOP);
 		
 		if (movesForward) {
 			moveForward();
@@ -203,6 +219,7 @@ public final class Pilot {
 			moveBackward();
 
 		}
+
 	}
 
 	/**
@@ -216,8 +233,10 @@ public final class Pilot {
 		double x = (currentPositionX - ZERO_X_POSITION)
 				/ CONVERT_METER_AND_PIXEL;
 
+		
+
 		if (x < LENGTH_OF_CORD - 0.05) {
-			currentPositionX -= changeInX.remove(changeInX.size() - 1);
+			currentPositionX -= changeInX.remove(changeInX.size()-1); ;
 		}
 		else {
 			while(changeInX.size()!= 0){
@@ -228,7 +247,7 @@ public final class Pilot {
 		double y = Math.sqrt(Math.pow(LENGTH_OF_CORD, 2) - Math.pow(x, 2));
 		currentPositionY = (y * CONVERT_METER_AND_PIXEL) + 240;
 		
-		if (changeInX.size() == 0) {
+		if (speed == 0) {
 			movesForward = false;
 		}
 	}
