@@ -2,18 +2,14 @@ package ch.zhaw.paraglider.view;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import ch.zhaw.paraglider.controller.RunGame;
+import ch.zhaw.paraglider.controller.XBoxController;
 import ch.zhaw.paraglider.physics.Pilot;
 import ch.zhaw.paraglider.physics.Wing;
-
-import com.sun.istack.internal.logging.Logger;
 
 /**
  * Main Class. Extends JPanel to draw the paraglider into the JFrame. Implements
@@ -22,7 +18,7 @@ import com.sun.istack.internal.logging.Logger;
  * @author Christian Brüesch
  * 
  */
-public class Main extends JPanel implements ActionListener {
+public class Main extends JPanel {
 
 	/**
 	 * Generated serial version UID.
@@ -37,12 +33,6 @@ public class Main extends JPanel implements ActionListener {
 	 */
 	private static final int FRAME_WIDTH = 1300;
 	/**
-	 * Standard Logger variable.
-	 */
-	private static Logger log = Logger.getLogger(Main.class.getName(),
-			Main.class);
-
-	/**
 	 * Variable for the wing instance.
 	 */
 	private Wing wing;
@@ -50,11 +40,6 @@ public class Main extends JPanel implements ActionListener {
 	 * Variable for the pilot instance.
 	 */
 	private Pilot pilot;
-
-	/**
-	 * JButtons for the View. - increaseSpeed - decreaseSpeed
-	 */
-	private JButton increaseSpeed, decreaseSpeed, decreaseSpeedBythree;
 
 	/**
 	 * Starting Point of the program. Creates JFrame and adds the main panel on
@@ -77,17 +62,10 @@ public class Main extends JPanel implements ActionListener {
 	public Main() {
 		pilot = Pilot.getInstance();
 		wing = new Wing("Left");
-		increaseSpeed = new JButton("+ 1 km/h");
-		this.add(increaseSpeed);
-		decreaseSpeed = new JButton("- 1 km/h");
-		this.add(decreaseSpeed);
-		decreaseSpeedBythree = new JButton("- 3 km/h");
-		this.add(decreaseSpeedBythree);
-		increaseSpeed.addActionListener(this);
-		decreaseSpeed.addActionListener(this);
-		decreaseSpeedBythree.addActionListener(this);
 		RunGame runGame = new RunGame(this);
 		new Thread(runGame).start();
+		XBoxController xBoxController = new XBoxController(wing);
+		new Thread(xBoxController).start();
 	}
 
 	/**
@@ -112,9 +90,10 @@ public class Main extends JPanel implements ActionListener {
 		Color color = g.getColor();
 		g.setColor(Color.black);
 		g.drawRect(40, 40, 580, 800);
-		g.drawString("Geschwindigkeit: " + wing.getHorizontalSpeed()+ " km/h", 50, 125);
-		g.drawString("Vertikalgeschwindigkeit: " + wing.getVerticalSpeed()+" m/s",
-				50, 140);
+		g.drawString("Geschwindigkeit: " + wing.getHorizontalSpeed() + " km/h",
+				50, 125);
+		g.drawString("Vertikalgeschwindigkeit: " + wing.getVerticalSpeed()
+				+ " m/s", 50, 140);
 		g.drawString("Gleitrate: " + wing.getCurrentGlideRatio(), 50, 155);
 
 		g.fillOval((int) pilot.getCurrentXPosition(),
@@ -160,45 +139,5 @@ public class Main extends JPanel implements ActionListener {
 		int[] yPoints = { 240, 180, 180, 240 };
 		g.fillPolygon(xPoints, yPoints, 4);
 		g.setColor(color);
-	}
-
-	/**
-	 * ActionPerformed method implements the two JButton and their actions.
-	 */
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == increaseSpeed) {
-			if (wing.getHorizontalSpeed() <= 55) {
-				wing.changeCurrentSpeed(1);
-				pilot.setChangeInSpeed(1);
-				log.info("Horizontal Speed: " + wing.getHorizontalSpeed()
-						+ " km/h  Vertical Speed: " + wing.getVerticalSpeed()
-						+ " m/s  Glide Ratio: " + wing.getCurrentGlideRatio());
-			}
-
-		}
-
-		if (e.getSource() == decreaseSpeed) {
-			if (wing.getHorizontalSpeed() >= 28.6) {
-				wing.changeCurrentSpeed(-1);
-				pilot.setChangeInSpeed(-1);
-				log.info("Horizontal Speed: " + wing.getHorizontalSpeed()
-						+ " km/h  Vertical Speed: " + wing.getVerticalSpeed()
-						+ " m/s  Glide Ratio: " + wing.getCurrentGlideRatio());
-			}
-
-		}
-		
-		if (e.getSource() == decreaseSpeedBythree) {
-			if (wing.getHorizontalSpeed() >= 28.6) {
-				wing.changeCurrentSpeed(-3);
-				pilot.setChangeInSpeed(-3);
-				log.info("Horizontal Speed: " + wing.getHorizontalSpeed()
-						+ " km/h  Vertical Speed: " + wing.getVerticalSpeed()
-						+ " m/s  Glide Ratio: " + wing.getCurrentGlideRatio());
-			}
-
-		}
-
 	}
 }

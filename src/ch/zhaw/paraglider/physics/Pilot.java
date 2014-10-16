@@ -1,7 +1,5 @@
 package ch.zhaw.paraglider.physics;
 
-import java.util.ArrayList;
-
 import ch.zhaw.paraglider.controller.RunGame;
 
 /**
