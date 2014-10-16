@@ -167,12 +167,10 @@ public class Main extends JPanel implements ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		double oldVerticalSpeed = wing.getVerticalSpeed();
 		if (e.getSource() == increaseSpeed) {
 			if (wing.getHorizontalSpeed() <= 55) {
 				wing.changeCurrentSpeed(1);
-				pilot.setNewSpeedChangeParameters(1);
-				pilot.setInMovement(true);
+				pilot.setChangeInSpeed(1);
 				log.info("Horizontal Speed: " + wing.getHorizontalSpeed()
 						+ " km/h  Vertical Speed: " + wing.getVerticalSpeed()
 						+ " m/s  Glide Ratio: " + wing.getCurrentGlideRatio());
@@ -183,8 +181,7 @@ public class Main extends JPanel implements ActionListener {
 		if (e.getSource() == decreaseSpeed) {
 			if (wing.getHorizontalSpeed() >= 28.6) {
 				wing.changeCurrentSpeed(-1);
-				pilot.setNewSpeedChangeParameters(-1);
-				pilot.setInMovement(true);
+				pilot.setChangeInSpeed(-1);
 				log.info("Horizontal Speed: " + wing.getHorizontalSpeed()
 						+ " km/h  Vertical Speed: " + wing.getVerticalSpeed()
 						+ " m/s  Glide Ratio: " + wing.getCurrentGlideRatio());
@@ -195,8 +192,7 @@ public class Main extends JPanel implements ActionListener {
 		if (e.getSource() == decreaseSpeedBythree) {
 			if (wing.getHorizontalSpeed() >= 28.6) {
 				wing.changeCurrentSpeed(-3);
-				pilot.setNewSpeedChangeParameters(-3);
-				pilot.setInMovement(true);
+				pilot.setChangeInSpeed(-3);
 				log.info("Horizontal Speed: " + wing.getHorizontalSpeed()
 						+ " km/h  Vertical Speed: " + wing.getVerticalSpeed()
 						+ " m/s  Glide Ratio: " + wing.getCurrentGlideRatio());
