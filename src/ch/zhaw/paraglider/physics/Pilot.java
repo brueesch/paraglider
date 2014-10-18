@@ -49,6 +49,10 @@ public final class Pilot {
 	 * Start position of the pilot in the y-axis.
 	 */
 	private final double ZERO_Y_POSITION = 394;
+	/** 
+	 * Start position of the pilot in the z-axis.
+	 */
+	private final double ZERO_Z_POSITION = 910;
 	/**
 	 * Position of the Zero Point. In the middle of the paraglider, where the
 	 * line starts.
@@ -62,6 +66,10 @@ public final class Pilot {
 	 * The current position of the pilot y-axis.
 	 */
 	private double currentPositionY = ZERO_Y_POSITION;
+	/**
+	 * The current position of the pilot z-axis.
+	 */
+	private double currentPositionZ = ZERO_Z_POSITION;
 	/**
 	 * Boolean which defines in which direction the movement is.
 	 */
@@ -113,6 +121,14 @@ public final class Pilot {
 	public double getCurrentYPosition() {
 		return currentPositionY;
 	}
+	/**
+	 * Returns the current position of the pilot on the z-axis.
+	 * 
+	 * @return double
+	 */
+	public double getCurrentZPosition() {
+		return currentPositionZ;
+	}
 
 	/**
 	 * Sets the new speed change.
@@ -142,6 +158,13 @@ public final class Pilot {
 	public void setWeightOfPilot(int weight) {
 		weightOfPilot = weight;
 	}
+	
+	public void reset() {
+		currentPositionX = ZERO_X_POSITION;
+		currentPositionY = ZERO_Y_POSITION;
+		currentPositionZ = ZERO_Z_POSITION;
+		fForward = 0;
+	}
 
 	/**
 	 * Calculates the next step of the animation of the pilot and sets the
@@ -151,8 +174,9 @@ public final class Pilot {
 		calculateForces();
 		calculateXChange();
 		calculateYChange();
+		calculateZChange();
 	}
-
+	
 	/**
 	 * Calculates the different Forces.
 	 */
@@ -229,6 +253,20 @@ public final class Pilot {
 		double change = (acceleration * Math.pow(RunGame.REFRESHRATE
 				/ CONVERT_S_AND_MS, 2)) / 2;
 		currentPositionX -= change * CONVERT_METER_AND_PIXEL;
+	}
+	
+	/**
+	 * Calculates the change in the z-axis.
+	 */
+	private void calculateZChange() {
+		Glider glider = Glider.getInstance();
+		
+		double angle = glider.getAngleOfTheGlider();
+		
+		double change = Math.sin(angle) * LENGTH_OF_CORD;
+		
+		currentPositionZ = ZERO_Z_POSITION+(change * CONVERT_METER_AND_PIXEL);
+		
 	}
 
 }

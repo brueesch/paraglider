@@ -4,6 +4,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Controller;
 import org.lwjgl.input.Controllers;
 
+import ch.zhaw.paraglider.physics.Glider;
 import ch.zhaw.paraglider.physics.Pilot;
 import ch.zhaw.paraglider.physics.Wing;
 
@@ -26,35 +27,41 @@ public class XBoxController implements Runnable {
 	 */
 	private Pilot pilot;
 	/**
-	 * Wing instance.
+	 * Glider instance.
 	 */
-	private Wing wing;
+	private Glider glider;
+	/**
+	 * Right and Left Wing variable.
+	 */
+	private Wing leftWing, rightWing;
 
 	/**
 	 * Initializes the xbox Controller.
 	 */
-	public XBoxController(Wing wing) {
+	public XBoxController() {
 		pilot = Pilot.getInstance();
-		this.wing = wing;
+		this.glider = Glider.getInstance();
 		try {
 			Controllers.create();
+			leftWing = glider.getWing("left");
+			rightWing = glider.getWing("right");
+			
 		} catch (LWJGLException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		Controllers.poll();
 
 		controller = Controllers.getController(POSITION_OF_XBOX_CONTROLLER);
-		controller.setDeadZone(0, (float) 0.2);
-		controller.setDeadZone(2, (float) 0.2);
+		//controller.setDeadZone(0, (float) 0.2);
+		//controller.setDeadZone(2, (float) 0.2);
 
 	}
-	
-	
+
 	/**
-	 * Run Method
-	 * Handles all inputs from the controller.
+	 * Run Method Handles all inputs from the controller.
 	 */
 	@Override
 	public void run() {
@@ -62,21 +69,65 @@ public class XBoxController implements Runnable {
 			controller.poll();
 			if (controller.getAxisValue(0) == 0
 					&& controller.getAxisValue(2) == 0) {
-				double oldValue = 0;
-				while (true) {					
-					controller.poll();
-					double value = controller.getAxisValue(0);
-					System.out.println(controller.getAxisValue(0) + "      "
-							+ controller.getAxisValue(2));
-					if(oldValue != value) {							
-							pilot.setChangeInSpeed(-((value-oldValue)*MULTIPLICATOR_CONTROLLER_SPEED));
-							wing.changeCurrentSpeed(-(value-oldValue)*MULTIPLICATOR_CONTROLLER_SPEED);
-							oldValue = controller.getAxisValue(0);
-					}			
-				}
+				activateController();
 			}
 
 		}
+	}
+
+	/**
+	 * Controls all inputs made with the controller.
+	 */
+	private void activateController() {
+		double oldValueLeftWing = 0;
+		double oldValueRightWing = 0;
+		while (true) {
+			controller.poll();
+			if (controller.isButtonPressed(6)) {
+				pilot.reset();
+			}
+			
+			System.out.println(controller.getAxisValue(0) + "      "
+					+ controller.getAxisValue(2));
+			oldValueLeftWing = controlLeftWing(oldValueLeftWing);
+			oldValueRightWing = controlRightWing(oldValueRightWing);
+		}
+	}
+
+	/**
+	 * Controls the movement of the right wing.
+	 * @param oldValueRightWing
+	 * @return double for oldValueRightWing
+	 */
+	private double controlRightWing(double oldValueRightWing) {
+		double valueRightWing = controller.getAxisValue(2);
+		if (oldValueRightWing != valueRightWing) {
+			if (valueRightWing >= 0) {
+				pilot.setChangeInSpeed(-((valueRightWing - oldValueRightWing) * MULTIPLICATOR_CONTROLLER_SPEED));
+				rightWing.changeCurrentSpeed(-(valueRightWing - oldValueRightWing)
+						* MULTIPLICATOR_CONTROLLER_SPEED);
+				oldValueRightWing = controller.getAxisValue(2);
+			}
+		}
+		return oldValueRightWing;
+	}
+
+	/**
+	 * Controls the movement of the left wing.
+	 * @param oldValueLeftWing
+	 * @return double for oldValueLeftWing
+	 */
+	private double controlLeftWing(double oldValueLeftWing) {
+		double valueLeftWing = controller.getAxisValue(0);
+		if (oldValueLeftWing != valueLeftWing) {
+			if (valueLeftWing >= 0) {
+				pilot.setChangeInSpeed(-((valueLeftWing - oldValueLeftWing) * MULTIPLICATOR_CONTROLLER_SPEED));
+				leftWing.changeCurrentSpeed(-(valueLeftWing - oldValueLeftWing)
+						* MULTIPLICATOR_CONTROLLER_SPEED);
+				oldValueLeftWing = controller.getAxisValue(0);
+			}
+		}
+		return oldValueLeftWing;
 	}
 
 }
