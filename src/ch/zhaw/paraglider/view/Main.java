@@ -10,6 +10,7 @@ import ch.zhaw.paraglider.controller.RunGame;
 import ch.zhaw.paraglider.controller.XBoxController;
 import ch.zhaw.paraglider.physics.Glider;
 import ch.zhaw.paraglider.physics.Pilot;
+import ch.zhaw.paraglider.physics.Vector;
 
 /**
  * Main Class. Extends JPanel to draw the paraglider into the JFrame. Implements
@@ -96,14 +97,10 @@ public class Main extends JPanel {
 				+ " m/s", 50, 140);
 		g.drawString("Gleitrate: " + glider.getCurrentGlideRatio(), 50, 155);
 
-		g.fillOval((int) pilot.getCurrentXPosition(),
-				(int) pilot.getCurrentYPosition(), diameter, diameter);
-		g.drawLine((int) pilot.getCurrentXPosition() + diameter / 2,
-				(int) pilot.getCurrentYPosition() + diameter / 2, 270, 240);
-		g.drawLine((int) pilot.getCurrentXPosition() + diameter / 2,
-				(int) pilot.getCurrentYPosition() + diameter / 2, 330, 240);
-		g.drawLine((int) pilot.getCurrentXPosition() + diameter / 2,
-				(int) pilot.getCurrentYPosition() + diameter / 2, 390, 240);
+		g.fillOval((int) pilot.getCurrentPosition().getX(), (int) pilot.getCurrentPosition().getY(), diameter, diameter);
+		g.drawLine((int) pilot.getCurrentPosition().getX() + diameter / 2, (int) pilot.getCurrentPosition().getY() + diameter / 2, 270, 240);
+		g.drawLine((int) pilot.getCurrentPosition().getX() + diameter / 2, (int) pilot.getCurrentPosition().getY() + diameter / 2, 330, 240);
+		g.drawLine((int) pilot.getCurrentPosition().getX() + diameter / 2, (int) pilot.getCurrentPosition().getY() + diameter / 2, 390, 240);
 
 		g.setColor(Color.RED);
 		int[] xPointsParaglider = { 230, 330, 430 };
@@ -129,17 +126,14 @@ public class Main extends JPanel {
 		g.setColor(Color.BLACK);
 		g.drawRect(640, 40, 580, 800);
 		
-		g.fillOval((int)pilot.getCurrentZPosition(), (int)pilot.getCurrentYPosition(), 40, 40);
-		g.drawLine((int) pilot.getCurrentZPosition() + diameter / 2,
-				(int) pilot.getCurrentYPosition() + diameter / 2, 720, 240);
-		g.drawLine((int) pilot.getCurrentZPosition() + diameter / 2,
-				(int) pilot.getCurrentYPosition() + diameter / 2, 825, 240);
-		g.drawLine((int) pilot.getCurrentZPosition() + diameter / 2,
-				(int) pilot.getCurrentYPosition() + diameter / 2, 930, 240);
-		g.drawLine((int) pilot.getCurrentZPosition() + diameter / 2,
-				(int) pilot.getCurrentYPosition() + diameter / 2, 1035, 240);
-		g.drawLine((int) pilot.getCurrentZPosition() + diameter / 2,
-				(int) pilot.getCurrentYPosition() + diameter / 2, 1140, 240);
+		Vector pos = pilot.getCurrentPosition();
+		
+		g.fillOval((int)pos.getZ(), (int)pos.getY(), 40, 40);
+		g.drawLine((int) pos.getZ() + diameter / 2, (int) pos.getY() + diameter / 2, 720, 240);
+		g.drawLine((int) pos.getZ() + diameter / 2,	(int) pos.getY() + diameter / 2, 825, 240);
+		g.drawLine((int) pos.getZ() + diameter / 2,	(int) pos.getY() + diameter / 2, 930, 240);
+		g.drawLine((int) pos.getZ() + diameter / 2,	(int) pos.getY() + diameter / 2, 1035, 240);
+		g.drawLine((int) pos.getZ() + diameter / 2,	(int) pos.getY() + diameter / 2, 1140, 240);
 
 		g.setColor(Color.RED);
 		int[] xPoints = { 680, 846, 1012, 1180 };
