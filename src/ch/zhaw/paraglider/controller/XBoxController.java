@@ -54,9 +54,20 @@ public class XBoxController implements Runnable {
 
 		Controllers.poll();
 		for(int i = 0; i<Controllers.getControllerCount();i++) {
+			System.out.println(Controllers.getController(i).getName());
 			if(Controllers.getController(i).getName().contains("Xbox")) {
 				positionOfXboxController = i;
+				
+				for(int j=0; j<Controllers.getController(i).getAxisCount();j++)
+				{
+					System.out.println(Controllers.getController(i).getAxisName(j));
+				}
+				for(int j=0; j<Controllers.getController(i).getButtonCount();j++)
+				{
+					System.out.println(Controllers.getController(i).getButtonName(j));
+				}
 			}
+			
 		}
 		
 		controller = Controllers.getController(positionOfXboxController);
