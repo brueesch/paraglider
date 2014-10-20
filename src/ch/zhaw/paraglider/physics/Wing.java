@@ -65,8 +65,7 @@ public class Wing {
 	public double getVerticalSpeed() {
 
 		return (1 / (2 * OPTIMAL_GLIDE_RATIO))
-				* (Math.pow(getHorizontalSpeed() / SPEED_OPTIMAL_GLIDING, 2) + Math
-						.pow(SPEED_OPTIMAL_GLIDING / getHorizontalSpeed(), 2))
+				* (Math.pow(getHorizontalSpeed() / SPEED_OPTIMAL_GLIDING, 2) + Math.pow(SPEED_OPTIMAL_GLIDING / getHorizontalSpeed(), 2))
 				* getHorizontalSpeed() / 3.6;
 	}
 
@@ -86,8 +85,7 @@ public class Wing {
 	 * @return double
 	 */
 	public double getCurrentGlideRatio() {
-		return 1 / ((constant1 * Math.pow(currentSpeed, 2)) + (constant2 / Math
-				.pow(currentSpeed, 2)));
+		return 1 / ((constant1 * Math.pow(currentSpeed, 2)) + (constant2 / Math.pow(currentSpeed, 2)));
 	}
 
 	/**
