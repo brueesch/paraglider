@@ -17,7 +17,7 @@ public class XBoxController implements Runnable {
 	/**
 	 * Position of the XBox Controller
 	 */
-	private final int POSITION_OF_XBOX_CONTROLLER = 4;
+	private int positionOfXboxController;
 	/**
 	 * Constant for convertion from the Controller input to the speed change.
 	 */
@@ -53,8 +53,14 @@ public class XBoxController implements Runnable {
 		}
 
 		Controllers.poll();
-
-		controller = Controllers.getController(POSITION_OF_XBOX_CONTROLLER);
+		for(int i = 0; i<Controllers.getControllerCount();i++) {
+			if(Controllers.getController(i).getName().contains("Xbox")) {
+				positionOfXboxController = i;
+			}
+		}
+		
+		controller = Controllers.getController(positionOfXboxController);
+		
 		//controller.setDeadZone(0, (float) 0.2);
 		//controller.setDeadZone(2, (float) 0.2);
 
