@@ -195,6 +195,8 @@ public final class Pilot {
 
 		double cosAngle = u.getAngleToVector(v);
 
+					
+		
 		if (cosAngle < 0) {
 			cosAngle = 1 + cosAngle;
 			movesForward = false;

@@ -54,17 +54,17 @@ public class XBoxController implements Runnable {
 
 		Controllers.poll();
 		for(int i = 0; i<Controllers.getControllerCount();i++) {
-			System.out.println(Controllers.getController(i).getName());
-			if(Controllers.getController(i).getName().contains("Xbox")) {
+			if(Controllers.getController(i).getName().toUpperCase().contains("Xbox".toUpperCase())) {
 				positionOfXboxController = i;
-				
+
+				System.out.println(Controllers.getController(i).getName());
 				for(int j=0; j<Controllers.getController(i).getAxisCount();j++)
 				{
-					System.out.println(Controllers.getController(i).getAxisName(j));
+					System.out.println(Controllers.getController(i).getAxisName(j) + " - Axis: " +j );
 				}
 				for(int j=0; j<Controllers.getController(i).getButtonCount();j++)
 				{
-					System.out.println(Controllers.getController(i).getButtonName(j));
+					System.out.println(Controllers.getController(i).getButtonName(j) + " - Button: " +j );
 				}
 			}
 			
@@ -84,8 +84,7 @@ public class XBoxController implements Runnable {
 	public void run() {
 		while (true) {
 			controller.poll();
-			if (controller.getAxisValue(0) == 0
-					&& controller.getAxisValue(2) == 0) {
+			if (controller.getAxisValue(0) == 0	&& controller.getAxisValue(2) == 0) {
 				activateController();
 			}
 

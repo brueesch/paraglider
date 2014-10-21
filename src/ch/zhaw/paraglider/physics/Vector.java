@@ -7,7 +7,7 @@ package ch.zhaw.paraglider.physics;
  * 
  */
 
-public class Vector {
+public class Vector extends Object {
 	
 	private double x;
 	private double y;
@@ -68,5 +68,22 @@ public class Vector {
 		return this.getScalarProduct(v) / (this.getNorm()*v.getNorm());	
 	}
 	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(obj == this){
+			return true;
+		}		
+		if((obj == null) || (obj.getClass() != this.getClass())){
+			return false;
+		}
+		
+		Vector v = (Vector) obj;
+		
+		if(v.getX() == this.getX() && v.getY() == this.getY() && v.getZ() == this.getZ()){
+			return true;
+		}
+		return false;
+	}
 
 }
