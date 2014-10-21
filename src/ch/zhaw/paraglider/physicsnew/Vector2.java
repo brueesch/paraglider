@@ -1,4 +1,4 @@
-package ch.zhaw.paraglider.physics;
+package ch.zhaw.paraglider.physicsnew;
 
 /**
  * This Class represents a Vector
@@ -7,7 +7,7 @@ package ch.zhaw.paraglider.physics;
  * 
  */
 
-public class Vector extends Object {
+public class Vector2 extends Object {
 	
 	private double x;
 	private double y;
@@ -24,7 +24,7 @@ public class Vector extends Object {
 	 * @param double y
 	 * @param double z
 	 */
-	public Vector(double x, double y, double z)
+	public Vector2(double x, double y, double z)
 	{
 		this.setX(x);
 		this.setY(y);
@@ -35,7 +35,7 @@ public class Vector extends Object {
 	 * Returns an Vector with three dimensions which values are 0	 
 	 *  
 	 */
-	public Vector(){
+	public Vector2(){
 		this.setX(0);
 		this.setY(0);
 		this.setZ(0);
@@ -65,16 +65,16 @@ public class Vector extends Object {
 		this.z = z;
 	}
 	
-	public Vector add(Vector v)
+	public Vector2 add(Vector2 v)
 	{
-		return new Vector(this.getX() + v.getX(), this.getY() + v.getY(), this.getZ() + v.getZ());
+		return new Vector2(this.getX() + v.getX(), this.getY() + v.getY(), this.getZ() + v.getZ());
 	}
-	public Vector sub(Vector v)
+	public Vector2 sub(Vector2 v)
 	{
-		return new Vector(this.getX() - v.getX(), this.getY() - v.getY(), this.getZ() - v.getZ());
+		return new Vector2(this.getX() - v.getX(), this.getY() - v.getY(), this.getZ() - v.getZ());
 	}
 	
-	public double getScalarProduct(Vector v)
+	public double getScalarProduct(Vector2 v)
 	{
 		return this.getX()* v.getX() + this.getY() * v.getY() + this.getZ() * v.getZ();
 	}
@@ -84,9 +84,9 @@ public class Vector extends Object {
 		return Math.sqrt(Math.pow(this.getX(), 2) + Math.pow(this.getY(), 2) + Math.pow(this.getZ(), 2));
 	}
 	
-	public double getAngleToVector(Vector v, Unit unit)
+	public double getAngleToVector(Vector2 v, ch.zhaw.paraglider.physicsnew.Vector2.Unit radian)
 	{
-		if(unit == Unit.Degree)
+		if(radian == Unit.Degree)
 		{
 			return Math.toDegrees(this.getScalarProduct(v) / (this.getNorm() * v.getNorm()));
 		}
@@ -104,7 +104,7 @@ public class Vector extends Object {
 			return false;
 		}
 		
-		Vector v = (Vector) obj;
+		Vector2 v = (Vector2) obj;
 		
 		if(v.getX() == this.getX() && v.getY() == this.getY() && v.getZ() == this.getZ()){
 			return true;
