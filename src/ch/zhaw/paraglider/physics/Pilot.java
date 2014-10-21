@@ -1,6 +1,7 @@
 package ch.zhaw.paraglider.physics;
 
 import ch.zhaw.paraglider.controller.RunGame;
+import ch.zhaw.paraglider.physics.Vector.Unit;
 
 /**
  * This Class handles the physics and the position of the pilot. In addition it
@@ -193,7 +194,7 @@ public final class Pilot {
 		Vector u = ZERO_POSITION.sub(ZERO_POINT);
 		Vector v = currentPosition.sub(ZERO_POINT);
 
-		double cosAngle = u.getAngleToVector(v);
+		double cosAngle = u.getAngleToVector(v, Unit.Radian);
 
 					
 		

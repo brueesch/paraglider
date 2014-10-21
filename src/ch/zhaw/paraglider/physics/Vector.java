@@ -13,6 +13,15 @@ public class Vector extends Object {
 	private double y;
 	private double z;
 	
+	public enum Unit
+	{
+		Radian, Degree;
+	}
+	
+	/*
+	 * Initialize the Vector
+	 * @params double x, double y, double z
+	 */
 	public Vector(double x, double y, double z)
 	{
 		this.setX(x);
@@ -63,9 +72,14 @@ public class Vector extends Object {
 		return Math.sqrt(Math.pow(this.getX(), 2) + Math.pow(this.getY(), 2) + Math.pow(this.getZ(), 2));
 	}
 	
-	public double getAngleToVector(Vector v)
+	public double getAngleToVector(Vector v, Unit unit)
 	{
-		return this.getScalarProduct(v) / (this.getNorm()*v.getNorm());	
+		if(unit == Unit.Radian)
+		{
+			return Math.toDegrees(this.getScalarProduct(v) / (this.getNorm() * v.getNorm()));
+		}
+		return this.getScalarProduct(v) / (this.getNorm() * v.getNorm());
+			
 	}
 	
 	@Override

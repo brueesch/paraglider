@@ -6,6 +6,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ch.zhaw.paraglider.physics.Vector.Unit;
+
 public class VectorTest {
 
 	Vector v = null;
@@ -80,9 +82,15 @@ public class VectorTest {
 	}
 
 	@Test
-	public void testGetAngleToVector() {
+	public void testGetAngleToVectorRadian() {
 		
-		assertEquals(v.getAngleToVector(new Vector(4,5,6)),0.9746,0.001);
+		assertEquals(v.getAngleToVector(new Vector(4,5,6),Unit.Radian),55.84,0.01);
+	}
+	
+	@Test
+	public void testGetAngleToVectorDegree() {
+		
+		assertEquals(v.getAngleToVector(new Vector(4,5,6),Unit.Degree),0.9746,0.001);
 	}
 
 }
