@@ -17,11 +17,11 @@ public class XBoxController implements Runnable {
 	/**
 	 * Position of the XBox Controller
 	 */
-	private int positionOfXboxController;
+	private int positionOfXboxController = -1;
 	/**
 	 * Constant for convertion from the Controller input to the speed change.
 	 */
-	private final double MULTIPLICATOR_CONTROLLER_SPEED = 8.5;
+	private final double MULTIPLICATOR_CONTROLLER_SPEED = 5;//8.5;
 	/**
 	 * Pilot instance.
 	 */
@@ -69,7 +69,7 @@ public class XBoxController implements Runnable {
 			}
 			
 		}
-		
+
 		controller = Controllers.getController(positionOfXboxController);
 		
 		//controller.setDeadZone(0, (float) 0.2);
@@ -103,8 +103,8 @@ public class XBoxController implements Runnable {
 				pilot.reset();
 			}
 			
-			System.out.println(controller.getAxisValue(0) + "      "
-					+ controller.getAxisValue(2));
+			//System.out.println(controller.getAxisValue(0) + "      "
+			//		+ controller.getAxisValue(2));
 			oldValueLeftWing = controlLeftWing(oldValueLeftWing);
 			oldValueRightWing = controlRightWing(oldValueRightWing);
 		}

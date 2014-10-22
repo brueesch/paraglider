@@ -1,7 +1,6 @@
 package ch.zhaw.paraglider.physics;
 
 import ch.zhaw.paraglider.controller.RunGame;
-import ch.zhaw.paraglider.physics.Vector.Unit;
 
 /**
  * This Class handles the physics and the position of the pilot. In addition it
@@ -15,69 +14,70 @@ public final class Pilot {
 	/**
 	 * Variable that defines the Weight of the Pilot in kg.
 	 */
-	private int weightOfPilot = 85;
-	
+	private int weightOfPilot = 120;//85;
+
 	/**
 	 * Constant to convert pixel into meter.
 	 */
 	private final double CONVERT_METER_AND_PIXEL = 20;
-	
+
 	/**
 	 * Constant to konvert km/h into m/s.
 	 */
 	private final double CONVERT_KMH_AND_MS = 3.6;
-	
+
 	/**
 	 * Constant to konvert secounds into milisecounds.
 	 */
 	private final double CONVERT_S_AND_MS = 1000;
-	
+
 	/**
 	 * Constant which defines the Lenght of the paraglider cord in m.
 	 */
 	private final double LENGTH_OF_CORD = 7.68;
-	
+
 	/**
 	 * Constant for the Gravitational Force in m per second squared.
 	 */
 	private final double GRAVITATIONAL_FORCE = 9.81;
-	
+
 	/**
 	 * Period time of the "pilot pendulum".
 	 */
-	private final double TIME_OF_PERIOD = (2 * Math.PI * Math.sqrt(LENGTH_OF_CORD / GRAVITATIONAL_FORCE));
-	
+	private final double TIME_OF_PERIOD = (2 * Math.PI * Math
+			.sqrt(LENGTH_OF_CORD / GRAVITATIONAL_FORCE));
+
 	/**
 	 * Start position of the pilot.
 	 */
-	private final Vector ZERO_POSITION = new Vector(310,394,910);
-	
+	private final Vector ZERO_POSITION = new Vector(310, 394, 910);
+
 	/**
 	 * Position of the Zero Point. In the middle of the paraglider, where the
 	 * line starts.
 	 */
-	private final Vector ZERO_POINT = new Vector(310,240,0);
-	
+	private final Vector ZERO_POINT = new Vector(310, 240, 0);
+
 	/**
 	 * The current position of the pilot.
 	 */
-	private Vector currentPosition = new Vector(ZERO_POSITION.getX(),ZERO_POSITION.getY(),ZERO_POSITION.getZ());
-	
+	private Vector currentPosition = new Vector(ZERO_POSITION.getX(),
+			ZERO_POSITION.getY(), ZERO_POSITION.getZ());
+
 	/**
 	 * Boolean which defines in which direction the movement is.
 	 */
-	private boolean movesForward = true;
-	
+	private boolean isOnPositiveSite = true;
+
 	/**
 	 * Pilot instance for the Singleton pattern.
 	 */
 	private static Pilot instance;
-	
+
 	/**
 	 * Constant with the current Forward Force.
 	 */
 	double fForward;
-	
 
 	/**
 	 * Private constructor - Singleton Pattern.
@@ -105,8 +105,7 @@ public final class Pilot {
 	 * 
 	 * @return Vector
 	 */
-	public Vector getCurrentPosition()
-	{
+	public Vector getCurrentPosition() {
 		return currentPosition;
 	}
 
@@ -117,7 +116,8 @@ public final class Pilot {
 	 */
 	public void setChangeInSpeed(double speed) {
 
-		fForward += (speed * CONVERT_KMH_AND_MS / (RunGame.REFRESHRATE / CONVERT_S_AND_MS))	* weightOfPilot;
+		fForward += (speed * CONVERT_KMH_AND_MS / (RunGame.REFRESHRATE / CONVERT_S_AND_MS))
+				* weightOfPilot;
 	}
 
 	/**
@@ -137,9 +137,10 @@ public final class Pilot {
 	public void setWeightOfPilot(int weight) {
 		weightOfPilot = weight;
 	}
-	
+
 	public void reset() {
-		currentPosition = new Vector(ZERO_POSITION.getX(),ZERO_POSITION.getY(),ZERO_POSITION.getZ());
+		currentPosition = new Vector(ZERO_POSITION.getX(),
+				ZERO_POSITION.getY(), ZERO_POSITION.getZ());
 		fForward = 0;
 	}
 
@@ -148,22 +149,42 @@ public final class Pilot {
 	 * current position of the x and y - axis to the calculated values.
 	 */
 	public void makeNextStep() {
-		calculateForces();
-		calculateChanges();
+		calculateXAxis();
+		calculateZAxis();
+		calculateYAxis();
 	}
 	
 	/**
-	 * Calculates the different Forces.
+	 * Calculates the X Axis.
 	 */
-	private void calculateForces() {
+	private void calculateXAxis() {
+		calculateForcesInTheXAxis();
+		calculateChangeInXAxis();
+	}
+
+	private void calculateChangeInXAxis() {
+		double acceleration = (fForward) / weightOfPilot;
+		double changeX = (acceleration * Math.pow(RunGame.REFRESHRATE
+				/ CONVERT_S_AND_MS, 2)) / 2;
+		currentPosition.setX(currentPosition.getX()
+				- (changeX * CONVERT_METER_AND_PIXEL));
+	}
+
+	/**
+	 * Calculates the different Forces in the X-Axis.
+	 */
+	private void calculateForcesInTheXAxis() {
 		double fg = weightOfPilot * GRAVITATIONAL_FORCE;
-		double fCord = fg * Math.cos(getCurrentAngle());
+		double fCord = fg * getCurrentCos();
 		double fBackwards = Math.sqrt(Math.pow(fg, 2) - Math.pow(fCord, 2));
 
-		if (movesForward) {
-			fForward += fBackwards;
+		System.out.println("Forward Force: " + fForward + " Backward Force"
+				+ fBackwards + " Fg: " + fg);
+
+		if (isOnPositiveSite) {
+				fForward += fBackwards;
 		} else {
-			fForward -= fBackwards;
+				fForward -= fBackwards;
 		}
 
 		if (fForward > 0) {
@@ -187,49 +208,41 @@ public final class Pilot {
 	 * Returns the current Angle, between the current positon of the pilot and
 	 * his position in flight without speed change.
 	 * 
-	 * @return double with the angle in radian.
+	 * @return double cos of Angle
 	 */
-	private double getCurrentAngle()
-	{
-		Vector u = ZERO_POSITION.sub(ZERO_POINT);
-		Vector v = currentPosition.sub(ZERO_POINT);
+	private double getCurrentCos() {
+		double[] u = { ZERO_POSITION.getX() - ZERO_POINT.getX(),
+				ZERO_POSITION.getY() - ZERO_POINT.getY() };
+		double[] v = { currentPosition.getX() - ZERO_POINT.getX(),
+				currentPosition.getY() - ZERO_POINT.getY() };
 
-		double cosAngle = u.getAngleToVector(v, Unit.Radian);	
-		
-		if (cosAngle < 0) {
-			cosAngle = 1 + cosAngle;
-			movesForward = false;
+		double upperFormula = ((u[0] * v[0]) + (u[1] * v[1]));
+		double lowerFormula = (Math.sqrt(Math.pow(u[0], 2) + Math.pow(u[1], 2)))
+				* (Math.sqrt(Math.pow(v[0], 2) + Math.pow(v[1], 2)));
+		double cosAngle = upperFormula / lowerFormula;
+
+		if (currentPosition.getX() < ZERO_POSITION.getX()) {
+			isOnPositiveSite = false;
 		} else {
-			cosAngle = 1 - cosAngle;
-			movesForward = true;
+			isOnPositiveSite = true;
 		}
-		return Math.acos(cosAngle);
+		return cosAngle;
 	}
-	/**
-	 * calculates the change of all axis
-	 */
-	private void calculateChanges()
-	{
-		/**
-		 * Calculates the change in the x-axis.
-		 */
-		double acceleration = (fForward) / weightOfPilot;
-		double changeX = (acceleration * Math.pow(RunGame.REFRESHRATE/ CONVERT_S_AND_MS, 2)) / 2;
-		currentPosition.setX(currentPosition.getX() - (changeX * CONVERT_METER_AND_PIXEL));
-		
-		/**
-		 * calculates the change in the y axis.
-		 */
-		double x = (currentPosition.getX() - ZERO_POSITION.getX())/ CONVERT_METER_AND_PIXEL;
+
+	private void calculateZAxis() {
+		Glider glider = Glider.getInstance();
+		double angle = glider.getAngleOfTheGlider();
+		double changeZ = Math.sin(angle) * LENGTH_OF_CORD;
+		currentPosition.setZ(ZERO_POSITION.getZ()
+				+ (changeZ * CONVERT_METER_AND_PIXEL));
+	}
+
+	private void calculateYAxis() {
+		double x = (currentPosition.getX() - ZERO_POSITION.getX())
+				/ CONVERT_METER_AND_PIXEL;
 		double y = Math.sqrt(Math.pow(LENGTH_OF_CORD, 2) - Math.pow(x, 2));
 		currentPosition.setY((y * CONVERT_METER_AND_PIXEL) + ZERO_POINT.getY());
-		
-		/**
-		 * Calculates the change in the z-axis.
-		 */
-		Glider glider = Glider.getInstance();		
-		double angle = glider.getAngleOfTheGlider();		
-		double changeZ = Math.sin(angle) * LENGTH_OF_CORD;
-		currentPosition.setZ(ZERO_POSITION.getZ() + (changeZ * CONVERT_METER_AND_PIXEL));
 	}
+
+
 }
