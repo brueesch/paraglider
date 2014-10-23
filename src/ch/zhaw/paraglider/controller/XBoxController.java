@@ -34,6 +34,11 @@ public class XBoxController implements Runnable {
 	 * Right and Left Wing variable.
 	 */
 	private Wing leftWing, rightWing;
+	
+	/**
+	 * Says if a xBox controller is connected.
+	 */
+	private boolean controllerIsConnected = false;
 
 	/**
 	 * Initializes the xbox Controller.
@@ -69,12 +74,18 @@ public class XBoxController implements Runnable {
 			}
 			
 		}
-
-		controller = Controllers.getController(positionOfXboxController);
+		if(positionOfXboxController != -1) {
+			controller = Controllers.getController(positionOfXboxController);
+			controllerIsConnected = true;
+		}
 		
 		//controller.setDeadZone(0, (float) 0.2);
 		//controller.setDeadZone(2, (float) 0.2);
 
+	}
+	
+	public boolean isControllerConnected() {
+		return controllerIsConnected;
 	}
 
 	/**
