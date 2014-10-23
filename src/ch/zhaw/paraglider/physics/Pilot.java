@@ -1,6 +1,6 @@
 package ch.zhaw.paraglider.physics;
 
-import ch.zhaw.paraglider.controller.RunGame;
+
 
 /**
  * This Class handles the physics and the position of the pilot. In addition it
@@ -19,13 +19,13 @@ public final class Pilot {
 	/**
 	 * Start position of the pilot.
 	 */
-	private final Vector ZERO_POSITION = new Vector(310, 910, 394);
+	private final Vector ZERO_POSITION = new Vector(0, 0, Constants.LENGTH_OF_CORD);
 
 	/**
 	 * Position of the Zero Point. In the middle of the paraglider, where the
 	 * line starts.
 	 */
-	private final Vector ZERO_POINT = new Vector(310, 0, 240);
+	private final Vector ZERO_POINT = new Vector(0, 0, 0);
 
 	/**
 	 * The current position of the pilot.
@@ -185,8 +185,7 @@ public final class Pilot {
 		double lowerFormula = (Math.sqrt(Math.pow(u[0], 2) + Math.pow(u[1], 2)))
 				* (Math.sqrt(Math.pow(v[0], 2) + Math.pow(v[1], 2)));
 		double cosAngle = upperFormula / lowerFormula;
-		
-		System.out.println(cosAngle);
+
 
 		if (currentPosition.getX() < ZERO_POSITION.getX()) {
 			isOnPositiveSite = false;
@@ -204,9 +203,18 @@ public final class Pilot {
 	}
 
 	private void calculateZAxis() {
+		double x = currentPosition.getX() - ZERO_POSITION.getX();
+		double y = currentPosition.getY() - ZERO_POSITION.getY();
+		double a = Math.sqrt(Math.pow(x, 2)+Math.pow(y, 2));
+		double z = Math.sqrt(Math.pow(Constants.LENGTH_OF_CORD, 2)-Math.pow(a, 2));
+		System.out.println(z);
+		currentPosition.setZ(z);
+		
+		
+		/*
 		double x = Constants.convertPixelToMeter(currentPosition.getX() - ZERO_POSITION.getX());
 		double z = Math.sqrt(Math.pow(Constants.LENGTH_OF_CORD, 2) - Math.pow(x, 2));
-		currentPosition.setZ(Constants.convertMeterToPixel(z) + ZERO_POINT.getZ());
+		currentPosition.setZ(Constants.convertMeterToPixel(z) + ZERO_POINT.getZ());*/
 	}
 
 

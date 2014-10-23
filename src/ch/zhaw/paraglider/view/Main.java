@@ -141,6 +141,7 @@ public class Main extends JPanel implements ChangeListener {
 	 * @param g
 	 */
 	private void drawLeftView(Graphics g) {
+		int[] ZeroPoint = {330, 240};
 		int diameter = 40;
 		Color color = g.getColor();
 		g.setColor(Color.black);
@@ -216,12 +217,11 @@ public class Main extends JPanel implements ChangeListener {
 		
 		if(e.getSource().equals(rightSlider)) {
 			double value = rightSlider.getValue();
-			pilot.setChangeInSpeed(-((value - oldRightValue)*3.6));
+			pilot.setChangeInSpeed(-((value - oldRightValue)));
 			Wing rightWing;
 			try {
 				rightWing = glider.getRightWing();
-				rightWing.changeCurrentSpeed(-(value - oldRightValue)
-						/100 * 5*3.6);
+				rightWing.changeCurrentSpeed(-(value - oldRightValue));
 				oldRightValue = value;
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -231,12 +231,11 @@ public class Main extends JPanel implements ChangeListener {
 		
 		if(e.getSource().equals(leftSlider)) {
 			double value = leftSlider.getValue();
-			pilot.setChangeInSpeed(-((value - oldLeftValue)*3.6));
+			pilot.setChangeInSpeed(-((value - oldLeftValue)));
 			Wing leftWing;
 			try {
 				leftWing = glider.getLeftWing();
-				leftWing.changeCurrentSpeed(-(value - oldLeftValue)
-						/100 * 5*3.6);
+				leftWing.changeCurrentSpeed(-(value - oldLeftValue));
 				oldLeftValue = value;
 			} catch (Exception e1) {
 				e1.printStackTrace();
