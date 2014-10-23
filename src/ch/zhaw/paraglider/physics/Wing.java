@@ -18,7 +18,7 @@ public class Wing {
 	 * Constant for the speed when flying with the optimal glide ratio. Default
 	 * = 35 km/h
 	 */
-	private final double SPEED_OPTIMAL_GLIDING = 35;
+	private final double SPEED_OPTIMAL_GLIDING = 9.72;
 	/**
 	 * Mathematical constant for calculations.
 	 */
@@ -66,7 +66,7 @@ public class Wing {
 
 		return (1 / (2 * OPTIMAL_GLIDE_RATIO))
 				* (Math.pow(getHorizontalSpeed() / SPEED_OPTIMAL_GLIDING, 2) + Math.pow(SPEED_OPTIMAL_GLIDING / getHorizontalSpeed(), 2))
-				* getHorizontalSpeed() / 3.6;
+				* getHorizontalSpeed();
 	}
 
 	/**

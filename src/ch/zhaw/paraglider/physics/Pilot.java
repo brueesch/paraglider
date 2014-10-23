@@ -85,7 +85,7 @@ public final class Pilot {
 	 */
 	public void setChangeInSpeed(double speed) {
 
-		fForward += (Constants.convertKmhToMs(speed) / Constants.convertMsToSec(RunGame.REFRESHRATE)) * weightOfPilot;
+		fForward += (speed / Constants.TIME_INTERVALL) * weightOfPilot;
 	}
 
 	/**

@@ -21,7 +21,7 @@ public class XBoxController implements Runnable {
 	/**
 	 * Constant for convertion from the Controller input to the speed change.
 	 */
-	private final double MULTIPLICATOR_CONTROLLER_SPEED = 5;//8.5;
+	private final double MULTIPLICATOR_CONTROLLER_SPEED = 5*3.6;//8.5;
 	/**
 	 * Pilot instance.
 	 */

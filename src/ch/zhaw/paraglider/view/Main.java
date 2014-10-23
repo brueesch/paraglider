@@ -216,12 +216,12 @@ public class Main extends JPanel implements ChangeListener {
 		
 		if(e.getSource().equals(rightSlider)) {
 			double value = rightSlider.getValue();
-			pilot.setChangeInSpeed(-((value - oldRightValue)));
+			pilot.setChangeInSpeed(-((value - oldRightValue)*3.6));
 			Wing rightWing;
 			try {
-				rightWing = glider.getWing("right");
+				rightWing = glider.getRightWing();
 				rightWing.changeCurrentSpeed(-(value - oldRightValue)
-						/100 * 5);
+						/100 * 5*3.6);
 				oldRightValue = value;
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -231,12 +231,12 @@ public class Main extends JPanel implements ChangeListener {
 		
 		if(e.getSource().equals(leftSlider)) {
 			double value = leftSlider.getValue();
-			pilot.setChangeInSpeed(-((value - oldLeftValue)));
+			pilot.setChangeInSpeed(-((value - oldLeftValue)*3.6));
 			Wing leftWing;
 			try {
-				leftWing = glider.getWing("left");
+				leftWing = glider.getLeftWing();
 				leftWing.changeCurrentSpeed(-(value - oldLeftValue)
-						/100 * 5);
+						/100 * 5*3.6);
 				oldLeftValue = value;
 			} catch (Exception e1) {
 				e1.printStackTrace();
