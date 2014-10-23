@@ -1,5 +1,6 @@
 package ch.zhaw.paraglider.controller;
 
+import ch.zhaw.paraglider.physics.Constants;
 import ch.zhaw.paraglider.physics.Pilot;
 import ch.zhaw.paraglider.view.Main;
 
@@ -11,12 +12,7 @@ import ch.zhaw.paraglider.view.Main;
  * 
  */
 public class RunGame implements Runnable {
-
-	/**
-	 * Constant for the Refreshrate. Default: 5 ms
-	 */
-	public static int REFRESHRATE = 1;
-
+	
 	/**
 	 * Variable for the pilot Instance.
 	 */
@@ -47,7 +43,7 @@ public class RunGame implements Runnable {
 			pilot.makeNextStep();
 			main.repaint();
 			try {
-				Thread.sleep(REFRESHRATE);
+				Thread.sleep((int)(Constants.TIME_INTERVALL*1000));
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

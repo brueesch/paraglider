@@ -48,8 +48,8 @@ public class XBoxController implements Runnable {
 		this.glider = Glider.getInstance();
 		try {
 			Controllers.create();
-			leftWing = glider.getWing("left");
-			rightWing = glider.getWing("right");
+			leftWing = glider.getLeftWing();
+			rightWing = glider.getRightWing();
 			
 		} catch (LWJGLException e) {
 			e.printStackTrace();

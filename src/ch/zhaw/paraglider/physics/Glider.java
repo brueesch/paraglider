@@ -8,40 +8,27 @@ package ch.zhaw.paraglider.physics;
  */
 public class Glider {
 
-	/**
-	 * Constant for left wing.
-	 */
-	private static final int LEFT_WING = 0;
+	private Wing LeftWing = new Wing("Left");
+	private Wing RightWing = new Wing("Right");
+	private Pilot pilot = Pilot.getInstance();
 	
-	/**
-	 * Constant for the right wing.
-	 */
-	private static final int RIGHT_WING = 1;
+	/* Angle caused by the pendulum-effect */
+	private double pitchAngle = 0;
 	
-	/**
-	 * Array of wings. Contains space for two wing objects.
-	 */
-	private Wing[] wings = new Wing[2];
+	/* Angle caused by the centrifugal-forces*/
+	private double rollAngle = 0;
+	
+	/* Angle caused by the curveflight */
+	private double yawAngle = 0;
 	
 	/**
 	 * Constant defines which angle the paraglider flies per km/h 
 	 * speed difference between the two wings.
 	 */
 	private final double ANGLE_PER_KMH = 5.2;
-
-	/**
-	 * Instance of the glider for the Singleton pattern.
-	 */
-	private static Glider instance;
 	
-	/**
-	 * Constructor. Initializes the left and the right wing.
-	 * Private because of the Singleton pattern.
-	 */
-	private Glider() {
-		wings[LEFT_WING] = new Wing("Left");
-		wings[RIGHT_WING] = new Wing("Right");
-	}
+	private static Glider instance;
+	private Glider() {}
 	
 	/**
 	 * Returns the Instance of the Glider.
@@ -57,38 +44,51 @@ public class Glider {
 	
 	public double getHorizontalSpeed() {
 		//TODO Calculate new horizontal speed.
-		return wings[LEFT_WING].getHorizontalSpeed();
+		return LeftWing.getHorizontalSpeed();
 	}
 	
 	public double getVerticalSpeed() {
 		//TODO Calculate new vertical speed.
-		return wings[LEFT_WING].getVerticalSpeed();
+		return LeftWing.getVerticalSpeed();
 	}
 	
 	public double getCurrentGlideRatio() {
 		//TODO Calculate new glide ratio.
-		return wings[LEFT_WING].getCurrentGlideRatio();
+		return LeftWing.getCurrentGlideRatio();
 	}
 	
-	public Wing getWing(String name) throws Exception {
-		if(name.equalsIgnoreCase("left")) {
-			return wings[LEFT_WING];
-		}
-		else if(!name.equalsIgnoreCase("right")) {
-			throw new Exception("There only exist a right and left wing");
-		}
-		
-		return wings[RIGHT_WING];
+	public Wing getLeftWing() {
+		return RightWing;
+	}
+	public Wing getRightWing() {
+		return RightWing;
+	}
+
+	public double getPitchAngle() {
+		return pitchAngle;
+	}
+
+	public double getRollAngle() {
+		return rollAngle;
+	}
+
+	public double getYawAngle() {
+		return yawAngle;
+	}
+	
+	private void calculateYawAngle()
+	{
 		
 	}
+	
 	
 	/**
 	 * Returns the angle of the glider in relation to the ground.
 	 * @return double angle in radian.
 	 */
 	public double getAngleOfTheGlider() {
-		double currentSpeedLeftWing = wings[LEFT_WING].getHorizontalSpeed();
-		double currentSpeedRightWing = wings[RIGHT_WING].getHorizontalSpeed();
+		double currentSpeedLeftWing = LeftWing.getHorizontalSpeed();
+		double currentSpeedRightWing = RightWing.getHorizontalSpeed();
 		double speedDifferenz = currentSpeedRightWing -currentSpeedLeftWing;
 		
 		//Left Turn
@@ -107,6 +107,8 @@ public class Glider {
 		
 		
 	}
+
+	
 	
 
 }

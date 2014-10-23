@@ -8,9 +8,14 @@ public class Constants {
 	public static final double GRAVITATIONAL_FORCE = 9.81;
 	
 	/**
-	 * Constant which defines the Lenght of the paraglider cord in m.
+	 * Constant which defines the Length of the paraglider cord in m.
 	 */
 	public static final double LENGTH_OF_CORD = 7.68;
+	
+	/**
+	 * Constant which defines the wingspan of the Glider in m.
+	 */
+	public static final double WINGSPAN = 12;
 	
 	/**
 	 * Period time of the "pilot pendulum".
@@ -18,9 +23,10 @@ public class Constants {
 	public static final double TIME_OF_PERIOD = (2 * Math.PI * Math.sqrt(Constants.LENGTH_OF_CORD / Constants.GRAVITATIONAL_FORCE));
 
 	/**
-	 * Constant to convert pixel into meter.
+	 * Time intervall in Seconds
 	 */
-	public static final double CONVERT_METER_TO_PIXEL = 20;
+	public static final double TIME_INTERVALL = 0.001;
+	
 
 	public static double convertMeterToPixel(double meter)
 	{
