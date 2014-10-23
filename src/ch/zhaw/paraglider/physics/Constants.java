@@ -3,6 +3,11 @@ package ch.zhaw.paraglider.physics;
 public class Constants {
 	
 	/**
+	 * Constant which defines the wingspan of the Glider in m.
+	 */
+	public static final double GLIDER_WINGSPAN = 12;
+	
+	/**
 	 * Constant for the Gravitational Force in m per second squared.
 	 */
 	public static final double GRAVITATIONAL_FORCE = 9.81;
@@ -12,10 +17,7 @@ public class Constants {
 	 */
 	public static final double LENGTH_OF_CORD = 7.68;
 	
-	/**
-	 * Constant which defines the wingspan of the Glider in m.
-	 */
-	public static final double WINGSPAN = 12;
+	
 	
 	/**
 	 * Period time of the "pilot pendulum".

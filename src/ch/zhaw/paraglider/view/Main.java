@@ -219,7 +219,7 @@ public class Main extends JPanel implements ChangeListener {
 			pilot.setChangeInSpeed(-((value - oldRightValue)));
 			Wing rightWing;
 			try {
-				rightWing = glider.getWing("right");
+				rightWing = glider.getRightWing();
 				rightWing.changeCurrentSpeed(-(value - oldRightValue)
 						/100 * 5);
 				oldRightValue = value;
@@ -234,7 +234,7 @@ public class Main extends JPanel implements ChangeListener {
 			pilot.setChangeInSpeed(-((value - oldLeftValue)));
 			Wing leftWing;
 			try {
-				leftWing = glider.getWing("left");
+				leftWing = glider.getLeftWing();
 				leftWing.changeCurrentSpeed(-(value - oldLeftValue)
 						/100 * 5);
 				oldLeftValue = value;

@@ -77,7 +77,38 @@ public class Glider {
 	}
 	
 	private void calculateYawAngle()
-	{
+	{		
+		
+		double pathLeft = LeftWing.getHorizontalSpeed() * Constants.TIME_INTERVALL;
+		double pathRight = RightWing.getHorizontalSpeed() * Constants.TIME_INTERVALL;
+		
+		if(pathLeft == pathRight)
+		{
+			return;
+		}
+		
+		double radius = 0;
+		
+		/* Left Curve */
+		if(pathLeft < pathRight)
+		{
+			double xa = pathLeft;
+			double xb = pathRight;
+			double rb = Constants.GLIDER_WINGSPAN;
+			double ra = (xa*rb)/(xb-xa);
+			double r = ra + rb;
+			yawAngle += Math.toDegrees(xb/r);
+		}
+		/* Right Curve */
+		else
+		{
+			double xa = pathRight;
+			double xb = pathLeft;
+			double rb = Constants.GLIDER_WINGSPAN;
+			double ra = (xa*rb)/(xb-xa);
+			double r = ra + rb;
+			yawAngle -= Math.toDegrees(xb/r);
+		}
 		
 	}
 	
