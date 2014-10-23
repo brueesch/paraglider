@@ -224,7 +224,6 @@ public class Main extends JPanel implements ChangeListener {
 						/100 * 5);
 				oldRightValue = value;
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			
@@ -240,7 +239,6 @@ public class Main extends JPanel implements ChangeListener {
 						/100 * 5);
 				oldLeftValue = value;
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}	
 		}
