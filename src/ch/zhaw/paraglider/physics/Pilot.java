@@ -19,13 +19,13 @@ public final class Pilot {
 	/**
 	 * Start position of the pilot.
 	 */
-	private final Vector ZERO_POSITION = new Vector(310, 394, 910);
+	private final Vector ZERO_POSITION = new Vector(310, 910, 394);
 
 	/**
 	 * Position of the Zero Point. In the middle of the paraglider, where the
 	 * line starts.
 	 */
-	private final Vector ZERO_POINT = new Vector(310, 240, 0);
+	private final Vector ZERO_POINT = new Vector(310, 0, 240);
 
 	/**
 	 * The current position of the pilot.
@@ -118,8 +118,8 @@ public final class Pilot {
 	 */
 	public void makeNextStep() {
 		calculateXAxis();
-		calculateZAxis();
 		calculateYAxis();
+		calculateZAxis();
 	}
 	
 	/**
@@ -151,6 +151,7 @@ public final class Pilot {
 				fForward -= fBackwards;
 		}
 
+		
 		if (fForward > 0) {
 			fForward -= getDamping();
 		} else {
@@ -176,14 +177,16 @@ public final class Pilot {
 	 */
 	private double getCurrentCos() {
 		double[] u = { ZERO_POSITION.getX() - ZERO_POINT.getX(),
-				ZERO_POSITION.getY() - ZERO_POINT.getY() };
+				ZERO_POSITION.getZ() - ZERO_POINT.getZ() };
 		double[] v = { currentPosition.getX() - ZERO_POINT.getX(),
-				currentPosition.getY() - ZERO_POINT.getY() };
+				currentPosition.getZ() - ZERO_POINT.getZ() };
 
 		double upperFormula = ((u[0] * v[0]) + (u[1] * v[1]));
 		double lowerFormula = (Math.sqrt(Math.pow(u[0], 2) + Math.pow(u[1], 2)))
 				* (Math.sqrt(Math.pow(v[0], 2) + Math.pow(v[1], 2)));
 		double cosAngle = upperFormula / lowerFormula;
+		
+		System.out.println(cosAngle);
 
 		if (currentPosition.getX() < ZERO_POSITION.getX()) {
 			isOnPositiveSite = false;
@@ -193,17 +196,17 @@ public final class Pilot {
 		return cosAngle;
 	}
 
-	private void calculateZAxis() {
+	private void calculateYAxis() {
 		Glider glider = Glider.getInstance();
 		double angle = glider.getAngleOfTheGlider();
-		double changeZ = Math.sin(angle) * Constants.LENGTH_OF_CORD;
-		currentPosition.setZ(ZERO_POSITION.getZ()+ Constants.convertMeterToPixel(changeZ));
+		double changeY = Math.sin(angle) * Constants.LENGTH_OF_CORD;
+		currentPosition.setY(ZERO_POSITION.getY()+ Constants.convertMeterToPixel(changeY));
 	}
 
-	private void calculateYAxis() {
+	private void calculateZAxis() {
 		double x = Constants.convertPixelToMeter(currentPosition.getX() - ZERO_POSITION.getX());
-		double y = Math.sqrt(Math.pow(Constants.LENGTH_OF_CORD, 2) - Math.pow(x, 2));
-		currentPosition.setY(Constants.convertMeterToPixel(y) + ZERO_POINT.getY());
+		double z = Math.sqrt(Math.pow(Constants.LENGTH_OF_CORD, 2) - Math.pow(x, 2));
+		currentPosition.setZ(Constants.convertMeterToPixel(z) + ZERO_POINT.getZ());
 	}
 
 

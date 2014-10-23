@@ -152,26 +152,26 @@ public class Main extends JPanel implements ChangeListener {
 		g.drawString("Gleitrate: " + glider.getCurrentGlideRatio(), 50, 155);
 
 		g.fillOval((int) pilot.getCurrentPosition().getX(), (int) pilot
-				.getCurrentPosition().getY(), diameter, diameter);
+				.getCurrentPosition().getZ(), diameter, diameter);
 		g.drawLine((int) pilot.getCurrentPosition().getX() + diameter / 2,
-				(int) pilot.getCurrentPosition().getY() + diameter / 2, 270,
+				(int) pilot.getCurrentPosition().getZ() + diameter / 2, 270,
 				240);
 		g.drawLine((int) pilot.getCurrentPosition().getX() + diameter / 2,
-				(int) pilot.getCurrentPosition().getY() + diameter / 2, 330,
+				(int) pilot.getCurrentPosition().getZ() + diameter / 2, 330,
 				240);
 		g.drawLine((int) pilot.getCurrentPosition().getX() + diameter / 2,
-				(int) pilot.getCurrentPosition().getY() + diameter / 2, 390,
+				(int) pilot.getCurrentPosition().getZ() + diameter / 2, 390,
 				240);
 
 		g.setColor(Color.RED);
 		int[] xPointsParaglider = { 230, 330, 430 };
-		int[] yPointsParaglider = { 240, 180, 240 };
-		g.fillPolygon(xPointsParaglider, yPointsParaglider, 3);
+		int[] zPointsParaglider = { 240, 180, 240 };
+		g.fillPolygon(xPointsParaglider, zPointsParaglider, 3);
 
 		g.setColor(Color.BLUE);
 		int[] xPointsArrow = { 80, 120, 120, 140, 120, 120, 80 };
-		int[] yPointsArrow = { 80, 80, 70, 90, 110, 100, 100 };
-		g.fillPolygon(xPointsArrow, yPointsArrow, xPointsArrow.length);
+		int[] zPointsArrow = { 80, 80, 70, 90, 110, 100, 100 };
+		g.fillPolygon(xPointsArrow, zPointsArrow, xPointsArrow.length);
 		g.setColor(color);
 	}
 
@@ -189,22 +189,22 @@ public class Main extends JPanel implements ChangeListener {
 
 		Vector pos = pilot.getCurrentPosition();
 
-		g.fillOval((int) pos.getZ(), (int) pos.getY(), 40, 40);
-		g.drawLine((int) pos.getZ() + diameter / 2, (int) pos.getY() + diameter
+		g.fillOval((int) pos.getY(), (int) pos.getZ(), 40, 40);
+		g.drawLine((int) pos.getY() + diameter / 2, (int) pos.getZ() + diameter
 				/ 2, 720, 240);
-		g.drawLine((int) pos.getZ() + diameter / 2, (int) pos.getY() + diameter
+		g.drawLine((int) pos.getY() + diameter / 2, (int) pos.getZ() + diameter
 				/ 2, 825, 240);
-		g.drawLine((int) pos.getZ() + diameter / 2, (int) pos.getY() + diameter
+		g.drawLine((int) pos.getY() + diameter / 2, (int) pos.getZ() + diameter
 				/ 2, 930, 240);
-		g.drawLine((int) pos.getZ() + diameter / 2, (int) pos.getY() + diameter
+		g.drawLine((int) pos.getY() + diameter / 2, (int) pos.getZ() + diameter
 				/ 2, 1035, 240);
-		g.drawLine((int) pos.getZ() + diameter / 2, (int) pos.getY() + diameter
+		g.drawLine((int) pos.getY() + diameter / 2, (int) pos.getZ() + diameter
 				/ 2, 1140, 240);
 
 		g.setColor(Color.RED);
-		int[] xPoints = { 680, 846, 1012, 1180 };
-		int[] yPoints = { 240, 180, 180, 240 };
-		g.fillPolygon(xPoints, yPoints, 4);
+		int[] yPoints = { 680, 846, 1012, 1180 };
+		int[] zPoints = { 240, 180, 180, 240 };
+		g.fillPolygon(yPoints, zPoints, 4);
 		g.setColor(color);
 	}
 
