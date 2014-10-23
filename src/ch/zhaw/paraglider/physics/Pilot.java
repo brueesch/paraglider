@@ -133,7 +133,7 @@ public final class Pilot {
 	private void calculateChangeInXAxis() {
 		double acceleration = (fForward) / weightOfPilot;
 		
-		double changeX = (acceleration * Math.pow(Constants.convertMsToSec(RunGame.REFRESHRATE), 2)) / 2;
+		double changeX = (acceleration * Math.pow(Constants.TIME_INTERVALL, 2)) / 2;
 		currentPosition.setX(currentPosition.getX()	- Constants.convertMeterToPixel(changeX));
 	}
 
