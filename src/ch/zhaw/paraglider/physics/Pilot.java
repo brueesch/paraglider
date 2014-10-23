@@ -17,37 +17,6 @@ public final class Pilot {
 	private int weightOfPilot = 120;//85;
 
 	/**
-	 * Constant to convert pixel into meter.
-	 */
-	private final double CONVERT_METER_AND_PIXEL = 20;
-
-	/**
-	 * Constant to konvert km/h into m/s.
-	 */
-	private final double CONVERT_KMH_AND_MS = 3.6;
-
-	/**
-	 * Constant to konvert secounds into milisecounds.
-	 */
-	private final double CONVERT_S_AND_MS = 1000;
-
-	/**
-	 * Constant which defines the Lenght of the paraglider cord in m.
-	 */
-	private final double LENGTH_OF_CORD = 7.68;
-
-	/**
-	 * Constant for the Gravitational Force in m per second squared.
-	 */
-	private final double GRAVITATIONAL_FORCE = 9.81;
-
-	/**
-	 * Period time of the "pilot pendulum".
-	 */
-	private final double TIME_OF_PERIOD = (2 * Math.PI * Math
-			.sqrt(LENGTH_OF_CORD / GRAVITATIONAL_FORCE));
-
-	/**
 	 * Start position of the pilot.
 	 */
 	private final Vector ZERO_POSITION = new Vector(310, 394, 910);
@@ -116,8 +85,7 @@ public final class Pilot {
 	 */
 	public void setChangeInSpeed(double speed) {
 
-		fForward += (speed * CONVERT_KMH_AND_MS / (RunGame.REFRESHRATE / CONVERT_S_AND_MS))
-				* weightOfPilot;
+		fForward += (Constants.convertKmhToMs(speed) / Constants.convertMsToSec(RunGame.REFRESHRATE)) * weightOfPilot;
 	}
 
 	/**
@@ -164,22 +132,18 @@ public final class Pilot {
 
 	private void calculateChangeInXAxis() {
 		double acceleration = (fForward) / weightOfPilot;
-		double changeX = (acceleration * Math.pow(RunGame.REFRESHRATE
-				/ CONVERT_S_AND_MS, 2)) / 2;
-		currentPosition.setX(currentPosition.getX()
-				- (changeX * CONVERT_METER_AND_PIXEL));
+		
+		double changeX = (acceleration * Math.pow(Constants.convertMsToSec(RunGame.REFRESHRATE), 2)) / 2;
+		currentPosition.setX(currentPosition.getX()	- Constants.convertMeterToPixel(changeX));
 	}
 
 	/**
 	 * Calculates the different Forces in the X-Axis.
 	 */
 	private void calculateForcesInTheXAxis() {
-		double fg = weightOfPilot * GRAVITATIONAL_FORCE;
+		double fg = weightOfPilot * Constants.GRAVITATIONAL_FORCE;
 		double fCord = fg * getCurrentCos();
 		double fBackwards = Math.sqrt(Math.pow(fg, 2) - Math.pow(fCord, 2));
-
-		System.out.println("Forward Force: " + fForward + " Backward Force"
-				+ fBackwards + " Fg: " + fg);
 
 		if (isOnPositiveSite) {
 				fForward += fBackwards;
@@ -201,7 +165,7 @@ public final class Pilot {
 	 */
 	private double getDamping() {
 		// TODO Formel korrigieren, nicht ganz richtig.
-		return weightOfPilot / (Math.pow((TIME_OF_PERIOD / (2 * Math.PI)), 2));
+		return weightOfPilot / (Math.pow((Constants.TIME_OF_PERIOD / (2 * Math.PI)), 2));
 	}
 
 	/**
@@ -232,16 +196,14 @@ public final class Pilot {
 	private void calculateZAxis() {
 		Glider glider = Glider.getInstance();
 		double angle = glider.getAngleOfTheGlider();
-		double changeZ = Math.sin(angle) * LENGTH_OF_CORD;
-		currentPosition.setZ(ZERO_POSITION.getZ()
-				+ (changeZ * CONVERT_METER_AND_PIXEL));
+		double changeZ = Math.sin(angle) * Constants.LENGTH_OF_CORD;
+		currentPosition.setZ(ZERO_POSITION.getZ()+ Constants.convertMeterToPixel(changeZ));
 	}
 
 	private void calculateYAxis() {
-		double x = (currentPosition.getX() - ZERO_POSITION.getX())
-				/ CONVERT_METER_AND_PIXEL;
-		double y = Math.sqrt(Math.pow(LENGTH_OF_CORD, 2) - Math.pow(x, 2));
-		currentPosition.setY((y * CONVERT_METER_AND_PIXEL) + ZERO_POINT.getY());
+		double x = Constants.convertPixelToMeter(currentPosition.getX() - ZERO_POSITION.getX());
+		double y = Math.sqrt(Math.pow(Constants.LENGTH_OF_CORD, 2) - Math.pow(x, 2));
+		currentPosition.setY(Constants.convertMeterToPixel(y) + ZERO_POINT.getY());
 	}
 
 
