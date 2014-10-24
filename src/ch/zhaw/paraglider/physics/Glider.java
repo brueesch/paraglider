@@ -76,6 +76,18 @@ public class Glider {
 		return yawAngle;
 	}
 	
+	private double calculatePitchAngle()
+	{
+		//TODO
+		return 0;
+	}
+	
+	private double calculateRollAngle()
+	{
+		//TODO
+		return 0;
+	}
+	
 	private void calculateYawAngle()
 	{		
 		
