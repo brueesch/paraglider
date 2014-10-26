@@ -199,7 +199,7 @@ public final class Pilot {
 		Glider glider = Glider.getInstance();
 		double angle = glider.getAngleOfTheGlider();
 		double changeY = Math.sin(angle) * Constants.LENGTH_OF_CORD;
-		currentPosition.setY(ZERO_POSITION.getY()+ Constants.convertMeterToPixel(changeY));
+		currentPosition.setY(ZERO_POSITION.getY()+changeY);
 	}
 
 	private void calculateZAxis() {
