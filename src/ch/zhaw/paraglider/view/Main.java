@@ -2,7 +2,10 @@ package ch.zhaw.paraglider.view;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -11,6 +14,7 @@ import javax.swing.event.ChangeListener;
 
 import ch.zhaw.paraglider.controller.RunGame;
 import ch.zhaw.paraglider.controller.XBoxController;
+import ch.zhaw.paraglider.physics.Constants;
 import ch.zhaw.paraglider.physics.Glider;
 import ch.zhaw.paraglider.physics.Pilot;
 import ch.zhaw.paraglider.physics.Vector;
@@ -23,8 +27,9 @@ import ch.zhaw.paraglider.physics.Wing;
  * @author Christian Brüesch
  * 
  */
-public class Main extends JPanel implements ChangeListener {
+public class Main extends JPanel implements ChangeListener, ActionListener {
 
+	private static final int METER_TO_PIXEL = 20;
 	/**
 	 * Generated serial version UID.
 	 */
@@ -51,6 +56,7 @@ public class Main extends JPanel implements ChangeListener {
 	 */
 	public static JSlider leftSlider, rightSlider;
 	private double oldRightValue = 0, oldLeftValue = 0;
+	private JButton reset;
 
 	/**
 	 * Starting Point of the program. Creates JFrame and adds the main panel on
@@ -74,6 +80,7 @@ public class Main extends JPanel implements ChangeListener {
 		pilot = Pilot.getInstance();
 		glider = Glider.getInstance();
 		initSliders();
+		initButtons();
 		RunGame runGame = new RunGame(this);
 		new Thread(runGame).start();
 		XBoxController xBoxController = new XBoxController();
@@ -83,6 +90,13 @@ public class Main extends JPanel implements ChangeListener {
 		else {
 			
 		}
+	}
+
+	private void initButtons() {
+		reset = new JButton("Reset");
+		reset.addActionListener(this);
+		add(reset);
+		
 	}
 
 	/**
@@ -141,7 +155,7 @@ public class Main extends JPanel implements ChangeListener {
 	 * @param g
 	 */
 	private void drawLeftView(Graphics g) {
-		int[] ZeroPoint = {330, 240};
+		Vector zeroPoint = new Vector(330, 0, 240);
 		int diameter = 40;
 		Color color = g.getColor();
 		g.setColor(Color.black);
@@ -151,18 +165,17 @@ public class Main extends JPanel implements ChangeListener {
 		g.drawString("Vertikalgeschwindigkeit: " + glider.getVerticalSpeed()
 				+ " m/s", 50, 140);
 		g.drawString("Gleitrate: " + glider.getCurrentGlideRatio(), 50, 155);
+		Vector pos = pilot.getCurrentPosition();
 
-		g.fillOval((int) pilot.getCurrentPosition().getX(), (int) pilot
-				.getCurrentPosition().getZ(), diameter, diameter);
-		g.drawLine((int) pilot.getCurrentPosition().getX() + diameter / 2,
-				(int) pilot.getCurrentPosition().getZ() + diameter / 2, 270,
-				240);
-		g.drawLine((int) pilot.getCurrentPosition().getX() + diameter / 2,
-				(int) pilot.getCurrentPosition().getZ() + diameter / 2, 330,
-				240);
-		g.drawLine((int) pilot.getCurrentPosition().getX() + diameter / 2,
-				(int) pilot.getCurrentPosition().getZ() + diameter / 2, 390,
-				240);
+		int currentXPosition = (int) (zeroPoint.getX()+(pos.getX()*METER_TO_PIXEL))-diameter/2;
+		int currentZPosition = (int) (zeroPoint.getZ() + (pos.getZ()*METER_TO_PIXEL))-diameter/2;
+		g.fillOval(currentXPosition, currentZPosition, diameter, diameter);
+		g.drawLine(currentXPosition+diameter/2, currentZPosition+diameter/2, 270,
+				(int)zeroPoint.getZ());
+		g.drawLine(currentXPosition+diameter/2, currentZPosition+diameter/2, 330,
+				(int)zeroPoint.getZ());
+		g.drawLine(currentXPosition+diameter/2, currentZPosition+diameter/2, 390,
+				(int)zeroPoint.getZ());
 
 		g.setColor(Color.RED);
 		int[] xPointsParaglider = { 230, 330, 430 };
@@ -183,24 +196,29 @@ public class Main extends JPanel implements ChangeListener {
 	 * @param g
 	 */
 	private void drawRightView(Graphics g) {
+		Vector zeroPoint = new Vector(0, 930, 240);
 		int diameter = 40;
 		Color color = g.getColor();
 		g.setColor(Color.BLACK);
 		g.drawRect(640, 40, 580, 800);
 
 		Vector pos = pilot.getCurrentPosition();
+		
+		int currentYPosition = (int) (zeroPoint.getY()+(pos.getY()*METER_TO_PIXEL))-diameter/2;
+		int currentZPosition = (int) (zeroPoint.getZ() + (pos.getZ()*METER_TO_PIXEL))-diameter/2;
+		g.fillOval(currentYPosition, currentZPosition, diameter, diameter);
 
-		g.fillOval((int) pos.getY(), (int) pos.getZ(), 40, 40);
-		g.drawLine((int) pos.getY() + diameter / 2, (int) pos.getZ() + diameter
-				/ 2, 720, 240);
-		g.drawLine((int) pos.getY() + diameter / 2, (int) pos.getZ() + diameter
-				/ 2, 825, 240);
-		g.drawLine((int) pos.getY() + diameter / 2, (int) pos.getZ() + diameter
-				/ 2, 930, 240);
-		g.drawLine((int) pos.getY() + diameter / 2, (int) pos.getZ() + diameter
-				/ 2, 1035, 240);
-		g.drawLine((int) pos.getY() + diameter / 2, (int) pos.getZ() + diameter
-				/ 2, 1140, 240);
+		g.drawLine(currentYPosition+diameter/2, currentZPosition+diameter/2, 720,
+				(int)zeroPoint.getZ());
+		g.drawLine(currentYPosition+diameter/2, currentZPosition+diameter/2, 825,
+				(int)zeroPoint.getZ());
+		g.drawLine(currentYPosition+diameter/2, currentZPosition+diameter/2, 930,
+				(int)zeroPoint.getZ());
+		g.drawLine(currentYPosition+diameter/2, currentZPosition+diameter/2, 1035,
+				(int)zeroPoint.getZ());
+		g.drawLine(currentYPosition+diameter/2, currentZPosition+diameter/2, 1140,
+				(int)zeroPoint.getZ());
+		
 
 		g.setColor(Color.RED);
 		int[] yPoints = { 680, 846, 1012, 1180 };
@@ -217,29 +235,39 @@ public class Main extends JPanel implements ChangeListener {
 		
 		if(e.getSource().equals(rightSlider)) {
 			double value = rightSlider.getValue();
-			pilot.setChangeInSpeed(-((value - oldRightValue)));
+			pilot.setChangeInSpeed(-(Constants.convertKmhToMs((value - oldRightValue))));
 			Wing rightWing;
 			try {
 				rightWing = glider.getRightWing();
-				rightWing.changeCurrentSpeed(-(value - oldRightValue));
+				rightWing.changeCurrentSpeed(-Constants.convertKmhToMs((value - oldRightValue)));
 				oldRightValue = value;
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
-			
 		}
 		
 		if(e.getSource().equals(leftSlider)) {
 			double value = leftSlider.getValue();
-			pilot.setChangeInSpeed(-((value - oldLeftValue)));
+			pilot.setChangeInSpeed(-(Constants.convertKmhToMs((value - oldLeftValue))));
 			Wing leftWing;
 			try {
 				leftWing = glider.getLeftWing();
-				leftWing.changeCurrentSpeed(-(value - oldLeftValue));
+				leftWing.changeCurrentSpeed(-(Constants.convertKmhToMs(value - oldLeftValue)));
 				oldLeftValue = value;
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}	
 		}
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+		if(e.getSource() == reset) {
+			leftSlider.setValue(0);
+			rightSlider.setValue(0);
+			pilot.reset();
+		}
+		
 	}
 }
