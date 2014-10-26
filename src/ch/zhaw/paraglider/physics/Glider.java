@@ -48,17 +48,16 @@ public class Glider {
 	}
 	
 	public double getVerticalSpeed() {
-		//TODO Calculate new vertical speed.
-		return LeftWing.getVerticalSpeed();
+		return (LeftWing.getVerticalSpeed() + RightWing.getVerticalSpeed())/2;
 	}
 	
 	public double getCurrentGlideRatio() {
 		//TODO Calculate new glide ratio.
-		return LeftWing.getCurrentGlideRatio();
+		return (LeftWing.getCurrentGlideRatio()+RightWing.getHorizontalSpeed())/2;
 	}
 	
 	public Wing getLeftWing() {
-		return RightWing;
+		return LeftWing;
 	}
 	public Wing getRightWing() {
 		return RightWing;
