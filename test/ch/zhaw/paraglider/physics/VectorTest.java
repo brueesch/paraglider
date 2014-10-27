@@ -70,27 +70,4 @@ public class VectorTest {
 	public void testSub() {
 		assertTrue(v.sub(new Vector(1,1,1)).equals(new Vector(0,1,2)));
 	}
-
-	@Test
-	public void testGetScalarProduct() {		
-		assertEquals(v.getScalarProduct(new Vector(3,4,5)),26,0.001);
-	}
-
-	@Test
-	public void testGetNorm() {
-		assertEquals(v.getNorm(),Math.sqrt(14),0.001);
-	}
-
-	@Test
-	public void testGetAngleToVectorRadian() {
-		
-		assertEquals(v.getAngleToVector(new Vector(4,5,6),Unit.Radian),55.84,0.01);
-	}
-	
-	@Test
-	public void testGetAngleToVectorDegree() {
-		
-		assertEquals(v.getAngleToVector(new Vector(4,5,6),Unit.Degree),0.9746,0.001);
-	}
-
 }

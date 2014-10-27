@@ -42,6 +42,14 @@ public class Glider {
 		return instance;
 	}
 	
+	public void reset()
+	{
+		pitchAngle = 0;
+		rollAngle = 0;
+		yawAngle = 0;
+		pilot.reset();
+	}
+	
 	public double getHorizontalSpeed() {
 		//TODO Calculate new horizontal speed.
 		return (LeftWing.getHorizontalSpeed() + RightWing.getHorizontalSpeed())/2;
@@ -53,14 +61,25 @@ public class Glider {
 	
 	public double getCurrentGlideRatio() {
 		//TODO Calculate new glide ratio.
-		return (LeftWing.getCurrentGlideRatio()+RightWing.getHorizontalSpeed())/2;
+		return (LeftWing.getCurrentGlideRatio() + RightWing.getHorizontalSpeed())/2;
 	}
 	
-	public Wing getLeftWing() {
-		return LeftWing;
+	public void changeLeftWingSpeed(double ms)
+	{
+		LeftWing.changeCurrentSpeed(ms);
 	}
-	public Wing getRightWing() {
-		return RightWing;
+	public void changeRightWingSpeed(double ms)
+	{
+		RightWing.changeCurrentSpeed(ms);
+	}
+	
+	public void changePilotSpeed(double ms)
+	{
+		pilot.setChangeInSpeed(ms);
+	}
+	public Vector getPilotPosition()
+	{
+		return pilot.getCurrentPosition();
 	}
 
 	public double getPitchAngle() {

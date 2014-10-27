@@ -73,27 +73,6 @@ public class Vector extends Object {
 	{
 		return new Vector(this.getX() - v.getX(), this.getY() - v.getY(), this.getZ() - v.getZ());
 	}
-	
-	public double getScalarProduct(Vector v)
-	{
-		return this.getX()* v.getX() + this.getY() * v.getY() + this.getZ() * v.getZ();
-	}
-	
-	public double getNorm()
-	{
-		return Math.sqrt(Math.pow(this.getX(), 2) + Math.pow(this.getY(), 2) + Math.pow(this.getZ(), 2));
-	}
-	
-	public double getAngleToVector(Vector v, Unit unit)
-	{
-		if(unit == Unit.Degree)
-		{
-			return Math.toDegrees(this.getScalarProduct(v) / (this.getNorm() * v.getNorm()));
-		}
-		return this.getScalarProduct(v) / (this.getNorm() * v.getNorm());
-			
-	}
-	
 	@Override
 	public boolean equals(Object obj)
 	{

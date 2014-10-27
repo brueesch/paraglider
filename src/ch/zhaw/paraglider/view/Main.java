@@ -46,10 +46,6 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 	 * Variable for the glider instance.
 	 */
 	private Glider glider;
-	/**
-	 * Variable for the pilot instance.
-	 */
-	private Pilot pilot;
 
 	/**
 	 * Gui Elemente
@@ -77,7 +73,6 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 	 * Constructor. Initializes various objects and starts the runGame Thread.
 	 */
 	public Main() {
-		pilot = Pilot.getInstance();
 		glider = Glider.getInstance();
 		initSliders();
 		initButtons();
@@ -165,7 +160,7 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		g.drawString("Vertikalgeschwindigkeit: " + glider.getVerticalSpeed()
 				+ " m/s", 50, 140);
 		g.drawString("Gleitrate: " + glider.getCurrentGlideRatio(), 50, 155);
-		Vector pos = pilot.getCurrentPosition();
+		Vector pos = glider.getPilotPosition();
 
 		int currentXPosition = (int) (zeroPoint.getX()+(pos.getX()*METER_TO_PIXEL))-diameter/2;
 		int currentZPosition = (int) (zeroPoint.getZ() + (pos.getZ()*METER_TO_PIXEL))-diameter/2;
@@ -202,7 +197,7 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		g.setColor(Color.BLACK);
 		g.drawRect(640, 40, 580, 800);
 
-		Vector pos = pilot.getCurrentPosition();
+		Vector pos = glider.getPilotPosition();
 		
 		int currentYPosition = (int) (zeroPoint.getY()+(pos.getY()*METER_TO_PIXEL))-diameter/2;
 		int currentZPosition = (int) (zeroPoint.getZ() + (pos.getZ()*METER_TO_PIXEL))-diameter/2;
@@ -235,11 +230,9 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		
 		if(e.getSource().equals(rightSlider)) {
 			double value = rightSlider.getValue();
-			pilot.setChangeInSpeed(-(Constants.convertKmhToMs((value - oldRightValue))));
-			Wing rightWing;
+			glider.changePilotSpeed(-(Constants.convertKmhToMs((value - oldRightValue))));
 			try {
-				rightWing = glider.getRightWing();
-				rightWing.changeCurrentSpeed(-Constants.convertKmhToMs((value - oldRightValue)));
+				glider.changeRightWingSpeed(-Constants.convertKmhToMs((value - oldRightValue)));
 				oldRightValue = value;
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -248,11 +241,9 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		
 		if(e.getSource().equals(leftSlider)) {
 			double value = leftSlider.getValue();
-			pilot.setChangeInSpeed(-(Constants.convertKmhToMs((value - oldLeftValue))));
-			Wing leftWing;
+			glider.changePilotSpeed(-(Constants.convertKmhToMs((value - oldLeftValue))));
 			try {
-				leftWing = glider.getLeftWing();
-				leftWing.changeCurrentSpeed(-(Constants.convertKmhToMs(value - oldLeftValue)));
+				glider.changeLeftWingSpeed(-(Constants.convertKmhToMs(value - oldLeftValue)));
 				oldLeftValue = value;
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -266,7 +257,7 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		if(e.getSource() == reset) {
 			leftSlider.setValue(0);
 			rightSlider.setValue(0);
-			pilot.reset();
+			glider.reset();
 		}
 		
 	}

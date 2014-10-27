@@ -44,12 +44,9 @@ public class XBoxController implements Runnable {
 	 * Initializes the xbox Controller.
 	 */
 	public XBoxController() {
-		pilot = Pilot.getInstance();
 		this.glider = Glider.getInstance();
 		try {
 			Controllers.create();
-			leftWing = glider.getLeftWing();
-			rightWing = glider.getRightWing();
 			
 		} catch (LWJGLException e) {
 			e.printStackTrace();
@@ -130,9 +127,8 @@ public class XBoxController implements Runnable {
 		double valueRightWing = controller.getAxisValue(2);
 		if (oldValueRightWing != valueRightWing) {
 			if (valueRightWing >= 0) {
-				pilot.setChangeInSpeed(-((valueRightWing - oldValueRightWing) * MULTIPLICATOR_CONTROLLER_SPEED));
-				rightWing.changeCurrentSpeed(-(valueRightWing - oldValueRightWing)
-						* MULTIPLICATOR_CONTROLLER_SPEED);
+				glider.changePilotSpeed(-((valueRightWing - oldValueRightWing) * MULTIPLICATOR_CONTROLLER_SPEED));
+				glider.changeRightWingSpeed(-(valueRightWing - oldValueRightWing) * MULTIPLICATOR_CONTROLLER_SPEED);
 				oldValueRightWing = controller.getAxisValue(2);
 			}
 		}
@@ -148,9 +144,8 @@ public class XBoxController implements Runnable {
 		double valueLeftWing = controller.getAxisValue(0);
 		if (oldValueLeftWing != valueLeftWing) {
 			if (valueLeftWing >= 0) {
-				pilot.setChangeInSpeed(-((valueLeftWing - oldValueLeftWing) * MULTIPLICATOR_CONTROLLER_SPEED));
-				leftWing.changeCurrentSpeed(-(valueLeftWing - oldValueLeftWing)
-						* MULTIPLICATOR_CONTROLLER_SPEED);
+				glider.changePilotSpeed(-((valueLeftWing - oldValueLeftWing) * MULTIPLICATOR_CONTROLLER_SPEED));
+				glider.changeLeftWingSpeed(-(valueLeftWing - oldValueLeftWing)	* MULTIPLICATOR_CONTROLLER_SPEED);
 				oldValueLeftWing = controller.getAxisValue(0);
 			}
 		}
