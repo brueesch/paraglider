@@ -100,5 +100,10 @@ public class Vector2D extends Object {
 		}
 		return false;
 	}
+	
+	public String ToString()
+	{
+		return "(" + this.getX() + ", " + this.getZ() + ")";
+	}
 
 }
