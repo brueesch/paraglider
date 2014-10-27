@@ -144,7 +144,8 @@ public final class Pilot {
 	 */
 	private void calculateForcesInTheXAxis() {
 		double fg = weightOfPilot * Constants.GRAVITATIONAL_FORCE;
-		double fCord = fg * getCurrentCos();
+		System.out.println(getPitchAngle());
+		double fCord = fg * getPitchAngle();
 		double fBackwards = Math.sqrt(Math.pow(fg, 2) - Math.pow(fCord, 2));
 
 		if (isOnPositiveSite) {
@@ -171,38 +172,20 @@ public final class Pilot {
 		return weightOfPilot / (Math.pow((Constants.TIME_OF_PERIOD / (2 * Math.PI)), 2));
 	}
 
-	/**
-	 * Returns the current Angle, between the current positon of the pilot and
-	 * his position in flight without speed change.
-	 * 
-	 * @return double cos of Angle
-	 */
-	private double getCurrentCos() {
-		double[] u = { ZERO_POSITION.getX() - ZERO_POINT.getX(),
-				ZERO_POSITION.getZ() - ZERO_POINT.getZ() };
-		double[] v = { currentPosition.getX() - ZERO_POINT.getX(),
-				currentPosition.getZ() - ZERO_POINT.getZ() };
-
-		double upperFormula = ((u[0] * v[0]) + (u[1] * v[1]));
-		double lowerFormula = (Math.sqrt(Math.pow(u[0], 2) + Math.pow(u[1], 2)))
-				* (Math.sqrt(Math.pow(v[0], 2) + Math.pow(v[1], 2)));
-		double cosAngle = upperFormula / lowerFormula;
-
-
-		if (currentPosition.getX() < ZERO_POSITION.getX()) {
-			isOnPositiveSite = false;
-		} else {
-			isOnPositiveSite = true;
-		}
-		return cosAngle;
-	}
 	
 	public double getPitchAngle()
 	{
 		Vector2D u = new Vector2D(ZERO_POSITION.getX() - ZERO_POINT.getX(),	ZERO_POSITION.getZ() - ZERO_POINT.getZ());
 		Vector2D v = new Vector2D(currentPosition.getX() - ZERO_POINT.getX(), currentPosition.getZ() - ZERO_POINT.getZ());
 		
-		return u.getAngleToVector2D(v, Unit.Degree);
+		double cosAngle =  u.getAngleToVector2D(v, Unit.Radian);
+		
+		if (currentPosition.getX() < ZERO_POSITION.getX()) {
+			isOnPositiveSite = false;
+		} else {
+			isOnPositiveSite = true;
+		}
+		return cosAngle;
 	}
 
 	private void calculateYAxis() {
@@ -217,7 +200,6 @@ public final class Pilot {
 		double y = currentPosition.getY() - ZERO_POSITION.getY();
 		double a = Math.sqrt(Math.pow(x, 2)+Math.pow(y, 2));
 		double z = Math.sqrt(Math.pow(Constants.LENGTH_OF_CORD, 2)-Math.pow(a, 2));
-		System.out.println(z);
 		currentPosition.setZ(z);
 		
 		
