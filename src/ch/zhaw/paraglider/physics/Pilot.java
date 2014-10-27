@@ -1,5 +1,7 @@
 package ch.zhaw.paraglider.physics;
 
+import ch.zhaw.paraglider.physics.Vector2D.Unit;
+
 
 
 /**
@@ -193,6 +195,14 @@ public final class Pilot {
 			isOnPositiveSite = true;
 		}
 		return cosAngle;
+	}
+	
+	public double getPitchAngle()
+	{
+		Vector2D u = new Vector2D(ZERO_POSITION.getX() - ZERO_POINT.getX(),	ZERO_POSITION.getZ() - ZERO_POINT.getZ());
+		Vector2D v = new Vector2D(currentPosition.getX() - ZERO_POINT.getX(), currentPosition.getZ() - ZERO_POINT.getZ());
+		
+		return u.getAngleToVector2D(v, Unit.Degree);
 	}
 
 	private void calculateYAxis() {

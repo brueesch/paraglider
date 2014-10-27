@@ -44,7 +44,7 @@ public class Glider {
 	
 	public double getHorizontalSpeed() {
 		//TODO Calculate new horizontal speed.
-		return LeftWing.getHorizontalSpeed();
+		return (LeftWing.getHorizontalSpeed() + RightWing.getHorizontalSpeed())/2;
 	}
 	
 	public double getVerticalSpeed() {
@@ -77,8 +77,7 @@ public class Glider {
 	
 	private double calculatePitchAngle()
 	{
-		//TODO
-		return 0;
+		return pilot.getPitchAngle();
 	}
 	
 	private double calculateRollAngle()
