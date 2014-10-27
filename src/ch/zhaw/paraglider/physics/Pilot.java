@@ -2,8 +2,6 @@ package ch.zhaw.paraglider.physics;
 
 import ch.zhaw.paraglider.physics.Vector2D.Unit;
 
-
-
 /**
  * This Class handles the physics and the position of the pilot. In addition it
  * includes a method which animates the pilot.
@@ -16,12 +14,13 @@ public final class Pilot {
 	/**
 	 * Variable that defines the Weight of the Pilot in kg.
 	 */
-	private int weightOfPilot = 120;//85;
+	private int weightOfPilot = 120;// 85;
 
 	/**
 	 * Start position of the pilot.
 	 */
-	private final Vector ZERO_POSITION = new Vector(0, 0, Constants.LENGTH_OF_CORD);
+	private final Vector ZERO_POSITION = new Vector(0, 0,
+			Constants.LENGTH_OF_CORD);
 
 	/**
 	 * Position of the Zero Point. In the middle of the paraglider, where the
@@ -118,12 +117,12 @@ public final class Pilot {
 	 * Calculates the next step of the animation of the pilot and sets the
 	 * current position of the x and y - axis to the calculated values.
 	 */
-	public void makeNextStep() {
+	public void makeNextStep(double speedLeftWing, double speedRightWing) {
 		calculateXAxis();
-		calculateYAxis();
+		calculateYAxis(speedLeftWing, speedRightWing);
 		calculateZAxis();
 	}
-	
+
 	/**
 	 * Calculates the X Axis.
 	 */
@@ -134,9 +133,10 @@ public final class Pilot {
 
 	private void calculateChangeInXAxis() {
 		double acceleration = (fForward) / weightOfPilot;
-		
+
 		double changeX = (acceleration * Math.pow(Constants.TIME_INTERVALL, 2)) / 2;
-		currentPosition.setX(currentPosition.getX()	- Constants.convertMeterToPixel(changeX));
+
+		currentPosition.setX(currentPosition.getX() - changeX);
 	}
 
 	/**
@@ -144,17 +144,15 @@ public final class Pilot {
 	 */
 	private void calculateForcesInTheXAxis() {
 		double fg = weightOfPilot * Constants.GRAVITATIONAL_FORCE;
-		System.out.println(getPitchAngle());
 		double fCord = fg * getPitchAngle();
 		double fBackwards = Math.sqrt(Math.pow(fg, 2) - Math.pow(fCord, 2));
 
 		if (isOnPositiveSite) {
-				fForward += fBackwards;
+			fForward += fBackwards;
 		} else {
-				fForward -= fBackwards;
+			fForward -= fBackwards;
 		}
 
-		
 		if (fForward > 0) {
 			fForward -= getDamping();
 		} else {
@@ -169,17 +167,18 @@ public final class Pilot {
 	 */
 	private double getDamping() {
 		// TODO Formel korrigieren, nicht ganz richtig.
-		return weightOfPilot / (Math.pow((Constants.TIME_OF_PERIOD / (2 * Math.PI)), 2));
+		return weightOfPilot
+				/ (Math.pow((Constants.TIME_OF_PERIOD / (2 * Math.PI)), 2));
 	}
 
-	
-	public double getPitchAngle()
-	{
-		Vector2D u = new Vector2D(ZERO_POSITION.getX() - ZERO_POINT.getX(),	ZERO_POSITION.getZ() - ZERO_POINT.getZ());
-		Vector2D v = new Vector2D(currentPosition.getX() - ZERO_POINT.getX(), currentPosition.getZ() - ZERO_POINT.getZ());
-		
-		double cosAngle =  u.getAngleToVector2D(v, Unit.Radian);
-		
+	public double getPitchAngle() {
+		Vector2D u = new Vector2D(ZERO_POSITION.getX() - ZERO_POINT.getX(),
+				ZERO_POSITION.getZ() - ZERO_POINT.getZ());
+		Vector2D v = new Vector2D(currentPosition.getX() - ZERO_POINT.getX(),
+				currentPosition.getZ() - ZERO_POINT.getZ());
+
+		double cosAngle = u.getAngleToVector2D(v, Unit.Radian);
+
 		if (currentPosition.getX() < ZERO_POSITION.getX()) {
 			isOnPositiveSite = false;
 		} else {
@@ -188,26 +187,68 @@ public final class Pilot {
 		return cosAngle;
 	}
 
-	private void calculateYAxis() {
-		Glider glider = Glider.getInstance();
-		double angle = glider.getAngleOfTheGlider();
-		double changeY = Math.sin(angle) * Constants.LENGTH_OF_CORD;
-		currentPosition.setY(ZERO_POSITION.getY()+changeY);
-	}
-
 	private void calculateZAxis() {
 		double x = currentPosition.getX() - ZERO_POSITION.getX();
 		double y = currentPosition.getY() - ZERO_POSITION.getY();
-		double a = Math.sqrt(Math.pow(x, 2)+Math.pow(y, 2));
-		double z = Math.sqrt(Math.pow(Constants.LENGTH_OF_CORD, 2)-Math.pow(a, 2));
+		double a = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+		double z = Math.sqrt(Math.pow(Constants.LENGTH_OF_CORD, 2)
+				- Math.pow(a, 2));
 		currentPosition.setZ(z);
-		
-		
+
 		/*
-		double x = Constants.convertPixelToMeter(currentPosition.getX() - ZERO_POSITION.getX());
-		double z = Math.sqrt(Math.pow(Constants.LENGTH_OF_CORD, 2) - Math.pow(x, 2));
-		currentPosition.setZ(Constants.convertMeterToPixel(z) + ZERO_POINT.getZ());*/
+		 * double x = Constants.convertPixelToMeter(currentPosition.getX() -
+		 * ZERO_POSITION.getX()); double z =
+		 * Math.sqrt(Math.pow(Constants.LENGTH_OF_CORD, 2) - Math.pow(x, 2));
+		 * currentPosition.setZ(Constants.convertMeterToPixel(z) +
+		 * ZERO_POINT.getZ());
+		 */
 	}
 
+	private void calculateYAxis(double speedLeftWing, double speedRightWing) {
+		calculateForcesInTheYAxis(speedLeftWing, speedRightWing);
+		//calculateChangeInYAxis();
+	}
+
+	public double getRollAngle() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	private void calculateChangeInYAxis() {
+		double acceleration = (fForward) / weightOfPilot;
+
+		double changeX = (acceleration * Math.pow(Constants.TIME_INTERVALL, 2)) / 2;
+
+		currentPosition.setX(currentPosition.getX() - changeX);
+	}
+
+	/**
+	 * Calculates the different Forces in the X-Axis.
+	 * 
+	 * @param speedRightWing
+	 * @param speedLeftWing
+	 */
+	private void calculateForcesInTheYAxis(double speedLeftWing,
+			double speedRightWing) {
+		double fg = weightOfPilot * Constants.GRAVITATIONAL_FORCE;
+		double acceleration = 2;//(speedLeftWing - speedRightWing)
+				/// Constants.TIME_INTERVALL;
+		double fZentripetal = acceleration * weightOfPilot;
+		double fCord = Math.sqrt(Math.pow(fg, 2) + Math.pow(fZentripetal, 2));
+		//System.out.println("fg: " +fg + "acceleration: " + acceleration +" fZentripetal: " + fZentripetal + "fCord: "+ fCord);
+		double cos = fg / fCord;
+
+		// if (isOnPositiveSite) {
+		// fForward += fBackwards;
+		// } else {
+		// fForward -= fBackwards;
+		// }
+		//
+		// if (fForward > 0) {
+		// fForward -= getDamping();
+		// } else {
+		// fForward += getDamping();
+		// }
+	}
 
 }

@@ -1,7 +1,7 @@
 package ch.zhaw.paraglider.controller;
 
 import ch.zhaw.paraglider.physics.Constants;
-import ch.zhaw.paraglider.physics.Pilot;
+import ch.zhaw.paraglider.physics.Glider;
 import ch.zhaw.paraglider.view.Main;
 
 /**
@@ -16,7 +16,7 @@ public class RunGame implements Runnable {
 	/**
 	 * Variable for the pilot Instance.
 	 */
-	private Pilot pilot;
+	private Glider glider;
 
 	/**
 	 * Variable for the main Instance
@@ -30,7 +30,7 @@ public class RunGame implements Runnable {
 	 */
 	public RunGame(Main main) {
 		this.main = main;
-		pilot = Pilot.getInstance();
+		glider = Glider.getInstance();
 	}
 
 	/**
@@ -40,7 +40,7 @@ public class RunGame implements Runnable {
 	@Override
 	public void run() {
 		while (true) {
-			pilot.makeNextStep();
+			glider.makeNextStep();
 			main.repaint();
 			try {
 				Thread.sleep((int)(Constants.TIME_INTERVALL*1000));

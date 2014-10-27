@@ -8,8 +8,8 @@ package ch.zhaw.paraglider.physics;
  */
 public class Glider {
 
-	private Wing LeftWing = new Wing("Left");
-	private Wing RightWing = new Wing("Right");
+	private Wing leftWing = new Wing("Left");
+	private Wing rightWing = new Wing("Right");
 	private Pilot pilot = Pilot.getInstance();
 	
 	/* Angle caused by the pendulum-effect */
@@ -52,25 +52,25 @@ public class Glider {
 	
 	public double getHorizontalSpeed() {
 		//TODO Calculate new horizontal speed.
-		return (LeftWing.getHorizontalSpeed() + RightWing.getHorizontalSpeed())/2;
+		return (leftWing.getHorizontalSpeed() + rightWing.getHorizontalSpeed())/2;
 	}
 	
 	public double getVerticalSpeed() {
-		return (LeftWing.getVerticalSpeed() + RightWing.getVerticalSpeed())/2;
+		return (leftWing.getVerticalSpeed() + rightWing.getVerticalSpeed())/2;
 	}
 	
 	public double getCurrentGlideRatio() {
 		//TODO Calculate new glide ratio.
-		return (LeftWing.getCurrentGlideRatio() + RightWing.getHorizontalSpeed())/2;
+		return (leftWing.getCurrentGlideRatio() + rightWing.getHorizontalSpeed())/2;
 	}
 	
 	public void changeLeftWingSpeed(double ms)
 	{
-		LeftWing.changeCurrentSpeed(ms);
+		leftWing.changeCurrentSpeed(ms);
 	}
 	public void changeRightWingSpeed(double ms)
 	{
-		RightWing.changeCurrentSpeed(ms);
+		rightWing.changeCurrentSpeed(ms);
 	}
 	
 	public void changePilotSpeed(double ms)
@@ -100,16 +100,15 @@ public class Glider {
 	}
 	
 	private double calculateRollAngle()
-	{
-		//TODO
-		return 0;
+	{		
+		return pilot.getRollAngle();
 	}
 	
 	private void calculateYawAngle()
 	{		
 		
-		double pathLeft = LeftWing.getHorizontalSpeed() * Constants.TIME_INTERVALL;
-		double pathRight = RightWing.getHorizontalSpeed() * Constants.TIME_INTERVALL;
+		double pathLeft = leftWing.getHorizontalSpeed() * Constants.TIME_INTERVALL;
+		double pathRight = rightWing.getHorizontalSpeed() * Constants.TIME_INTERVALL;
 		
 		if(pathLeft == pathRight)
 		{
@@ -147,8 +146,8 @@ public class Glider {
 	 * @return double angle in radian.
 	 */
 	public double getAngleOfTheGlider() {
-		double currentSpeedLeftWing = LeftWing.getHorizontalSpeed();
-		double currentSpeedRightWing = RightWing.getHorizontalSpeed();
+		double currentSpeedLeftWing = leftWing.getHorizontalSpeed();
+		double currentSpeedRightWing = rightWing.getHorizontalSpeed();
 		double speedDifferenz = currentSpeedRightWing -currentSpeedLeftWing;
 		
 		//Left Turn
@@ -166,6 +165,10 @@ public class Glider {
 		}
 		
 		
+	}
+
+	public void makeNextStep() {
+		pilot.makeNextStep(leftWing.getHorizontalSpeed(), rightWing.getHorizontalSpeed());
 	}
 
 	
