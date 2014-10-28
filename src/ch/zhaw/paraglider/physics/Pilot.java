@@ -14,7 +14,7 @@ public final class Pilot {
 	/**
 	 * Variable that defines the Weight of the Pilot in kg.
 	 */
-	private int weightOfPilot = 120;// 85;
+	private int weightOfPilot = 85;// 85;
 
 	/**
 	 * Start position of the pilot.
@@ -231,12 +231,12 @@ public final class Pilot {
 	private void calculateForcesInTheYAxis(double speedLeftWing,
 			double speedRightWing) {
 		double fg = weightOfPilot * Constants.GRAVITATIONAL_FORCE;
-		double acceleration = 2;//(speedLeftWing - speedRightWing)
-				/// Constants.TIME_INTERVALL;
+		double acceleration = (speedLeftWing - speedRightWing)/Constants.TIME_INTERVALL;
 		double fZentripetal = acceleration * weightOfPilot;
 		double fCord = Math.sqrt(Math.pow(fg, 2) + Math.pow(fZentripetal, 2));
 		//System.out.println("fg: " +fg + "acceleration: " + acceleration +" fZentripetal: " + fZentripetal + "fCord: "+ fCord);
 		double cos = fg / fCord;
+		//System.out.println(cos);
 
 		// if (isOnPositiveSite) {
 		// fForward += fBackwards;

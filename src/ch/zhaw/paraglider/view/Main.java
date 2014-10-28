@@ -156,7 +156,7 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		g.setColor(Color.black);
 		g.drawRect(40, 40, 580, 800);
 		g.drawString("Geschwindigkeit: " + glider.getHorizontalSpeed()
-				+ " km/h", 50, 125);
+				+ " m/s", 50, 125);
 		g.drawString("Vertikalgeschwindigkeit: " + glider.getVerticalSpeed()
 				+ " m/s", 50, 140);
 		g.drawString("Gleitrate: " + glider.getCurrentGlideRatio(), 50, 155);
@@ -230,24 +230,31 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		
 		if(e.getSource().equals(rightSlider)) {
 			double value = rightSlider.getValue();
-			glider.changePilotSpeed(-(Constants.convertKmhToMs((value - oldRightValue))));
+			value -= oldRightValue;
+			value/=40.358;
+			
+			glider.changePilotSpeed(-value);
 			try {
-				glider.changeRightWingSpeed(-Constants.convertKmhToMs((value - oldRightValue)));
-				oldRightValue = value;
+				glider.changeRightWingSpeed(-value);
+				
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
 		}
 		
 		if(e.getSource().equals(leftSlider)) {
+			
 			double value = leftSlider.getValue();
-			glider.changePilotSpeed(-(Constants.convertKmhToMs((value - oldLeftValue))));
+			
+			glider.changePilotSpeed(-value);
 			try {
-				glider.changeLeftWingSpeed(-(Constants.convertKmhToMs(value - oldLeftValue)));
-				oldLeftValue = value;
+				glider.changeLeftWingSpeed(-value);
+				
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}	
+			
+			oldLeftValue = value;
 		}
 	}
 

@@ -49,7 +49,7 @@ public class Wing {
 	}
 
 	/**
-	 * This Method returns the current speed to the ground. In km/h
+	 * This Method returns the current speed to the ground. In m/s
 	 * 
 	 * @return double speed
 	 */
