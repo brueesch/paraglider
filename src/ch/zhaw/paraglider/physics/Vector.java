@@ -31,6 +31,13 @@ public class Vector extends Object {
 		this.setZ(z);
 	}
 	
+	public Vector(Vector v)
+	{
+		this.setX(v.getX());
+		this.setY(v.getY());
+		this.setZ(v.getZ());
+	}
+	
 	/*
 	 * Returns an Vector with three dimensions which values are 0	 
 	 *  
