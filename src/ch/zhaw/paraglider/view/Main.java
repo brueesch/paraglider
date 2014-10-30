@@ -102,10 +102,10 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		rightSlider = new JSlider();
 
 		leftSlider.setMinimum(0);
-		leftSlider.setMaximum(50);
+		leftSlider.setMaximum(10);
 
 		rightSlider.setMinimum(0);
-		rightSlider.setMaximum(50);
+		rightSlider.setMaximum(10);
 
 		leftSlider.setMinorTickSpacing(1);
 		leftSlider.setMajorTickSpacing(10);
@@ -230,9 +230,9 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		
 		if(e.getSource().equals(rightSlider)) {
 			double value = rightSlider.getValue();
-			glider.changePilotSpeed(-(((value - oldRightValue))));
+			glider.changePilotSpeed(-((value - oldRightValue)/3.6));
 			try {
-				glider.changeRightWingSpeed(-(value - oldRightValue));
+				glider.changeRightWingSpeed(-((value - oldRightValue)/3.6));
 				oldRightValue = value;
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -241,9 +241,9 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		
 		if(e.getSource().equals(leftSlider)) {
 			double value = leftSlider.getValue();
-			glider.changePilotSpeed(-((value - oldLeftValue)));
+			glider.changePilotSpeed(-((value - oldLeftValue)/3.6));
 			try {
-				glider.changeLeftWingSpeed(-(value - oldLeftValue));
+				glider.changeLeftWingSpeed(-((value - oldLeftValue)/3.6));
 				oldLeftValue = value;
 			} catch (Exception e1) {
 				e1.printStackTrace();
