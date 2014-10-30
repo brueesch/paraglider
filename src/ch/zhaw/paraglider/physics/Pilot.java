@@ -184,6 +184,7 @@ public final class Pilot {
 		} else {
 			isOnPositiveSite = true;
 		}
+		
 		return cosAngle;
 	}
 
@@ -229,8 +230,6 @@ public final class Pilot {
 		double fZen = weightOfPilot * w * w * radius;
 		double fG = Constants.GRAVITATIONAL_FORCE * weightOfPilot;
 		double fCord = Math.sqrt(Math.pow(fZen, 2) + Math.pow(fG, 2));	
-		
-		System.out.println(Math.toDegrees(Math.asin(fZen/fCord)));
 		
 		return (Math.asin(fZen/fCord));
 	}

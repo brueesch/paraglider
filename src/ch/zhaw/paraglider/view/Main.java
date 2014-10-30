@@ -155,8 +155,8 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		Color color = g.getColor();
 		g.setColor(Color.black);
 		g.drawRect(40, 40, 580, 800);
-		g.drawString("Geschwindigkeit: " + glider.getHorizontalSpeed()
-				+ " m/s", 50, 125);
+		g.drawString("Geschwindigkeit: " + Constants.convertMsToKmh(glider.getHorizontalSpeed())
+				+ " km/h", 50, 125);
 		g.drawString("Vertikalgeschwindigkeit: " + glider.getVerticalSpeed()
 				+ " m/s", 50, 140);
 		g.drawString("Gleitrate: " + glider.getCurrentGlideRatio(), 50, 155);
