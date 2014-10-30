@@ -205,14 +205,83 @@ public final class Pilot {
 	}
 
 	private void calculateYAxis(double speedLeftWing, double speedRightWing) {
-		calculateForcesInTheYAxis(speedLeftWing, speedRightWing);
+		//calculateForcesInTheYAxis(speedLeftWing, speedRightWing);
 		//calculateChangeInYAxis();
+		getRollAngle(speedLeftWing, speedRightWing);
 	}
 
-	public double getRollAngle() {
-		// TODO Auto-generated method stub
-		return 0;
+	public double getRollAngle(double speedLeftWing, double speedRightWing) {
+		
+		if(speedLeftWing == speedRightWing)
+		{
+			return 0;
+		}		
+		
+		double pathLeft = speedLeftWing * Constants.TIME_INTERVALL;
+		double pathRight = speedRightWing * Constants.TIME_INTERVALL;
+		double pilotPath = (speedLeftWing + speedRightWing) /2 * Constants.TIME_INTERVALL;
+				
+		double radius = 0;
+		double w = 0;
+		
+		/* Left Curve */
+		if(pathLeft < pathRight)
+		{
+			radius = getRadius(pathLeft,pathRight) - (Constants.GLIDER_WINGSPAN/2);
+			
+		}
+		/* Right Curve */
+		else
+		{
+			radius = getRadius(pathRight,pathLeft) - (Constants.GLIDER_WINGSPAN/2);
+		}
+		w = Math.toRadians(pilotPath/radius);
+		
+		double fZen = weightOfPilot * w * w * radius;
+		double fG = Constants.GRAVITATIONAL_FORCE * weightOfPilot;
+		double fCord = Math.sqrt(Math.pow(fZen, 2) + Math.pow(fG, 2));	
+		
+		System.out.println(Math.toDegrees(Math.asin(fZen/fCord)));
+		
+		return Math.toDegrees(Math.asin(fZen/fCord));
 	}
+	
+	private double getAngle(double speedLeftWing, double speedRightWing)
+	{
+		if(speedLeftWing == speedRightWing)
+		{
+			return 0;
+		}
+		
+		double pathLeft = speedLeftWing * Constants.TIME_INTERVALL;
+		double pathRight = speedRightWing * Constants.TIME_INTERVALL;
+		double pilotPath = (speedLeftWing + speedRightWing) /2 * Constants.TIME_INTERVALL;
+		double w = 0;
+		
+		/* Left Curve */
+		if(pathLeft < pathRight)
+		{
+			double r = getRadius(pathLeft,pathRight);
+			return Math.toRadians(pathLeft/r);
+			
+		}
+		/* Right Curve */
+		else
+		{
+			double r = getRadius(pathRight,pathLeft);
+			return Math.toRadians(pathRight/r);
+		}
+	}
+	
+	private double getRadius(double pathLeft,double pathRight)
+	{
+		double xa = pathRight;
+		double xb = pathLeft;
+		double rb = Constants.GLIDER_WINGSPAN;
+		double ra = (xa*rb)/(xb-xa);
+		return (ra + rb);
+	}
+	
 
 	private void calculateChangeInYAxis() {
 		double acceleration = (fForward) / weightOfPilot;
@@ -248,7 +317,9 @@ public final class Pilot {
 		// fForward -= getDamping();
 		// } else {
 		// fForward += getDamping();
-		// }
+		// }	
+		
+		
 	}
 
 }

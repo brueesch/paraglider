@@ -101,7 +101,7 @@ public class Glider {
 	
 	private double calculateRollAngle()
 	{		
-		return pilot.getRollAngle();
+		return pilot.getRollAngle(leftWing.getHorizontalSpeed(), rightWing.getHorizontalSpeed());
 	}
 	
 	private void calculateYawAngle()
@@ -114,8 +114,6 @@ public class Glider {
 		{
 			return;
 		}
-		
-		double radius = 0;
 		
 		/* Left Curve */
 		if(pathLeft < pathRight)
