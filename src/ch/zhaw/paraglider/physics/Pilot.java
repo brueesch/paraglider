@@ -144,8 +144,7 @@ public final class Pilot {
 	 */
 	private void calculateForcesInTheXAxis() {
 		double fg = weightOfPilot * Constants.GRAVITATIONAL_FORCE;
-		double fCord = fg * getPitchAngle();
-		double fBackwards = Math.sqrt(Math.pow(fg, 2) - Math.pow(fCord, 2));
+		double fBackwards = fg * Math.sin(getPitchAngle());
 
 		if (isOnPositiveSite) {
 			fForward += fBackwards;
@@ -168,7 +167,7 @@ public final class Pilot {
 	private double getDamping() {
 		// TODO Formel korrigieren, nicht ganz richtig.
 		return weightOfPilot
-				/ (Math.pow((Constants.TIME_OF_PERIOD / (2 * Math.PI)), 2));
+				/ (Math.pow((Constants.TIME_OF_PERIOD / (2 * Math.PI)), 2))/10;
 	}
 
 	public double getPitchAngle() {
@@ -185,7 +184,7 @@ public final class Pilot {
 			isOnPositiveSite = true;
 		}
 		
-		return cosAngle;
+		return Math.acos(cosAngle);
 	}
 
 	private void calculateZAxis() {
