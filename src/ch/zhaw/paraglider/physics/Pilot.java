@@ -76,7 +76,10 @@ public final class Pilot {
 	public void setWeightOfPilot(int weight) {
 		weightOfPilot = weight;
 	}
-
+	
+	/**
+	 * Resets all position and forces to the start position.
+	 */
 	public void reset() {
 		currentPosition = new Vector(ZERO_POSITION);
 		synchronized (lock) {
@@ -94,7 +97,12 @@ public final class Pilot {
 		calculateZ();
 	}
 	
-	public double getPitchAngle() {
+	/**
+	 * Returns the current PitchAngle of the Glider.
+	 * The Pitch Angle is the angle of the x -axis in relationship to the ground.
+	 * @return double in Degree
+	 */
+	public synchronized double getPitchAngle() {
 		Vector2D u = new Vector2D(ZERO_POSITION.getX() - ZERO_POINT.getX(),
 				ZERO_POSITION.getZ() - ZERO_POINT.getZ());
 		Vector2D v = new Vector2D(currentPosition.getX() - ZERO_POINT.getX(),
@@ -108,10 +116,15 @@ public final class Pilot {
 			isOnPositiveSite = true;
 		}
 		
-		return Math.acos(cosAngle);
+		return Math.toDegrees(Math.acos(cosAngle));
 	}
-	
-	public double getRollAngle(double speedLeftWing, double speedRightWing) {
+
+	/**
+	 * Returns the current Roll Angle of the Glider.
+	 * The Roll Angle is the angle of the y - axis in relationship to the ground.
+	 * @return double in Degree
+	 */
+	public synchronized double getRollAngle(double speedLeftWing, double speedRightWing) {
 		
 		if(speedLeftWing == speedRightWing)
 		{
@@ -127,7 +140,7 @@ public final class Pilot {
 		double alpha = 0;
 		
 		
-		radius = getRadius(pathLeft,pathRight) - (Constants.GLIDER_WINGSPAN/2);
+		radius = getCurveRadius(pathLeft,pathRight) - (Constants.GLIDER_WINGSPAN/2);
 
 		
 		alpha = pilotPath/radius;
@@ -136,12 +149,9 @@ public final class Pilot {
 		double fG = Constants.GRAVITATIONAL_FORCE * weightOfPilot;
 		double fCord = Math.sqrt(Math.pow(fZen, 2) + Math.pow(fG, 2));	
 		
-		return (Math.asin(fZen/fCord));
+		return Math.toDegrees((Math.asin(fZen/fCord)));
 	}
 
-	/**
-	 * Calculates the X Axis.
-	 */
 	private void calculateX() {
 		calculateForcesInTheXAxis();
 		calculateChangeInXAxis();
@@ -155,12 +165,9 @@ public final class Pilot {
 		currentPosition.setX(currentPosition.getX() - changeX);
 	}
 
-	/**
-	 * Calculates the different Forces in the X-Axis.
-	 */
 	private void calculateForcesInTheXAxis() {
 		double fg = weightOfPilot * Constants.GRAVITATIONAL_FORCE;
-		double fBackwards = fg * Math.sin(getPitchAngle());
+		double fBackwards = fg * Math.sin(Math.toRadians(getPitchAngle()));
 
 		synchronized (lock) {
 			if (isOnPositiveSite) {
@@ -177,19 +184,12 @@ public final class Pilot {
 		}
 	}
 
-	/**
-	 * Returns the damping of the pendel.
-	 * 
-	 * @return double in Newton
-	 */
 	private double getDamping() {
 		// TODO Formel korrigieren, nicht ganz richtig.
 		return weightOfPilot
 				/ (Math.pow((Constants.TIME_OF_PERIOD / (2 * Math.PI)), 2))/10;
 	}
 	
-
-
 	private void calculateZ() {
 		double x = currentPosition.getX() - ZERO_POSITION.getX();
 		double y = currentPosition.getY() - ZERO_POSITION.getY();
@@ -200,15 +200,14 @@ public final class Pilot {
 	}
 
 	private void calculateY(double speedLeftWing, double speedRightWing) {		
-		getRollAngle(speedLeftWing, speedRightWing);
 
-		double newY = Constants.LENGTH_OF_CORD * Math.sin(getRollAngle(speedLeftWing, speedRightWing));
+		double newY = Constants.LENGTH_OF_CORD * Math.sin(Math.toRadians(getRollAngle(speedLeftWing, speedRightWing)));
 		
 		currentPosition.setY(newY);
 		
 	}	
 	
-	private double getRadius(double pathLeft,double pathRight)
+	private double getCurveRadius(double pathLeft,double pathRight)
 	{
 		double xa = pathRight;
 		double xb = pathLeft;

@@ -11,9 +11,6 @@ public class Glider {
 	private Wing leftWing = new Wing("Left");
 	private Wing rightWing = new Wing("Right");
 	private Pilot pilot = Pilot.getInstance();
-	
-	private double pitchAngle = 0;
-	private double rollAngle = 0;
 	private double yawAngle = 0;
 	
 	private static Glider instance;
@@ -31,37 +28,73 @@ public class Glider {
 		return instance;
 	}
 	
+	/**
+	 * Returns the current Position of the Pilot in a Vector (x,y,z).
+	 * @return Vector
+	 */
 	public Vector getPilotPosition()
 	{
 		return pilot.getCurrentPosition();
 	}
 
+	/**
+	 * Returns the current PitchAngle of the Glider.
+	 * The Pitch Angle is the angle of the x -axis in relationship to the ground.
+	 * @return double in Degree
+	 */
 	public double getPitchAngle() {
-		return pitchAngle;
+		return pilot.getPitchAngle();
 	}
 
+	/**
+	 * Returns the current Roll Angle of the Glider.
+	 * The Roll Angle is the angle of the y - axis in relationship to the ground.
+	 * @return double in Degree
+	 */
 	public double getRollAngle() {
-		return rollAngle;
+		return pilot.getRollAngle(leftWing.getHorizontalSpeed(), leftWing.getVerticalSpeed());
 	}
 
+	/**
+	 * Returns the current Yaw Angle of the Glider.
+	 * The Yawn Angle is the angle between the direction of the previous flying direction and the direction of the curve.
+	 * @return double in Degree
+	 */
 	public double getYawAngle() {
+		calculateYawAngle();
 		return yawAngle;
 	}
 	
+	/**
+	 * Returns the current Speed in relationship to the ground.
+	 * @return double in meter per secound.
+	 */
 	public double getHorizontalSpeed() {
-		//TODO Calculate new horizontal speed.
 		return (leftWing.getHorizontalSpeed() + rightWing.getHorizontalSpeed())/2;
 	}
 	
+	/**
+	 * Returns the current vertical Speed in relationship to the ground.
+	 * The positive speed direction is to the ground.
+	 * @return double in meter per second.
+	 */
 	public double getVerticalSpeed() {
 		return (leftWing.getVerticalSpeed() + rightWing.getVerticalSpeed())/2;
 	}
 	
+	/**
+	 * Returns the current glide Ratio.
+	 * @return double
+	 */
 	public double getCurrentGlideRatio() {
-		//TODO Calculate new glide ratio.
 		return (leftWing.getCurrentGlideRatio() + rightWing.getCurrentGlideRatio())/2;
 	}	
 	
+	/**
+	 * Changes the speed of the Glider.
+	 * @param msLeft double in meter per seconds
+	 * @param msRight double in meter per seconds
+	 */
 	public void changeSpeed(double msLeft, double msRight )
 	{
 		leftWing.changeCurrentSpeed(msLeft);
@@ -69,37 +102,10 @@ public class Glider {
 		pilot.setChangeInSpeed((msLeft+msRight)/2);
 	}
 	
-	public void changeLeftWingSpeed(double ms)
-	{
-		leftWing.changeCurrentSpeed(ms);
-	}
-	public void changeRightWingSpeed(double ms)
-	{
-		rightWing.changeCurrentSpeed(ms);
-	}
-	
-	public void changePilotSpeed(double ms)
-	{
-		pilot.setChangeInSpeed(ms);
-	}
-	
-	
 	public void reset()
 	{
-		pitchAngle = 0;
-		rollAngle = 0;
 		yawAngle = 0;
 		pilot.reset();
-	}
-	
-	private double calculatePitchAngle()
-	{
-		return pilot.getPitchAngle();
-	}
-	
-	private double calculateRollAngle()
-	{		
-		return pilot.getRollAngle(leftWing.getHorizontalSpeed(), rightWing.getHorizontalSpeed());
 	}
 	
 	private void calculateYawAngle()
@@ -107,33 +113,15 @@ public class Glider {
 		
 		double pathLeft = leftWing.getHorizontalSpeed() * Constants.TIME_INTERVALL;
 		double pathRight = rightWing.getHorizontalSpeed() * Constants.TIME_INTERVALL;
-		
-		if(pathLeft == pathRight)
-		{
-			return;
-		}
-		
-		/* Left Curve */
-		if(pathLeft < pathRight)
-		{
+			
+		if(pathLeft != pathRight) {
 			double xa = pathLeft;
 			double xb = pathRight;
 			double rb = Constants.GLIDER_WINGSPAN;
 			double ra = (xa*rb)/(xb-xa);
-			double r = ra + rb;
-			yawAngle += Math.toDegrees(xb/r);
+			double radius = ra + rb;
+			yawAngle += Math.toDegrees(xb/radius);
 		}
-		/* Right Curve */
-		else
-		{
-			double xa = pathRight;
-			double xb = pathLeft;
-			double rb = Constants.GLIDER_WINGSPAN;
-			double ra = (xa*rb)/(xb-xa);
-			double r = ra + rb;
-			yawAngle -= Math.toDegrees(xb/r);
-		}
-		
 	}
 
 	public void makeNextStep() {

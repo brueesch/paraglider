@@ -18,7 +18,7 @@ public class Vector extends Object {
 		Radian, Degree;
 	}
 	
-	/*
+	/**
 	 * Returns an Vector with three dimensions x,y,z	 * 
 	 * @param double x
 	 * @param double y
@@ -38,9 +38,8 @@ public class Vector extends Object {
 		this.setZ(v.getZ());
 	}
 	
-	/*
-	 * Returns an Vector with three dimensions which values are 0	 
-	 *  
+	/** 
+	 * Initalizes a 0 - Vector 
 	 */
 	public Vector(){
 		this.setX(0);

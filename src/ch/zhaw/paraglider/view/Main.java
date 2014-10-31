@@ -16,9 +16,7 @@ import ch.zhaw.paraglider.controller.RunGame;
 import ch.zhaw.paraglider.controller.XBoxController;
 import ch.zhaw.paraglider.physics.Constants;
 import ch.zhaw.paraglider.physics.Glider;
-import ch.zhaw.paraglider.physics.Pilot;
 import ch.zhaw.paraglider.physics.Vector;
-import ch.zhaw.paraglider.physics.Wing;
 
 /**
  * Main Class. Extends JPanel to draw the paraglider into the JFrame. Implements
@@ -228,26 +226,16 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 	@Override
 	public void stateChanged(ChangeEvent e) {
 		
-		if(e.getSource().equals(rightSlider)) {
-			double value = rightSlider.getValue();
-			glider.changePilotSpeed(-((value - oldRightValue)/3.6));
+		if(e.getSource().equals(rightSlider) || e.getSource().equals(leftSlider)) {
+			double rightValue = rightSlider.getValue();
+			double leftValue = leftSlider.getValue();
 			try {
-				glider.changeRightWingSpeed(-((value - oldRightValue)/3.6));
-				oldRightValue = value;
+				glider.changeSpeed(-((leftValue - oldLeftValue)/3.6), -((rightValue - oldRightValue)/3.6));
+				oldRightValue = rightValue;
+				oldLeftValue = leftValue;
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
-		}
-		
-		if(e.getSource().equals(leftSlider)) {
-			double value = leftSlider.getValue();
-			glider.changePilotSpeed(-((value - oldLeftValue)/3.6));
-			try {
-				glider.changeLeftWingSpeed(-((value - oldLeftValue)/3.6));
-				oldLeftValue = value;
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}	
 		}
 	}
 
