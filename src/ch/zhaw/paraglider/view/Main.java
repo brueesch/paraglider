@@ -27,30 +27,20 @@ import ch.zhaw.paraglider.physics.Vector;
  */
 public class Main extends JPanel implements ChangeListener, ActionListener {
 
-	private static final int METER_TO_PIXEL = 20;
-	/**
-	 * Generated serial version UID.
-	 */
-	private static final long serialVersionUID = -1624980403895301036L;
-	/**
-	 * Constant to define the height of the frame.
-	 */
-	private static final int FRAME_HEIGHT = 1000;
-	/**
-	 * Constant to define the width of the frame.
-	 */
-	private static final int FRAME_WIDTH = 1300;
-	/**
-	 * Variable for the glider instance.
-	 */
-	private Glider glider;
-
 	/**
 	 * Gui Elemente
 	 */
-	public static JSlider leftSlider, rightSlider;
+	
+	
+	private static final long serialVersionUID = -1624980403895301036L;
+	private static final int FRAME_HEIGHT = 1000;
+	private static final int FRAME_WIDTH = 1300;
+	
+	private Glider glider;
 	private double oldRightValue = 0, oldLeftValue = 0;
 	private JButton reset;
+	private JSlider leftSlider, rightSlider;
+	private double[][] backgroundLinePositions;
 
 	/**
 	 * Starting Point of the program. Creates JFrame and adds the main panel on
@@ -80,9 +70,6 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		if (xBoxController.isControllerConnected()) {
 			new Thread(xBoxController).start();
 		}
-		else {
-			
-		}
 	}
 
 	private void initButtons() {
@@ -92,9 +79,6 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		
 	}
 
-	/**
-	 * Initialises Sliders
-	 */
 	private void initSliders() {
 		leftSlider = new JSlider();
 		rightSlider = new JSlider();
@@ -141,13 +125,8 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 
 	}
 
-	/**
-	 * The method draws the left view of the program. It contains the paraglider
-	 * from the side view.
-	 * 
-	 * @param g
-	 */
 	private void drawLeftView(Graphics g) {
+		drawLeftBackground(g);
 		Vector zeroPoint = new Vector(330, 0, 240);
 		int diameter = 40;
 		Color color = g.getColor();
@@ -160,8 +139,8 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		g.drawString("Gleitrate: " + glider.getCurrentGlideRatio(), 50, 155);
 		Vector pos = glider.getPilotPosition();
 
-		int currentXPosition = (int) (zeroPoint.getX()+(pos.getX()*METER_TO_PIXEL))-diameter/2;
-		int currentZPosition = (int) (zeroPoint.getZ() + (pos.getZ()*METER_TO_PIXEL))-diameter/2;
+		int currentXPosition = (int) (zeroPoint.getX()+(Constants.convertMeterToPixel(pos.getX())))-diameter/2;
+		int currentZPosition = (int) (zeroPoint.getZ() + (Constants.convertMeterToPixel(pos.getZ())))-diameter/2;
 		g.fillOval(currentXPosition, currentZPosition, diameter, diameter);
 		g.drawLine(currentXPosition+diameter/2, currentZPosition+diameter/2, 270,
 				(int)zeroPoint.getZ());
@@ -182,12 +161,45 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		g.setColor(color);
 	}
 
-	/**
-	 * The method draws the left view of the program. It contains the paraglider
-	 * from the front view.
-	 * 
-	 * @param g
-	 */
+	private void drawLeftBackground(Graphics g) {
+		Color color = g.getColor();
+		g.setColor(Color.black);
+		//x = 0, y = 1
+		if(backgroundLinePositions== null) {
+			initLineArray();
+		}
+		
+		double speed = glider.getHorizontalSpeed();
+		double distanz = speed*Constants.TIME_INTERVALL;
+		distanz = Constants.convertMeterToPixel(distanz);
+		
+		for(int i = 0; i<backgroundLinePositions.length; i++) {
+			double x = backgroundLinePositions[i][0];
+			x -= distanz;
+			if(x <40) {
+				x = 600;
+			}
+			backgroundLinePositions[i][0] = x;
+		}
+		
+		
+		for(int i = 0; i < backgroundLinePositions.length; i++) {
+			g.drawLine((int)backgroundLinePositions[i][0], 40, (int)backgroundLinePositions[i][0], 840);
+		}
+		
+		
+		g.setColor(color);
+	}
+
+	private void initLineArray() {
+		backgroundLinePositions = new double[7][2];
+		
+		for(int i = 0; i < backgroundLinePositions.length; i++) {
+			backgroundLinePositions[i][0] = 80+i*80;
+			backgroundLinePositions[i][1] = 80+i*80;
+		}
+	}
+
 	private void drawRightView(Graphics g) {
 		Vector zeroPoint = new Vector(0, 930, 240);
 		int diameter = 40;
@@ -197,8 +209,8 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 
 		Vector pos = glider.getPilotPosition();
 		
-		int currentYPosition = (int) (zeroPoint.getY()+(pos.getY()*METER_TO_PIXEL))-diameter/2;
-		int currentZPosition = (int) (zeroPoint.getZ() + (pos.getZ()*METER_TO_PIXEL))-diameter/2;
+		int currentYPosition = (int) (zeroPoint.getY()+(Constants.convertMeterToPixel(pos.getY())))-diameter/2;
+		int currentZPosition = (int) (zeroPoint.getZ() + (Constants.convertMeterToPixel(pos.getZ())))-diameter/2;
 		g.fillOval(currentYPosition, currentZPosition, diameter, diameter);
 
 		g.drawLine(currentYPosition+diameter/2, currentZPosition+diameter/2, 720,
