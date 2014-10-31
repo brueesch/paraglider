@@ -12,20 +12,9 @@ public class Glider {
 	private Wing rightWing = new Wing("Right");
 	private Pilot pilot = Pilot.getInstance();
 	
-	/* Angle caused by the pendulum-effect */
 	private double pitchAngle = 0;
-	
-	/* Angle caused by the centrifugal-forces*/
 	private double rollAngle = 0;
-	
-	/* Angle caused by the curveflight */
 	private double yawAngle = 0;
-	
-	/**
-	 * Constant defines which angle the paraglider flies per km/h 
-	 * speed difference between the two wings.
-	 */
-	private final double ANGLE_PER_KMH = 5.2;
 	
 	private static Glider instance;
 	private Glider() {}
@@ -42,41 +31,6 @@ public class Glider {
 		return instance;
 	}
 	
-	public void reset()
-	{
-		pitchAngle = 0;
-		rollAngle = 0;
-		yawAngle = 0;
-		pilot.reset();
-	}
-	
-	public double getHorizontalSpeed() {
-		//TODO Calculate new horizontal speed.
-		return (leftWing.getHorizontalSpeed() + rightWing.getHorizontalSpeed())/2;
-	}
-	
-	public double getVerticalSpeed() {
-		return (leftWing.getVerticalSpeed() + rightWing.getVerticalSpeed())/2;
-	}
-	
-	public double getCurrentGlideRatio() {
-		//TODO Calculate new glide ratio.
-		return (leftWing.getCurrentGlideRatio() + rightWing.getHorizontalSpeed())/2;
-	}
-	
-	public void changeLeftWingSpeed(double ms)
-	{
-		leftWing.changeCurrentSpeed(ms);
-	}
-	public void changeRightWingSpeed(double ms)
-	{
-		rightWing.changeCurrentSpeed(ms);
-	}
-	
-	public void changePilotSpeed(double ms)
-	{
-		pilot.setChangeInSpeed(ms);
-	}
 	public Vector getPilotPosition()
 	{
 		return pilot.getCurrentPosition();
@@ -92,6 +46,50 @@ public class Glider {
 
 	public double getYawAngle() {
 		return yawAngle;
+	}
+	
+	public double getHorizontalSpeed() {
+		//TODO Calculate new horizontal speed.
+		return (leftWing.getHorizontalSpeed() + rightWing.getHorizontalSpeed())/2;
+	}
+	
+	public double getVerticalSpeed() {
+		return (leftWing.getVerticalSpeed() + rightWing.getVerticalSpeed())/2;
+	}
+	
+	public double getCurrentGlideRatio() {
+		//TODO Calculate new glide ratio.
+		return (leftWing.getCurrentGlideRatio() + rightWing.getCurrentGlideRatio())/2;
+	}	
+	
+	public void changeSpeed(double msLeft, double msRight )
+	{
+		leftWing.changeCurrentSpeed(msLeft);
+		rightWing.changeCurrentSpeed(msRight);
+		pilot.setChangeInSpeed((msLeft+msRight)/2);
+	}
+	
+	public void changeLeftWingSpeed(double ms)
+	{
+		leftWing.changeCurrentSpeed(ms);
+	}
+	public void changeRightWingSpeed(double ms)
+	{
+		rightWing.changeCurrentSpeed(ms);
+	}
+	
+	public void changePilotSpeed(double ms)
+	{
+		pilot.setChangeInSpeed(ms);
+	}
+	
+	
+	public void reset()
+	{
+		pitchAngle = 0;
+		rollAngle = 0;
+		yawAngle = 0;
+		pilot.reset();
 	}
 	
 	private double calculatePitchAngle()
@@ -137,36 +135,9 @@ public class Glider {
 		}
 		
 	}
-	
-	
-	/**
-	 * Returns the angle of the glider in relation to the ground.
-	 * @return double angle in radian.
-	 */
-	public double getAngleOfTheGlider() {
-		double currentSpeedLeftWing = leftWing.getHorizontalSpeed();
-		double currentSpeedRightWing = rightWing.getHorizontalSpeed();
-		double speedDifferenz = currentSpeedRightWing -currentSpeedLeftWing;
-		
-		//Left Turn
-		if(speedDifferenz>0) {
-			double angle = speedDifferenz*ANGLE_PER_KMH;
-			return Math.toRadians(angle);
-		}
-		//Right Turn
-		else if(speedDifferenz<0) {
-			double angle = speedDifferenz*ANGLE_PER_KMH;
-			return Math.toRadians(angle);
-		}
-		else {
-			return 0;
-		}
-		
-		
-	}
 
 	public void makeNextStep() {
-		pilot.makeNextStep(leftWing.getHorizontalSpeed(), rightWing.getHorizontalSpeed());
+		pilot.calculatePosition(leftWing.getHorizontalSpeed(), rightWing.getHorizontalSpeed());
 	}
 
 	

@@ -127,8 +127,7 @@ public class XBoxController implements Runnable {
 		double valueRightWing = controller.getAxisValue(2);
 		if (oldValueRightWing != valueRightWing) {
 			if (valueRightWing >= 0) {
-				glider.changePilotSpeed(-((valueRightWing - oldValueRightWing) * MULTIPLICATOR_CONTROLLER_SPEED));
-				glider.changeRightWingSpeed(-(valueRightWing - oldValueRightWing) * MULTIPLICATOR_CONTROLLER_SPEED);
+				glider.changeSpeed(0,-(valueRightWing - oldValueRightWing) * MULTIPLICATOR_CONTROLLER_SPEED);
 				oldValueRightWing = controller.getAxisValue(2);
 			}
 		}
@@ -144,8 +143,7 @@ public class XBoxController implements Runnable {
 		double valueLeftWing = controller.getAxisValue(0);
 		if (oldValueLeftWing != valueLeftWing) {
 			if (valueLeftWing >= 0) {
-				glider.changePilotSpeed(-((valueLeftWing - oldValueLeftWing) * MULTIPLICATOR_CONTROLLER_SPEED));
-				glider.changeLeftWingSpeed(-(valueLeftWing - oldValueLeftWing)	* MULTIPLICATOR_CONTROLLER_SPEED);
+				glider.changeSpeed(-(valueLeftWing - oldValueLeftWing)	* MULTIPLICATOR_CONTROLLER_SPEED,0);
 				oldValueLeftWing = controller.getAxisValue(0);
 			}
 		}
