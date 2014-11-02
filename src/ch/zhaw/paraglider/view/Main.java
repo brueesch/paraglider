@@ -131,7 +131,7 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		int diameter = 40;
 		Color color = g.getColor();
 		g.setColor(Color.black);
-		g.drawRect(40, 40, 580, 800);
+		g.drawRect(40, 40, 580, 560);
 		g.drawString("Geschwindigkeit: " + Constants.convertMsToKmh(glider.getHorizontalSpeed())
 				+ " km/h", 50, 125);
 		g.drawString("Vertikalgeschwindigkeit: " + glider.getVerticalSpeed()
@@ -164,48 +164,67 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 	private void drawLeftBackground(Graphics g) {
 		Color color = g.getColor();
 		g.setColor(Color.black);
-		//x = 0, y = 1
+		int xAxis = 0, zAxis = 2;
 		if(backgroundLinePositions== null) {
 			initLineArray();
 		}
 		
-		double speed = glider.getHorizontalSpeed();
-		double distanz = speed*Constants.TIME_INTERVALL;
-		distanz = Constants.convertMeterToPixel(distanz);
-		
-		for(int i = 0; i<backgroundLinePositions.length; i++) {
-			double x = backgroundLinePositions[i][0];
-			x -= distanz;
-			if(x <40) {
-				x = 600;
-			}
-			backgroundLinePositions[i][0] = x;
-		}
-		
+		calculateNewPosition(xAxis);
+		calculateNewPosition(zAxis);
 		
 		for(int i = 0; i < backgroundLinePositions.length; i++) {
-			g.drawLine((int)backgroundLinePositions[i][0], 40, (int)backgroundLinePositions[i][0], 840);
+			g.drawLine((int)backgroundLinePositions[i][xAxis], 40, (int)backgroundLinePositions[i][xAxis], 600);
+			g.drawLine(40, (int)backgroundLinePositions[i][zAxis],620, (int)backgroundLinePositions[i][zAxis]);
 		}
 		
 		
 		g.setColor(color);
 	}
+	
+
+
+	private void calculateNewPosition(int axis) {
+		double speed;
+		if(axis == 0) {
+			speed = glider.getHorizontalSpeed();
+		}
+		else if(axis == 1) {
+			//TODO: Fill in the y Speed
+			speed = 0;
+		}
+		else {
+			speed = glider.getVerticalSpeed();
+		}
+		double distanz = speed*Constants.TIME_INTERVALL;
+		distanz = Constants.convertMeterToPixel(distanz);
+		
+		for(int i = 0; i<backgroundLinePositions.length; i++) {
+			double currentPosition = backgroundLinePositions[i][axis];
+			currentPosition -= distanz;
+			if(currentPosition <40) {
+				currentPosition = 600;
+			}
+			backgroundLinePositions[i][axis] = currentPosition;
+		}
+	}
 
 	private void initLineArray() {
-		backgroundLinePositions = new double[7][2];
+		backgroundLinePositions = new double[7][3];
 		
 		for(int i = 0; i < backgroundLinePositions.length; i++) {
 			backgroundLinePositions[i][0] = 80+i*80;
 			backgroundLinePositions[i][1] = 80+i*80;
+			backgroundLinePositions[i][2] = 80+i*80;
 		}
 	}
 
 	private void drawRightView(Graphics g) {
+		drawRightBackground(g);
 		Vector zeroPoint = new Vector(0, 930, 240);
 		int diameter = 40;
 		Color color = g.getColor();
 		g.setColor(Color.BLACK);
-		g.drawRect(640, 40, 580, 800);
+		g.drawRect(640, 40, 580, 560);
 
 		Vector pos = glider.getPilotPosition();
 		
@@ -229,6 +248,22 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		int[] yPoints = { 680, 846, 1012, 1180 };
 		int[] zPoints = { 240, 180, 180, 240 };
 		g.fillPolygon(yPoints, zPoints, 4);
+		g.setColor(color);
+	}
+	
+	private void drawRightBackground(Graphics g) {
+		int yAxis = 1, zAxis = 2;
+		if(backgroundLinePositions == null) {
+			initLineArray();
+		}
+		Color color = g.getColor();
+		g.setColor(Color.BLACK);
+		calculateNewPosition(yAxis);
+		
+		for(int i = 0; i<backgroundLinePositions.length; i++) {
+			g.drawLine((int)backgroundLinePositions[i][yAxis]+600,40, (int)backgroundLinePositions[i][yAxis]+600,600);
+			g.drawLine(640, (int)backgroundLinePositions[i][zAxis],1220, (int)backgroundLinePositions[i][zAxis]);
+		}
 		g.setColor(color);
 	}
 
