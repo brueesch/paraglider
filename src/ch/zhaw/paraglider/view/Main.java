@@ -12,6 +12,7 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import Jama.Matrix;
 import ch.zhaw.paraglider.controller.RunGame;
 import ch.zhaw.paraglider.controller.XBoxController;
 import ch.zhaw.paraglider.physics.Constants;
@@ -30,18 +31,19 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 	/**
 	 * Gui Elemente
 	 */
-	
+
 	public static JSlider leftSlider, rightSlider;
-	
+
 	private static final long serialVersionUID = -1624980403895301036L;
-	private static final int FRAME_HEIGHT = 1000;
+	private static final int FRAME_HEIGHT = 700;
 	private static final int FRAME_WIDTH = 1300;
-	
+
 	private Glider glider;
 	private double oldRightValue = 0, oldLeftValue = 0;
 	private JButton reset;
-	
+
 	private double[][] backgroundLinePositions;
+
 
 	/**
 	 * Starting Point of the program. Creates JFrame and adds the main panel on
@@ -77,7 +79,7 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		reset = new JButton("Reset");
 		reset.addActionListener(this);
 		add(reset);
-		
+
 	}
 
 	private void initSliders() {
@@ -107,7 +109,7 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 
 		leftSlider.setValue(0);
 		rightSlider.setValue(0);
-		
+
 		leftSlider.addChangeListener(this);
 		rightSlider.addChangeListener(this);
 
@@ -119,97 +121,176 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 	 * Main paint method. Paints all components on the view.
 	 */
 	public void paintComponent(Graphics g) {
+		Color color = g.getColor();
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
 		drawLeftView(g);
 		drawRightView(g);
-
+		g.setColor(color);
 	}
 
-	private void drawLeftView(Graphics g) {
+	private void drawLeftView(Graphics g) {		
+		double[][] coordinatesParaglider = { { -100, 0 }, { 0, -60 },
+				{ 100, 0 } };
+		double[][] coordinatesPilot = { { 0,
+				Constants.convertMeterToPixel(Constants.LENGTH_OF_CORD) } };
+
 		drawLeftBackground(g);
 		Vector zeroPoint = new Vector(330, 0, 240);
-		int diameter = 40;
+		double alpha = glider.getPitchAngle();
+		coordinatesPilot = calculateRotation(coordinatesPilot,alpha);
+		checkDirection(coordinatesPilot);
+		coordinatesPilot = moveToZeroPoint(coordinatesPilot,zeroPoint);
+		
+		coordinatesParaglider = calculateRotation(coordinatesParaglider,alpha);
+		checkDirection(coordinatesParaglider);
+		coordinatesParaglider = moveToZeroPoint(coordinatesParaglider, zeroPoint);
+		
+		
+		drawInfosAndFrame(g,zeroPoint);
+		drawPilotAndParaglider(g, coordinatesParaglider, coordinatesPilot,zeroPoint);	
+	}
+	
+	private void drawRightView(Graphics g) {
+		double[][] coordinatesParaglider = { { -250, 0 }, {-84, -60 },{84, -60 },
+				{ 250, 0 } };
+		double[][] coordinatesPilot = { { 0,
+				Constants.convertMeterToPixel(Constants.LENGTH_OF_CORD) } };
+
+		drawRightBackground(g);
+		Vector zeroPoint = new Vector(930, 0, 240);
+		double alpha = glider.getRollAngle();
+		coordinatesPilot = calculateRotation(coordinatesPilot,alpha);
+		coordinatesPilot = moveToZeroPoint(coordinatesPilot,zeroPoint);
+		coordinatesParaglider = calculateRotation(coordinatesParaglider,alpha);
+		coordinatesParaglider = moveToZeroPoint(coordinatesParaglider, zeroPoint);
+		
+		drawInfosAndFrame(g,zeroPoint);
+		drawPilotAndParaglider(g, coordinatesParaglider, coordinatesPilot,zeroPoint);	
+	}
+
+	private void drawPilotAndParaglider(Graphics g,
+			double[][] coordinatesParaglider, double[][] coordinatesPilot, Vector zeroPoint) {
 		Color color = g.getColor();
 		g.setColor(Color.black);
-		g.drawRect(40, 40, 580, 560);
-		g.drawString("Geschwindigkeit: " + Constants.convertMsToKmh(glider.getHorizontalSpeed())
-				+ " km/h", 50, 125);
-		g.drawString("Vertikalgeschwindigkeit: " + glider.getVerticalSpeed()
-				+ " m/s", 50, 140);
-		g.drawString("Gleitrate: " + glider.getCurrentGlideRatio(), 50, 155);
-		Vector pos = glider.getPilotPosition();
-
-		int currentXPosition = (int) (zeroPoint.getX()+(Constants.convertMeterToPixel(pos.getX())))-diameter/2;
-		int currentZPosition = (int) (zeroPoint.getZ() + (Constants.convertMeterToPixel(pos.getZ())))-diameter/2;
-		g.fillOval(currentXPosition, currentZPosition, diameter, diameter);
-		g.drawLine(currentXPosition+diameter/2, currentZPosition+diameter/2, 270,
-				(int)zeroPoint.getZ());
-		g.drawLine(currentXPosition+diameter/2, currentZPosition+diameter/2, 330,
-				(int)zeroPoint.getZ());
-		g.drawLine(currentXPosition+diameter/2, currentZPosition+diameter/2, 390,
-				(int)zeroPoint.getZ());
+		int diameter = 40;
+		g.fillOval((int) (coordinatesPilot[0][0] - diameter / 2),
+				(int) (coordinatesPilot[0][1] - diameter / 2), diameter,
+				diameter);
+		g.drawLine((int) (coordinatesPilot[0][0]),
+				(int) (coordinatesPilot[0][1]),
+				(int) zeroPoint.getX(),
+				(int) zeroPoint.getZ());
+		g.drawLine((int) (coordinatesPilot[0][0]),
+				(int) (coordinatesPilot[0][1]),
+				(int) coordinatesParaglider[0][0],
+				(int) coordinatesParaglider[0][1]);
+		g.drawLine((int) (coordinatesPilot[0][0]),
+				(int) (coordinatesPilot[0][1]),
+				(int) coordinatesParaglider[coordinatesParaglider.length-1][0],
+				(int) coordinatesParaglider[coordinatesParaglider.length-1][1]);
 
 		g.setColor(Color.RED);
-		int[] xPointsParaglider = { 230, 330, 430 };
-		int[] zPointsParaglider = { 240, 180, 240 };
-		g.fillPolygon(xPointsParaglider, zPointsParaglider, 3);
-
-		g.setColor(Color.BLUE);
-		int[] xPointsArrow = { 80, 120, 120, 140, 120, 120, 80 };
-		int[] zPointsArrow = { 80, 80, 70, 90, 110, 100, 100 };
-		g.fillPolygon(xPointsArrow, zPointsArrow, xPointsArrow.length);
+		int[] xCoordinates = new int[coordinatesParaglider.length];
+		int[] zCoordinates = new int[coordinatesParaglider.length];
+		for (int i = 0; i < coordinatesParaglider.length; i++) {
+			xCoordinates[i] = (int) coordinatesParaglider[i][0];
+			zCoordinates[i] = (int) coordinatesParaglider[i][1];
+		}
+		g.fillPolygon(xCoordinates, zCoordinates, xCoordinates.length);
 		g.setColor(color);
+	}
+
+	private double[][] moveToZeroPoint(double[][] coordinatesArray, Vector zeroPoint) {
+		for (int i = 0; i < coordinatesArray.length; i++) {
+			for (int j = 0; j < coordinatesArray[i].length; j++) {
+				if (j == 0) {
+					coordinatesArray[i][j] += zeroPoint.getX();
+				} else {
+					coordinatesArray[i][j] += zeroPoint.getZ();
+				}
+			}
+		}
+		return coordinatesArray;
+	}
+
+	private void drawInfosAndFrame(Graphics g, Vector zeroPoint) {
+		Color color = g.getColor();
+		g.setColor(Color.black);
+		g.drawRect((int)(-290+zeroPoint.getX()), (int)(-200+zeroPoint.getZ()), 580, 560);
+		g.drawString(
+				"Geschwindigkeit: "
+						+ Constants.convertMsToKmh(glider.getHorizontalSpeed())
+						+ " km/h", 50, 75);
+		g.drawString("Vertikalgeschwindigkeit: " + glider.getVerticalSpeed()
+				+ " m/s", 50, 90);
+		g.drawString("Gleitrate: " + glider.getCurrentGlideRatio(), 50, 105);
+		g.setColor(color);
+	}
+
+	private double[][] calculateRotation(double[][] coordinatesArray, double alpha) {
+		Matrix a = new Matrix(coordinatesArray);
+		double[][] rotationArray = { { Math.cos(alpha), Math.sin(alpha) },
+				{ -Math.sin(alpha), Math.cos(alpha) } };
+		Matrix rotationMatrix = new Matrix(rotationArray);
+		double[][] result = a.times(rotationMatrix).getArray();
+		
+		return result;
+	}
+
+	public void checkDirection(double[][] result) {
+		if(glider.isOnPositiveSite()){
+			for(int i = 0; i<result.length;i++) {
+					result[i][0] = -result[i][0];
+			}
+		}
 	}
 
 	private void drawLeftBackground(Graphics g) {
 		Color color = g.getColor();
 		g.setColor(Color.black);
 		int xAxis = 0, zAxis = 2;
-		if(backgroundLinePositions== null) {
+		if (backgroundLinePositions == null) {
 			initLineArray();
 		}
-		
+
 		calculateNewPosition(xAxis);
 		calculateNewPosition(zAxis);
-		
-		for(int i = 0; i < backgroundLinePositions.length; i++) {
-			g.drawLine((int)backgroundLinePositions[i][xAxis], 40, (int)backgroundLinePositions[i][xAxis], 600);
-			g.drawLine(40, (int)backgroundLinePositions[i][zAxis],620, (int)backgroundLinePositions[i][zAxis]);
+
+		for (int i = 0; i < backgroundLinePositions.length; i++) {
+			g.drawLine((int) backgroundLinePositions[i][xAxis], 40,
+					(int) backgroundLinePositions[i][xAxis], 600);
+			g.drawLine(40, (int) backgroundLinePositions[i][zAxis], 620,
+					(int) backgroundLinePositions[i][zAxis]);
 		}
-		
-		
+
 		g.setColor(color);
 	}
-	
-
 
 	private void calculateNewPosition(int axis) {
 		double speed;
-		if(axis == 0) {
+		if (axis == 0) {
 			speed = glider.getHorizontalSpeed();
-		}
-		else if(axis == 1) {
-			double angle = Math.toDegrees(glider.getAngularVelocity()*Constants.TIME_INTERVALL);
+		} else if (axis == 1) {
+			double angle = Math.toDegrees(glider.getAngularVelocity()
+					* Constants.TIME_INTERVALL);
 			double radius = 20;
-			double distance = (angle * 2* radius * Math.PI) /360;
-			
-			speed = -distance/Constants.TIME_INTERVALL;
-			//speed = -3;
-		}
-		else {
+			double distance = (angle * 2 * radius * Math.PI) / 360;
+
+			speed = distance / Constants.TIME_INTERVALL;
+		} else {
 			speed = glider.getVerticalSpeed();
 		}
-		double distanz = speed*Constants.TIME_INTERVALL;
+		double distanz = speed * Constants.TIME_INTERVALL;
 		distanz = Constants.convertMeterToPixel(distanz);
-		
-		for(int i = 0; i<backgroundLinePositions.length; i++) {
+
+		for (int i = 0; i < backgroundLinePositions.length; i++) {
 			double currentPosition = backgroundLinePositions[i][axis];
 			currentPosition -= distanz;
-			if(currentPosition <40) {
+			if (currentPosition < 40) {
 				currentPosition = 600;
 			}
-			if(currentPosition > 620) {
+			if (currentPosition > 620) {
 				currentPosition = 40;
 			}
 			backgroundLinePositions[i][axis] = currentPosition;
@@ -218,59 +299,30 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 
 	private void initLineArray() {
 		backgroundLinePositions = new double[7][3];
-		
-		for(int i = 0; i < backgroundLinePositions.length; i++) {
-			backgroundLinePositions[i][0] = 80+i*80;
-			backgroundLinePositions[i][1] = 80+i*80;
-			backgroundLinePositions[i][2] = 80+i*80;
+
+		for (int i = 0; i < backgroundLinePositions.length; i++) {
+			backgroundLinePositions[i][0] = 80 + i * 80;
+			backgroundLinePositions[i][1] = 80 + i * 80;
+			backgroundLinePositions[i][2] = 80 + i * 80;
 		}
 	}
 
-	private void drawRightView(Graphics g) {
-		drawRightBackground(g);
-		Vector zeroPoint = new Vector(0, 930, 240);
-		int diameter = 40;
-		Color color = g.getColor();
-		g.setColor(Color.BLACK);
-		g.drawRect(640, 40, 580, 560);
 
-		Vector pos = glider.getPilotPosition();
-		
-		int currentYPosition = (int) (zeroPoint.getY()+(Constants.convertMeterToPixel(pos.getY())))-diameter/2;
-		int currentZPosition = (int) (zeroPoint.getZ() + (Constants.convertMeterToPixel(pos.getZ())))-diameter/2;
-		g.fillOval(currentYPosition, currentZPosition, diameter, diameter);
 
-		g.drawLine(currentYPosition+diameter/2, currentZPosition+diameter/2, 720,
-				(int)zeroPoint.getZ());
-		g.drawLine(currentYPosition+diameter/2, currentZPosition+diameter/2, 825,
-				(int)zeroPoint.getZ());
-		g.drawLine(currentYPosition+diameter/2, currentZPosition+diameter/2, 930,
-				(int)zeroPoint.getZ());
-		g.drawLine(currentYPosition+diameter/2, currentZPosition+diameter/2, 1035,
-				(int)zeroPoint.getZ());
-		g.drawLine(currentYPosition+diameter/2, currentZPosition+diameter/2, 1140,
-				(int)zeroPoint.getZ());
-		
-
-		g.setColor(Color.RED);
-		int[] yPoints = { 680, 846, 1012, 1180 };
-		int[] zPoints = { 240, 180, 180, 240 };
-		g.fillPolygon(yPoints, zPoints, 4);
-		g.setColor(color);
-	}
-	
 	private void drawRightBackground(Graphics g) {
 		int yAxis = 1, zAxis = 2;
-		if(backgroundLinePositions == null) {
+		if (backgroundLinePositions == null) {
 			initLineArray();
 		}
 		Color color = g.getColor();
 		g.setColor(Color.BLACK);
 		calculateNewPosition(yAxis);
-		
-		for(int i = 0; i<backgroundLinePositions.length; i++) {
-			g.drawLine((int)backgroundLinePositions[i][yAxis]+600,40, (int)backgroundLinePositions[i][yAxis]+600,600);
-			g.drawLine(640, (int)backgroundLinePositions[i][zAxis],1220, (int)backgroundLinePositions[i][zAxis]);
+
+		for (int i = 0; i < backgroundLinePositions.length; i++) {
+			g.drawLine((int) backgroundLinePositions[i][yAxis] + 600, 40,
+					(int) backgroundLinePositions[i][yAxis] + 600, 600);
+			g.drawLine(640, (int) backgroundLinePositions[i][zAxis], 1220,
+					(int) backgroundLinePositions[i][zAxis]);
 		}
 		g.setColor(color);
 	}
@@ -280,12 +332,14 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 	 */
 	@Override
 	public void stateChanged(ChangeEvent e) {
-		
-		if(e.getSource().equals(rightSlider) || e.getSource().equals(leftSlider)) {
+
+		if (e.getSource().equals(rightSlider)
+				|| e.getSource().equals(leftSlider)) {
 			double rightValue = rightSlider.getValue();
 			double leftValue = leftSlider.getValue();
 			try {
-				glider.changeSpeed(-((leftValue - oldLeftValue)/3.6), -((rightValue - oldRightValue)/3.6));
+				glider.changeSpeed(-((leftValue - oldLeftValue) / 3.6),
+						-((rightValue - oldRightValue) / 3.6));
 				oldRightValue = rightValue;
 				oldLeftValue = leftValue;
 			} catch (Exception e1) {
@@ -296,12 +350,12 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
-		if(e.getSource() == reset) {
+
+		if (e.getSource() == reset) {
 			leftSlider.setValue(0);
 			rightSlider.setValue(0);
 			glider.reset();
 		}
-		
+
 	}
 }

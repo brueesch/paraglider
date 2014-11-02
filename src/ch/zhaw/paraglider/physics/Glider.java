@@ -40,7 +40,7 @@ public class Glider {
 	/**
 	 * Returns the current PitchAngle of the Glider.
 	 * The Pitch Angle is the angle of the x -axis in relationship to the ground.
-	 * @return double in Degree
+	 * @return double in Radian
 	 */
 	public double getPitchAngle() {
 		return pilot.getPitchAngle();
@@ -49,10 +49,10 @@ public class Glider {
 	/**
 	 * Returns the current Roll Angle of the Glider.
 	 * The Roll Angle is the angle of the y - axis in relationship to the ground.
-	 * @return double in Degree
+	 * @return double in Radian
 	 */
 	public double getRollAngle() {
-		return pilot.getRollAngle(leftWing.getHorizontalSpeed(), leftWing.getVerticalSpeed());
+		return pilot.getRollAngle();
 	}
 
 	/**
@@ -108,6 +108,7 @@ public class Glider {
 		pilot.reset();
 	}
 	
+	//TODO: Formel korrigieren, siehe getCurveRadius in Pilot
 	private void calculateYawAngle()
 	{		
 		
@@ -132,7 +133,9 @@ public class Glider {
 		return pilot.getAngularVelocity();
 	}
 
-	
+	public boolean isOnPositiveSite() {
+		return pilot.isOnPositiveSite();
+	}
 	
 
 }

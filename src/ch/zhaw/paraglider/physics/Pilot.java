@@ -19,8 +19,10 @@ public final class Pilot {
 	private boolean isOnPositiveSite = true;
 	private static Pilot instance;
 	private double fForward;
-	private final Object lock = new Object();
+	private final Object fForwardLock = new Object();
+	private final Object rollAngleLock = new Object();
 	private double angularVelocity;
+	private double rollAngle = 0;
 
 	private Pilot() {
 		super();
@@ -56,7 +58,7 @@ public final class Pilot {
 	 */
 	public void setChangeInSpeed(double speed) {
 
-		synchronized (lock) {
+		synchronized (fForwardLock) {
 			fForward += (speed / Constants.TIME_INTERVALL) * weightOfPilot;
 		}
 	}
@@ -84,7 +86,7 @@ public final class Pilot {
 	 */
 	public void reset() {
 		currentPosition = new Vector(ZERO_POSITION);
-		synchronized (lock) {
+		synchronized (fForwardLock) {
 			fForward = 0;
 		}
 	}
@@ -103,7 +105,7 @@ public final class Pilot {
 	 * Returns the current PitchAngle of the Glider. The Pitch Angle is the
 	 * angle of the x -axis in relationship to the ground.
 	 * 
-	 * @return double in Degree
+	 * @return double in Radian
 	 */
 	public synchronized double getPitchAngle() {
 		Vector2D u = new Vector2D(ZERO_POSITION.getX() - ZERO_POINT.getX(),
@@ -119,16 +121,16 @@ public final class Pilot {
 			isOnPositiveSite = true;
 		}
 
-		return Math.toDegrees(Math.acos(cosAngle));
+		return Math.acos(cosAngle);
 	}
 
 	/**
 	 * Returns the current Roll Angle of the Glider. The Roll Angle is the angle
 	 * of the y - axis in relationship to the ground.
 	 * 
-	 * @return double in Degree
+	 * @return double in Radian
 	 */
-	public synchronized double getRollAngle(double speedLeftWing,
+	public double calculateRollAngle(double speedLeftWing,
 			double speedRightWing) {
 
 		if (speedLeftWing == speedRightWing) {
@@ -138,8 +140,9 @@ public final class Pilot {
 
 		double fCen = getCentrifugalForce(speedLeftWing, speedRightWing);
 		double fG = Constants.GRAVITATIONAL_FORCE * weightOfPilot;
-
-		return Math.atan(fCen / fG);
+		double resultAngle = Math.atan(fCen / fG);
+		setRollAngle(resultAngle);
+		return resultAngle;
 	}
 
 	private double getCentrifugalForce(double speedLeftWing,
@@ -174,10 +177,10 @@ public final class Pilot {
 
 	private void calculateForcesInTheXAxis() {
 		double fg = weightOfPilot * Constants.GRAVITATIONAL_FORCE;
-		double fBackwards = fg * Math.sin(Math.toRadians(getPitchAngle()));
+		double fBackwards = fg * Math.sin(getPitchAngle());
 
-		synchronized (lock) {
-			if (isOnPositiveSite) {
+		synchronized (fForwardLock) {
+			if (isOnPositiveSite()) {
 				fForward += fBackwards;
 			} else {
 				fForward -= fBackwards;
@@ -190,6 +193,8 @@ public final class Pilot {
 			}
 		}
 	}
+
+	
 
 	private double getDamping() {
 		// TODO Formel korrigieren, nicht ganz richtig.
@@ -210,7 +215,7 @@ public final class Pilot {
 	private void calculateY(double speedLeftWing, double speedRightWing) {
 
 		double newY = Constants.LENGTH_OF_CORD
-				* Math.sin(getRollAngle(speedLeftWing, speedRightWing));
+				* Math.sin(calculateRollAngle(speedLeftWing, speedRightWing));
 
 		currentPosition.setY(newY);
 
@@ -226,6 +231,22 @@ public final class Pilot {
 
 	public double getAngularVelocity() {
 		return angularVelocity;
+	}
+	
+	public boolean isOnPositiveSite() {
+		return isOnPositiveSite;
+	}
+
+	public double getRollAngle() {
+		synchronized (rollAngleLock) {
+			return rollAngle;
+		}
+	}
+	
+	public void setRollAngle(double rollAngle) {
+		synchronized (rollAngleLock) {
+			this.rollAngle = rollAngle;
+		}
 	}
 
 }

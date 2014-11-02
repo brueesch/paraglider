@@ -93,7 +93,7 @@ public class XBoxController implements Runnable {
 		}
 	}
 
-
+/*
 	private double controlRightWing(double oldValueRightWing) {
 		double valueRightWing = controller.getAxisValue(2);
 		if (oldValueRightWing != valueRightWing) {
@@ -115,5 +115,6 @@ public class XBoxController implements Runnable {
 		}
 		return oldValueLeftWing;
 	}
+	*/
 
 }
