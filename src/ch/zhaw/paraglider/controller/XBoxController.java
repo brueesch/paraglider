@@ -5,6 +5,7 @@ import org.lwjgl.input.Controller;
 import org.lwjgl.input.Controllers;
 
 import ch.zhaw.paraglider.physics.Glider;
+import ch.zhaw.paraglider.view.Main;
 
 public class XBoxController implements Runnable {
 
@@ -75,15 +76,20 @@ public class XBoxController implements Runnable {
 
 
 	private void activateController() {
-		double oldValueLeftWing = 0;
-		double oldValueRightWing = 0;
+		/*double oldValueLeftWing = 0;
+		double oldValueRightWing = 0;*/
+		final int leftWing = 0;
+		final int rightWing = 2;
 		while (true) {
 			controller.poll();
 			if(controller.isButtonPressed(6)) {
 				glider.reset();
 			}
-			oldValueLeftWing = controlLeftWing(oldValueLeftWing);
-			oldValueRightWing = controlRightWing(oldValueRightWing);
+			
+			Main.leftSlider.setValue((int) (controller.getAxisValue(leftWing)*Main.leftSlider.getMaximum()));
+			Main.rightSlider.setValue((int) (controller.getAxisValue(rightWing)*Main.rightSlider.getMaximum()));
+			/*oldValueLeftWing = controlLeftWing(oldValueLeftWing);
+			oldValueRightWing = controlRightWing(oldValueRightWing);*/
 		}
 	}
 

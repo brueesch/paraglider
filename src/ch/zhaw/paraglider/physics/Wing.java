@@ -18,7 +18,7 @@ public class Wing {
 	 * Constant for the speed when flying with the optimal glide ratio. Default
 	 * = 9,72 m/s
 	 */
-	private final double SPEED_OPTIMAL_GLIDING = 9.72;
+	private final double SPEED_OPTIMAL_GLIDING = 13.9;
 	/**
 	 * Mathematical constant for calculations.
 	 */

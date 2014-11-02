@@ -127,6 +127,10 @@ public class Glider {
 	public void makeNextStep() {
 		pilot.calculatePosition(leftWing.getHorizontalSpeed(), rightWing.getHorizontalSpeed());
 	}
+	
+	public double getAngularVelocity() {
+		return pilot.getAngularVelocity();
+	}
 
 	
 	

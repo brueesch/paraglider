@@ -31,6 +31,7 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 	 * Gui Elemente
 	 */
 	
+	public static JSlider leftSlider, rightSlider;
 	
 	private static final long serialVersionUID = -1624980403895301036L;
 	private static final int FRAME_HEIGHT = 1000;
@@ -39,7 +40,7 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 	private Glider glider;
 	private double oldRightValue = 0, oldLeftValue = 0;
 	private JButton reset;
-	private JSlider leftSlider, rightSlider;
+	
 	private double[][] backgroundLinePositions;
 
 	/**
@@ -84,10 +85,10 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		rightSlider = new JSlider();
 
 		leftSlider.setMinimum(0);
-		leftSlider.setMaximum(10);
+		leftSlider.setMaximum(46);
 
 		rightSlider.setMinimum(0);
-		rightSlider.setMaximum(10);
+		rightSlider.setMaximum(46);
 
 		leftSlider.setMinorTickSpacing(1);
 		leftSlider.setMajorTickSpacing(10);
@@ -189,8 +190,12 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 			speed = glider.getHorizontalSpeed();
 		}
 		else if(axis == 1) {
-			//TODO: Fill in the y Speed
-			speed = 0;
+			double angle = Math.toDegrees(glider.getAngularVelocity()*Constants.TIME_INTERVALL);
+			double radius = 20;
+			double distance = (angle * 2* radius * Math.PI) /360;
+			
+			speed = -distance/Constants.TIME_INTERVALL;
+			//speed = -3;
 		}
 		else {
 			speed = glider.getVerticalSpeed();
@@ -203,6 +208,9 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 			currentPosition -= distanz;
 			if(currentPosition <40) {
 				currentPosition = 600;
+			}
+			if(currentPosition > 620) {
+				currentPosition = 40;
 			}
 			backgroundLinePositions[i][axis] = currentPosition;
 		}

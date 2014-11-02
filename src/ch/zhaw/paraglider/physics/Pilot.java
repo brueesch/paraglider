@@ -12,13 +12,15 @@ import ch.zhaw.paraglider.physics.Vector2D.Unit;
 public final class Pilot {
 
 	private int weightOfPilot = 85;
-	private final Vector ZERO_POSITION = new Vector(0, 0, Constants.LENGTH_OF_CORD);
+	private final Vector ZERO_POSITION = new Vector(0, 0,
+			Constants.LENGTH_OF_CORD);
 	private final Vector ZERO_POINT = new Vector(0, 0, 0);
 	private Vector currentPosition = new Vector(ZERO_POSITION);
 	private boolean isOnPositiveSite = true;
 	private static Pilot instance;
 	private double fForward;
 	private final Object lock = new Object();
+	private double angularVelocity;
 
 	private Pilot() {
 		super();
@@ -76,7 +78,7 @@ public final class Pilot {
 	public void setWeightOfPilot(int weight) {
 		weightOfPilot = weight;
 	}
-	
+
 	/**
 	 * Resets all position and forces to the start position.
 	 */
@@ -96,10 +98,11 @@ public final class Pilot {
 		calculateY(speedLeftWing, speedRightWing);
 		calculateZ();
 	}
-	
+
 	/**
-	 * Returns the current PitchAngle of the Glider.
-	 * The Pitch Angle is the angle of the x -axis in relationship to the ground.
+	 * Returns the current PitchAngle of the Glider. The Pitch Angle is the
+	 * angle of the x -axis in relationship to the ground.
+	 * 
 	 * @return double in Degree
 	 */
 	public synchronized double getPitchAngle() {
@@ -115,41 +118,44 @@ public final class Pilot {
 		} else {
 			isOnPositiveSite = true;
 		}
-		
+
 		return Math.toDegrees(Math.acos(cosAngle));
 	}
 
 	/**
-	 * Returns the current Roll Angle of the Glider.
-	 * The Roll Angle is the angle of the y - axis in relationship to the ground.
+	 * Returns the current Roll Angle of the Glider. The Roll Angle is the angle
+	 * of the y - axis in relationship to the ground.
+	 * 
 	 * @return double in Degree
 	 */
-	public synchronized double getRollAngle(double speedLeftWing, double speedRightWing) {
-		
-		if(speedLeftWing == speedRightWing)
-		{
-			return 0;
-		}		
-		
-		double pathLeft = speedLeftWing * Constants.TIME_INTERVALL;
-		double pathRight = speedRightWing * Constants.TIME_INTERVALL;
-		double pilotPath = (speedLeftWing + speedRightWing) /2 * Constants.TIME_INTERVALL;
-				
-		double radius = 0;
-		double w = 0;
-		double alpha = 0;
-		
-		
-		radius = getCurveRadius(pathLeft,pathRight) - (Constants.GLIDER_WINGSPAN/2);
+	public synchronized double getRollAngle(double speedLeftWing,
+			double speedRightWing) {
 
-		
-		alpha = pilotPath/radius;
-		w = alpha/Constants.TIME_INTERVALL;
-		double fZen = weightOfPilot * w * w * radius;
+		if (speedLeftWing == speedRightWing) {
+			angularVelocity = 0;
+			return 0;
+		}
+
+		double fCen = getCentrifugalForce(speedLeftWing, speedRightWing);
 		double fG = Constants.GRAVITATIONAL_FORCE * weightOfPilot;
-		double fCord = Math.sqrt(Math.pow(fZen, 2) + Math.pow(fG, 2));	
-		
-		return Math.toDegrees((Math.asin(fZen/fCord)));
+
+		return Math.atan(fCen / fG);
+	}
+
+	private double getCentrifugalForce(double speedLeftWing,
+			double speedRightWing) {
+
+		double pilotPath = (speedLeftWing + speedRightWing) / 2
+				* Constants.TIME_INTERVALL;
+		double radius = getCurveRadius(
+				speedLeftWing * Constants.TIME_INTERVALL, speedRightWing
+						* Constants.TIME_INTERVALL)
+				- (Constants.GLIDER_WINGSPAN / 2);
+		double alpha = (pilotPath * 360) / (2 * radius * Math.PI);
+		alpha = Math.toRadians(alpha);
+		angularVelocity = alpha / Constants.TIME_INTERVALL;
+
+		return weightOfPilot * Math.pow(angularVelocity, 2) * radius;
 	}
 
 	private void calculateX() {
@@ -163,6 +169,7 @@ public final class Pilot {
 		double changeX = (acceleration * Math.pow(Constants.TIME_INTERVALL, 2)) / 2;
 
 		currentPosition.setX(currentPosition.getX() - changeX);
+
 	}
 
 	private void calculateForcesInTheXAxis() {
@@ -175,7 +182,7 @@ public final class Pilot {
 			} else {
 				fForward -= fBackwards;
 			}
-	
+
 			if (fForward > 0) {
 				fForward -= getDamping();
 			} else {
@@ -187,9 +194,10 @@ public final class Pilot {
 	private double getDamping() {
 		// TODO Formel korrigieren, nicht ganz richtig.
 		return weightOfPilot
-				/ (Math.pow((Constants.TIME_OF_PERIOD / (2 * Math.PI)), 2))/10;
+				/ (Math.pow((Constants.TIME_OF_PERIOD / (2 * Math.PI)), 2))
+				/ 10;
 	}
-	
+
 	private void calculateZ() {
 		double x = currentPosition.getX() - ZERO_POSITION.getX();
 		double y = currentPosition.getY() - ZERO_POSITION.getY();
@@ -199,22 +207,25 @@ public final class Pilot {
 		currentPosition.setZ(z);
 	}
 
-	private void calculateY(double speedLeftWing, double speedRightWing) {		
+	private void calculateY(double speedLeftWing, double speedRightWing) {
 
-		double newY = Constants.LENGTH_OF_CORD * Math.sin(Math.toRadians(getRollAngle(speedLeftWing, speedRightWing)));
-		
+		double newY = Constants.LENGTH_OF_CORD
+				* Math.sin(getRollAngle(speedLeftWing, speedRightWing));
+
 		currentPosition.setY(newY);
-		
-	}	
-	
-	private double getCurveRadius(double pathLeft,double pathRight)
-	{
+
+	}
+
+	private double getCurveRadius(double pathLeft, double pathRight) {
 		double xa = pathRight;
 		double xb = pathLeft;
 		double rb = Constants.GLIDER_WINGSPAN;
-		double ra = (xa*rb)/(xb-xa);
+		double ra = (rb * xb) / (xa - xb);
 		return (ra + rb);
 	}
 
+	public double getAngularVelocity() {
+		return angularVelocity;
+	}
 
 }
