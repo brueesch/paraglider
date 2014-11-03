@@ -27,7 +27,7 @@ public class Constants {
 	/**
 	 * Time intervall in Seconds
 	 */
-	public static final double TIME_INTERVALL = 0.001;
+	public static final double TIME_INTERVALL = 0.02;
 	
 
 	public static double convertMeterToPixel(double meter)
