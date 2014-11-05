@@ -4,9 +4,12 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
@@ -18,6 +21,7 @@ import ch.zhaw.paraglider.controller.XBoxController;
 import ch.zhaw.paraglider.physics.Constants;
 import ch.zhaw.paraglider.physics.Glider;
 import ch.zhaw.paraglider.physics.Vector;
+import ch.zhaw.paraglider.physics.Wing;
 
 /**
  * Main Class. Extends JPanel to draw the paraglider into the JFrame. Implements
@@ -33,17 +37,17 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 	 */
 
 	public static JSlider leftSlider, rightSlider;
+	private JSlider bothSlider, maxSpeed, glideRatio, damping;
 
 	private static final long serialVersionUID = -1624980403895301036L;
 	private static final int FRAME_HEIGHT = 700;
 	private static final int FRAME_WIDTH = 1300;
 
 	private Glider glider;
-	private double oldRightValue = 0, oldLeftValue = 0;
+	private double oldRightValue = 0, oldLeftValue = 0, oldValue = 0;
 	private JButton reset;
 
 	private double[][] backgroundLinePositions;
-
 
 	/**
 	 * Starting Point of the program. Creates JFrame and adds the main panel on
@@ -83,8 +87,25 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 	}
 
 	private void initSliders() {
+		JLabel labelLeftSlider = new JLabel("Left Break");
 		leftSlider = new JSlider();
+
+		JLabel labelRightSlider = new JLabel("Right Break");
 		rightSlider = new JSlider();
+
+		JLabel labelBothSlider = new JLabel("Both Breaks");
+		bothSlider = new JSlider();
+
+		JLabel labelMaxSpeed = new JLabel("Max Speed by optimal Gliding");
+		maxSpeed = new JSlider();
+
+		JLabel labelGlideRatio = new JLabel("Optimal Glide Ratio");
+		glideRatio = new JSlider();
+
+		JLabel labelDamping = new JLabel("Damping");
+		damping = new JSlider();
+
+		// bothSlider, maxSpeed, glideRatio, damping;
 
 		leftSlider.setMinimum(0);
 		leftSlider.setMaximum(46);
@@ -92,29 +113,83 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		rightSlider.setMinimum(0);
 		rightSlider.setMaximum(46);
 
+		bothSlider.setMinimum(0);
+		bothSlider.setMaximum(46);
+
+		maxSpeed.setMinimum(1);
+		maxSpeed.setMaximum(55);
+
+		glideRatio.setMinimum(1);
+		glideRatio.setMaximum(11);
+
+		damping.setMinimum(0);
+		damping.setMaximum(1000);
+
 		leftSlider.setMinorTickSpacing(1);
 		leftSlider.setMajorTickSpacing(10);
 
 		rightSlider.setMinorTickSpacing(1);
 		rightSlider.setMajorTickSpacing(10);
 
+		bothSlider.setMinorTickSpacing(1);
+		bothSlider.setMajorTickSpacing(10);
+
+		maxSpeed.setMinorTickSpacing(1);
+		maxSpeed.setMajorTickSpacing(10);
+
+		glideRatio.setMinorTickSpacing(1);
+		glideRatio.setMajorTickSpacing(10);
+
+		damping.setMinorTickSpacing(100);
+		damping.setMajorTickSpacing(500);
+
 		leftSlider.createStandardLabels(1);
 		rightSlider.createStandardLabels(1);
+		bothSlider.createStandardLabels(1);
+		maxSpeed.createStandardLabels(1);
+		glideRatio.createStandardLabels(1);
+		damping.createStandardLabels(1);
 
 		leftSlider.setPaintTicks(true);
 		rightSlider.setPaintTicks(true);
+		bothSlider.setPaintTicks(true);
+		maxSpeed.setPaintTicks(true);
+		glideRatio.setPaintTicks(true);
+		damping.setPaintTicks(true);
 
 		leftSlider.setPaintLabels(true);
 		rightSlider.setPaintLabels(true);
+		bothSlider.setPaintLabels(true);
+		maxSpeed.setPaintLabels(true);
+		glideRatio.setPaintLabels(true);
+		damping.setPaintLabels(true);
 
 		leftSlider.setValue(0);
 		rightSlider.setValue(0);
+		bothSlider.setValue(0);
+		maxSpeed.setValue(35);
+		glideRatio.setValue(9);
+		damping.setValue(0);
 
 		leftSlider.addChangeListener(this);
 		rightSlider.addChangeListener(this);
+		bothSlider.addChangeListener(this);
+		maxSpeed.addChangeListener(this);
+		glideRatio.addChangeListener(this);
+		damping.addChangeListener(this);
 
+		add(labelLeftSlider);
 		add(leftSlider);
+		add(labelRightSlider);
 		add(rightSlider);
+		add(labelBothSlider);
+		add(bothSlider);
+		add(labelMaxSpeed);
+		add(maxSpeed);
+		add(labelGlideRatio);
+		add(glideRatio);
+		add(labelDamping);
+		add(damping);
 	}
 
 	/**
@@ -129,7 +204,7 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		g.setColor(color);
 	}
 
-	private void drawLeftView(Graphics g) {		
+	private void drawLeftView(Graphics g) {
 		double[][] coordinatesParaglider = { { -100, 0 }, { 0, -60 },
 				{ 100, 0 } };
 		double[][] coordinatesPilot = { { 0,
@@ -138,39 +213,43 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		drawLeftBackground(g);
 		Vector zeroPoint = new Vector(330, 0, 240);
 		double alpha = glider.getPitchAngle();
-		coordinatesPilot = calculateRotation(coordinatesPilot,alpha);
+		coordinatesPilot = calculateRotation(coordinatesPilot, alpha);
 		checkDirection(coordinatesPilot);
-		coordinatesPilot = moveToZeroPoint(coordinatesPilot,zeroPoint);
-		
-		coordinatesParaglider = calculateRotation(coordinatesParaglider,alpha);
+		coordinatesPilot = moveToZeroPoint(coordinatesPilot, zeroPoint);
+
+		coordinatesParaglider = calculateRotation(coordinatesParaglider, alpha);
 		checkDirection(coordinatesParaglider);
-		coordinatesParaglider = moveToZeroPoint(coordinatesParaglider, zeroPoint);
-		
-		
-		drawInfosAndFrame(g,zeroPoint);
-		drawPilotAndParaglider(g, coordinatesParaglider, coordinatesPilot,zeroPoint);	
+		coordinatesParaglider = moveToZeroPoint(coordinatesParaglider,
+				zeroPoint);
+
+		drawInfosAndFrame(g, zeroPoint);
+		drawPilotAndParaglider(g, coordinatesParaglider, coordinatesPilot,
+				zeroPoint);
 	}
-	
+
 	private void drawRightView(Graphics g) {
-		double[][] coordinatesParaglider = { { -250, 0 }, {-84, -60 },{84, -60 },
-				{ 250, 0 } };
+		double[][] coordinatesParaglider = { { -250, 0 }, { -84, -60 },
+				{ 84, -60 }, { 250, 0 } };
 		double[][] coordinatesPilot = { { 0,
 				Constants.convertMeterToPixel(Constants.LENGTH_OF_CORD) } };
 
 		drawRightBackground(g);
 		Vector zeroPoint = new Vector(930, 0, 240);
 		double alpha = glider.getRollAngle();
-		coordinatesPilot = calculateRotation(coordinatesPilot,alpha);
-		coordinatesPilot = moveToZeroPoint(coordinatesPilot,zeroPoint);
-		coordinatesParaglider = calculateRotation(coordinatesParaglider,alpha);
-		coordinatesParaglider = moveToZeroPoint(coordinatesParaglider, zeroPoint);
-		
-		drawInfosAndFrame(g,zeroPoint);
-		drawPilotAndParaglider(g, coordinatesParaglider, coordinatesPilot,zeroPoint);	
+		coordinatesPilot = calculateRotation(coordinatesPilot, alpha);
+		coordinatesPilot = moveToZeroPoint(coordinatesPilot, zeroPoint);
+		coordinatesParaglider = calculateRotation(coordinatesParaglider, alpha);
+		coordinatesParaglider = moveToZeroPoint(coordinatesParaglider,
+				zeroPoint);
+
+		drawInfosAndFrame(g, zeroPoint);
+		drawPilotAndParaglider(g, coordinatesParaglider, coordinatesPilot,
+				zeroPoint);
 	}
 
 	private void drawPilotAndParaglider(Graphics g,
-			double[][] coordinatesParaglider, double[][] coordinatesPilot, Vector zeroPoint) {
+			double[][] coordinatesParaglider, double[][] coordinatesPilot,
+			Vector zeroPoint) {
 		Color color = g.getColor();
 		g.setColor(Color.black);
 		int diameter = 40;
@@ -178,17 +257,17 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 				(int) (coordinatesPilot[0][1] - diameter / 2), diameter,
 				diameter);
 		g.drawLine((int) (coordinatesPilot[0][0]),
-				(int) (coordinatesPilot[0][1]),
-				(int) zeroPoint.getX(),
+				(int) (coordinatesPilot[0][1]), (int) zeroPoint.getX(),
 				(int) zeroPoint.getZ());
 		g.drawLine((int) (coordinatesPilot[0][0]),
 				(int) (coordinatesPilot[0][1]),
 				(int) coordinatesParaglider[0][0],
 				(int) coordinatesParaglider[0][1]);
-		g.drawLine((int) (coordinatesPilot[0][0]),
+		g.drawLine(
+				(int) (coordinatesPilot[0][0]),
 				(int) (coordinatesPilot[0][1]),
-				(int) coordinatesParaglider[coordinatesParaglider.length-1][0],
-				(int) coordinatesParaglider[coordinatesParaglider.length-1][1]);
+				(int) coordinatesParaglider[coordinatesParaglider.length - 1][0],
+				(int) coordinatesParaglider[coordinatesParaglider.length - 1][1]);
 
 		g.setColor(Color.RED);
 		int[] xCoordinates = new int[coordinatesParaglider.length];
@@ -201,7 +280,8 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		g.setColor(color);
 	}
 
-	private double[][] moveToZeroPoint(double[][] coordinatesArray, Vector zeroPoint) {
+	private double[][] moveToZeroPoint(double[][] coordinatesArray,
+			Vector zeroPoint) {
 		for (int i = 0; i < coordinatesArray.length; i++) {
 			for (int j = 0; j < coordinatesArray[i].length; j++) {
 				if (j == 0) {
@@ -217,31 +297,33 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 	private void drawInfosAndFrame(Graphics g, Vector zeroPoint) {
 		Color color = g.getColor();
 		g.setColor(Color.black);
-		g.drawRect((int)(-290+zeroPoint.getX()), (int)(-200+zeroPoint.getZ()), 580, 560);
+		g.drawRect((int) (-290 + zeroPoint.getX()),
+				(int) (-200 + zeroPoint.getZ()), 580, 560);
 		g.drawString(
 				"Geschwindigkeit: "
 						+ Constants.convertMsToKmh(glider.getHorizontalSpeed())
-						+ " km/h", 50, 75);
+						+ " km/h", 50, 560);
 		g.drawString("Vertikalgeschwindigkeit: " + glider.getVerticalSpeed()
-				+ " m/s", 50, 90);
-		g.drawString("Gleitrate: " + glider.getCurrentGlideRatio(), 50, 105);
+				+ " m/s", 50, 575);
+		g.drawString("Gleitrate: " + glider.getCurrentGlideRatio(), 50, 590);
 		g.setColor(color);
 	}
 
-	private double[][] calculateRotation(double[][] coordinatesArray, double alpha) {
+	private double[][] calculateRotation(double[][] coordinatesArray,
+			double alpha) {
 		Matrix a = new Matrix(coordinatesArray);
 		double[][] rotationArray = { { Math.cos(alpha), Math.sin(alpha) },
 				{ -Math.sin(alpha), Math.cos(alpha) } };
 		Matrix rotationMatrix = new Matrix(rotationArray);
 		double[][] result = a.times(rotationMatrix).getArray();
-		
+
 		return result;
 	}
 
 	public void checkDirection(double[][] result) {
-		if(glider.isOnPositiveSite()){
-			for(int i = 0; i<result.length;i++) {
-					result[i][0] = -result[i][0];
+		if (glider.isOnPositiveSite()) {
+			for (int i = 0; i < result.length; i++) {
+				result[i][0] = -result[i][0];
 			}
 		}
 	}
@@ -281,12 +363,12 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		} else {
 			speed = glider.getVerticalSpeed();
 		}
-		double distanz = speed * Constants.TIME_INTERVALL;
-		distanz = Constants.convertMeterToPixel(distanz);
+		double distance = speed * Constants.TIME_INTERVALL;
+		distance = Constants.convertMeterToPixel(distance);
 
 		for (int i = 0; i < backgroundLinePositions.length; i++) {
 			double currentPosition = backgroundLinePositions[i][axis];
-			currentPosition -= distanz;
+			currentPosition -= distance;
 			if (currentPosition < 40) {
 				currentPosition = 600;
 			}
@@ -306,8 +388,6 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 			backgroundLinePositions[i][2] = 80 + i * 80;
 		}
 	}
-
-
 
 	private void drawRightBackground(Graphics g) {
 		int yAxis = 1, zAxis = 2;
@@ -337,14 +417,35 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 				|| e.getSource().equals(leftSlider)) {
 			double rightValue = rightSlider.getValue();
 			double leftValue = leftSlider.getValue();
-			try {
-				glider.changeSpeed(-((leftValue - oldLeftValue) / 3.6),
-						-((rightValue - oldRightValue) / 3.6));
-				oldRightValue = rightValue;
-				oldLeftValue = leftValue;
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
+			glider.changeSpeed(-((rightValue - oldRightValue) / 3.6),
+					-((leftValue - oldLeftValue) / 3.6));
+			oldRightValue = rightValue;
+			oldLeftValue = leftValue;
+		}
+
+		if (e.getSource().equals(bothSlider)) {
+			double value = bothSlider.getValue();
+			glider.changeSpeed(-((value - oldValue) / 3.6),
+					-((value - oldValue) / 3.6));
+			oldValue = value;
+		}
+
+		if (e.getSource().equals(maxSpeed)) {
+			Wing[] wings = glider.getWings();
+
+			wings[0].setSpeedOptimalGliding(maxSpeed.getValue() / 3.6);
+			wings[1].setSpeedOptimalGliding(maxSpeed.getValue() / 3.6);
+		}
+
+		if (e.getSource().equals(glideRatio)) {
+			Wing[] wings = glider.getWings();
+
+			wings[0].setOptmialGlideRatio(glideRatio.getValue());
+			wings[1].setOptmialGlideRatio(glideRatio.getValue());
+		}
+
+		if (e.getSource().equals(damping)) {
+			glider.setDamping(damping.getValue());
 		}
 	}
 
@@ -354,6 +455,11 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		if (e.getSource() == reset) {
 			leftSlider.setValue(0);
 			rightSlider.setValue(0);
+			bothSlider.setValue(0);
+			maxSpeed.setValue(35);
+			glideRatio.setValue(9);
+			damping.setValue(0);
+			backgroundLinePositions = null;
 			glider.reset();
 		}
 

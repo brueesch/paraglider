@@ -23,6 +23,7 @@ public final class Pilot {
 	private final Object rollAngleLock = new Object();
 	private double angularVelocity;
 	private double rollAngle = 0;
+	private double damping = 0;
 
 	private Pilot() {
 		super();
@@ -130,8 +131,7 @@ public final class Pilot {
 	 * 
 	 * @return double in Radian
 	 */
-	public double calculateRollAngle(double speedLeftWing,
-			double speedRightWing) {
+	public double calculateRollAngle(double speedLeftWing, double speedRightWing) {
 
 		if (speedLeftWing == speedRightWing) {
 			angularVelocity = 0;
@@ -186,21 +186,24 @@ public final class Pilot {
 				fForward -= fBackwards;
 			}
 
+			//calculateDamping();
 			if (fForward > 0) {
-				fForward -= getDamping();
+				fForward -= damping;
 			} else {
-				fForward += getDamping();
+				fForward += damping;
 			}
 		}
 	}
 
-	
-
-	private double getDamping() {
+	private void calculateDamping() {
 		// TODO Formel korrigieren, nicht ganz richtig.
-		return weightOfPilot
+		damping = weightOfPilot
 				/ (Math.pow((Constants.TIME_OF_PERIOD / (2 * Math.PI)), 2))
 				/ 10;
+	}
+
+	public void setDamping(double damping) {
+
 	}
 
 	private void calculateZ() {
@@ -232,7 +235,7 @@ public final class Pilot {
 	public double getAngularVelocity() {
 		return angularVelocity;
 	}
-	
+
 	public boolean isOnPositiveSite() {
 		return isOnPositiveSite;
 	}
@@ -242,7 +245,7 @@ public final class Pilot {
 			return rollAngle;
 		}
 	}
-	
+
 	public void setRollAngle(double rollAngle) {
 		synchronized (rollAngleLock) {
 			this.rollAngle = rollAngle;

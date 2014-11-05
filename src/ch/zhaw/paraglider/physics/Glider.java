@@ -137,5 +137,13 @@ public class Glider {
 		return pilot.isOnPositiveSite();
 	}
 	
-
+	//Method just for the sliders.
+	public Wing[] getWings() {
+		return new Wing[] {rightWing, leftWing};
+	}
+	
+	//Method just for the slider tests.
+	public void setDamping(double damping) {
+		pilot.setDamping(damping);
+	}
 }

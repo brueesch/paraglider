@@ -13,12 +13,12 @@ public class Wing {
 	/**
 	 * Constant for the optimal glide ratio. Default = 9;
 	 */
-	private final double OPTIMAL_GLIDE_RATIO = 9;
+	private double OPTIMAL_GLIDE_RATIO = 9;
 	/**
 	 * Constant for the speed when flying with the optimal glide ratio. Default
 	 * = 9,72 m/s
 	 */
-	private final double SPEED_OPTIMAL_GLIDING = 13.9;
+	private double SPEED_OPTIMAL_GLIDING = 9.722;
 	/**
 	 * Mathematical constant for calculations.
 	 */
@@ -95,5 +95,22 @@ public class Wing {
 	 */
 	public String getName() {
 		return name;
+	}
+	
+	//Method just for tests with slider
+	public void setSpeedOptimalGliding(double speedOptimalGliding) {
+		SPEED_OPTIMAL_GLIDING = speedOptimalGliding;
+		constant1 = 1 / (2 * Math.pow(SPEED_OPTIMAL_GLIDING, 2) * OPTIMAL_GLIDE_RATIO);
+		constant2 = Math.pow(SPEED_OPTIMAL_GLIDING, 2)
+				/ (2 * OPTIMAL_GLIDE_RATIO);
+		currentSpeed = SPEED_OPTIMAL_GLIDING;
+	}
+	
+	//Method jsut for tests with slider
+	public void setOptmialGlideRatio (double glideRatio) {
+		OPTIMAL_GLIDE_RATIO = glideRatio;
+		constant1 = 1 / (2 * Math.pow(SPEED_OPTIMAL_GLIDING, 2) * OPTIMAL_GLIDE_RATIO);
+		constant2 = Math.pow(SPEED_OPTIMAL_GLIDING, 2)
+				/ (2 * OPTIMAL_GLIDE_RATIO);
 	}
 }
