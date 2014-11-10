@@ -425,9 +425,18 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 
 		if (e.getSource().equals(bothSlider)) {
 			double value = bothSlider.getValue();
-			glider.changeSpeed(-((value - oldValue) / 3.6),
-					-((value - oldValue) / 3.6));
-			oldValue = value;
+			System.out.println(value);
+			if (value > 15) {
+					glider.fullStall();
+			} else if(value == 15) {
+				glider.setInFullStall(false);
+			}
+			
+			else {
+				glider.changeSpeed(-((value - oldValue) / 3.6),
+						-((value - oldValue) / 3.6));
+				oldValue = value;
+			}
 		}
 
 		if (e.getSource().equals(maxSpeed)) {

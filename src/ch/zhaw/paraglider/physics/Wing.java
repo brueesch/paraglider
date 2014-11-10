@@ -33,6 +33,9 @@ public class Wing {
 	 * gliding.
 	 */
 	private double currentSpeed = SPEED_OPTIMAL_GLIDING;
+	
+	private boolean inFullStall = false;
+	private double verticalSpeed;
 
 	/**
 	 * Variable contains the Name of the wing. Wing name either: left or right
@@ -56,6 +59,10 @@ public class Wing {
 	public double getHorizontalSpeed() {
 		return currentSpeed;
 	}
+	
+	public void setHorizontalSpeed(double speed) {
+		currentSpeed = speed;
+	}
 
 	/**
 	 * This Method calculates and returns the current rate of descent. In m/s
@@ -64,9 +71,19 @@ public class Wing {
 	 */
 	public double getVerticalSpeed() {
 
+		if(!inFullStall) {
 		return (1 / (2 * OPTIMAL_GLIDE_RATIO))
 				* (Math.pow(getHorizontalSpeed() / SPEED_OPTIMAL_GLIDING, 2) + Math.pow(SPEED_OPTIMAL_GLIDING / getHorizontalSpeed(), 2))
 				* getHorizontalSpeed();
+		}
+		else {
+			return verticalSpeed;
+		}
+	}
+	
+	public void setVerticalSpeed(double speed) {
+		inFullStall = true;
+		verticalSpeed = speed;
 	}
 
 	/**
@@ -112,5 +129,13 @@ public class Wing {
 		constant1 = 1 / (2 * Math.pow(SPEED_OPTIMAL_GLIDING, 2) * OPTIMAL_GLIDE_RATIO);
 		constant2 = Math.pow(SPEED_OPTIMAL_GLIDING, 2)
 				/ (2 * OPTIMAL_GLIDE_RATIO);
+	}
+
+	public boolean isInFullStall() {
+		return inFullStall;
+	}
+
+	public void setInFullStall(boolean inFullStall) {
+		this.inFullStall = inFullStall;
 	}
 }

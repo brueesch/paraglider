@@ -12,6 +12,7 @@ public class Glider {
 	private Wing rightWing = new Wing("Right");
 	private Pilot pilot = Pilot.getInstance();
 	private double yawAngle = 0;
+	private boolean inFullStall = false;
 	
 	private static Glider instance;
 	private Glider() {}
@@ -145,5 +146,24 @@ public class Glider {
 	//Method just for the slider tests.
 	public void setDamping(double damping) {
 		pilot.setDamping(damping);
+	}
+
+	public void fullStall() {
+		if(!inFullStall) {
+			rightWing.setHorizontalSpeed(-0.55);
+			leftWing.setHorizontalSpeed(-0.55);
+			rightWing.setVerticalSpeed(18);
+			leftWing.setVerticalSpeed(18);
+			inFullStall = true;
+		}
+		
+	}
+	
+	public void setInFullStall(boolean state) {
+		inFullStall = state;
+		rightWing.setInFullStall(state);
+		leftWing.setInFullStall(state);
+		rightWing.setHorizontalSpeed(5.55);
+		leftWing.setHorizontalSpeed(5.55);
 	}
 }
