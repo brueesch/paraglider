@@ -23,7 +23,6 @@ public final class Pilot {
 	private final Object rollAngleLock = new Object();
 	private double angularVelocity;
 	private double rollAngle = 0;
-	private double damping = 0;
 
 	private Pilot() {
 		super();
@@ -58,7 +57,6 @@ public final class Pilot {
 	 * @param speed
 	 */
 	public void setChangeInSpeed(double speed) {
-
 		synchronized (fForwardLock) {
 			fForward += (speed / Constants.TIME_INTERVALL) * weightOfPilot;
 		}
@@ -185,25 +183,13 @@ public final class Pilot {
 			} else {
 				fForward -= fBackwards;
 			}
-
-			//calculateDamping();
-			if (fForward > 0) {
-				fForward -= damping;
-			} else {
-				fForward += damping;
-			}
+			fForward += calculateDamping(fForward);
 		}
 	}
 
-	private void calculateDamping() {
-		// TODO Formel korrigieren, nicht ganz richtig.
-		damping = weightOfPilot
-				/ (Math.pow((Constants.TIME_OF_PERIOD / (2 * Math.PI)), 2))
-				/ 10;
-	}
-
-	public void setDamping(double damping) {
-
+	private double calculateDamping(double fForward) {
+		double acceleration = fForward/weightOfPilot;
+		return -acceleration * Constants.DAMPING_FACTOR * weightOfPilot;
 	}
 
 	private void calculateZ() {

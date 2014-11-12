@@ -113,23 +113,6 @@ public class Wing {
 	public String getName() {
 		return name;
 	}
-	
-	//Method just for tests with slider
-	public void setSpeedOptimalGliding(double speedOptimalGliding) {
-		SPEED_OPTIMAL_GLIDING = speedOptimalGliding;
-		constant1 = 1 / (2 * Math.pow(SPEED_OPTIMAL_GLIDING, 2) * OPTIMAL_GLIDE_RATIO);
-		constant2 = Math.pow(SPEED_OPTIMAL_GLIDING, 2)
-				/ (2 * OPTIMAL_GLIDE_RATIO);
-		currentSpeed = SPEED_OPTIMAL_GLIDING;
-	}
-	
-	//Method jsut for tests with slider
-	public void setOptmialGlideRatio (double glideRatio) {
-		OPTIMAL_GLIDE_RATIO = glideRatio;
-		constant1 = 1 / (2 * Math.pow(SPEED_OPTIMAL_GLIDING, 2) * OPTIMAL_GLIDE_RATIO);
-		constant2 = Math.pow(SPEED_OPTIMAL_GLIDING, 2)
-				/ (2 * OPTIMAL_GLIDE_RATIO);
-	}
 
 	public boolean isInFullStall() {
 		return inFullStall;

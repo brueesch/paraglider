@@ -143,10 +143,6 @@ public class Glider {
 		return new Wing[] {rightWing, leftWing};
 	}
 	
-	//Method just for the slider tests.
-	public void setDamping(double damping) {
-		pilot.setDamping(damping);
-	}
 
 	public void fullStall() {
 		if(!inFullStall) {

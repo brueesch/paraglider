@@ -17,6 +17,8 @@ public class Constants {
 	 */
 	public static final double LENGTH_OF_CORD = 7.68;
 	
+
+	
 	
 	
 	/**
@@ -27,7 +29,12 @@ public class Constants {
 	/**
 	 * Time intervall in Seconds
 	 */
-	public static final double TIME_INTERVALL = 0.02;
+	public static final double TIME_INTERVALL = 0.001;
+	
+	/**
+	 * Constant which defines the factor of the damping in relation to the acceleration.
+	 */
+	public static final double DAMPING_FACTOR = 0.1*TIME_INTERVALL;
 	
 
 	public static double convertMeterToPixel(double meter)

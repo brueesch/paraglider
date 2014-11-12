@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -21,7 +19,6 @@ import ch.zhaw.paraglider.controller.XBoxController;
 import ch.zhaw.paraglider.physics.Constants;
 import ch.zhaw.paraglider.physics.Glider;
 import ch.zhaw.paraglider.physics.Vector;
-import ch.zhaw.paraglider.physics.Wing;
 
 /**
  * Main Class. Extends JPanel to draw the paraglider into the JFrame. Implements
@@ -37,7 +34,7 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 	 */
 
 	public static JSlider leftSlider, rightSlider;
-	private JSlider bothSlider, maxSpeed, glideRatio, damping;
+	private JSlider bothSlider;
 
 	private static final long serialVersionUID = -1624980403895301036L;
 	private static final int FRAME_HEIGHT = 700;
@@ -96,34 +93,16 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		JLabel labelBothSlider = new JLabel("Both Breaks");
 		bothSlider = new JSlider();
 
-		JLabel labelMaxSpeed = new JLabel("Max Speed by optimal Gliding");
-		maxSpeed = new JSlider();
-
-		JLabel labelGlideRatio = new JLabel("Optimal Glide Ratio");
-		glideRatio = new JSlider();
-
-		JLabel labelDamping = new JLabel("Damping");
-		damping = new JSlider();
-
 		// bothSlider, maxSpeed, glideRatio, damping;
 
 		leftSlider.setMinimum(0);
-		leftSlider.setMaximum(46);
+		leftSlider.setMaximum(34);
 
 		rightSlider.setMinimum(0);
-		rightSlider.setMaximum(46);
+		rightSlider.setMaximum(34);
 
 		bothSlider.setMinimum(0);
-		bothSlider.setMaximum(46);
-
-		maxSpeed.setMinimum(1);
-		maxSpeed.setMaximum(55);
-
-		glideRatio.setMinimum(1);
-		glideRatio.setMaximum(11);
-
-		damping.setMinimum(0);
-		damping.setMaximum(1000);
+		bothSlider.setMaximum(34);
 
 		leftSlider.setMinorTickSpacing(1);
 		leftSlider.setMajorTickSpacing(10);
@@ -134,49 +113,25 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		bothSlider.setMinorTickSpacing(1);
 		bothSlider.setMajorTickSpacing(10);
 
-		maxSpeed.setMinorTickSpacing(1);
-		maxSpeed.setMajorTickSpacing(10);
-
-		glideRatio.setMinorTickSpacing(1);
-		glideRatio.setMajorTickSpacing(10);
-
-		damping.setMinorTickSpacing(100);
-		damping.setMajorTickSpacing(500);
-
 		leftSlider.createStandardLabels(1);
 		rightSlider.createStandardLabels(1);
 		bothSlider.createStandardLabels(1);
-		maxSpeed.createStandardLabels(1);
-		glideRatio.createStandardLabels(1);
-		damping.createStandardLabels(1);
 
 		leftSlider.setPaintTicks(true);
 		rightSlider.setPaintTicks(true);
 		bothSlider.setPaintTicks(true);
-		maxSpeed.setPaintTicks(true);
-		glideRatio.setPaintTicks(true);
-		damping.setPaintTicks(true);
 
 		leftSlider.setPaintLabels(true);
 		rightSlider.setPaintLabels(true);
 		bothSlider.setPaintLabels(true);
-		maxSpeed.setPaintLabels(true);
-		glideRatio.setPaintLabels(true);
-		damping.setPaintLabels(true);
 
 		leftSlider.setValue(0);
 		rightSlider.setValue(0);
 		bothSlider.setValue(0);
-		maxSpeed.setValue(35);
-		glideRatio.setValue(9);
-		damping.setValue(0);
 
 		leftSlider.addChangeListener(this);
 		rightSlider.addChangeListener(this);
 		bothSlider.addChangeListener(this);
-		maxSpeed.addChangeListener(this);
-		glideRatio.addChangeListener(this);
-		damping.addChangeListener(this);
 
 		add(labelLeftSlider);
 		add(leftSlider);
@@ -184,12 +139,6 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		add(rightSlider);
 		add(labelBothSlider);
 		add(bothSlider);
-		add(labelMaxSpeed);
-		add(maxSpeed);
-		add(labelGlideRatio);
-		add(glideRatio);
-		add(labelDamping);
-		add(damping);
 	}
 
 	/**
@@ -425,36 +374,14 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 
 		if (e.getSource().equals(bothSlider)) {
 			double value = bothSlider.getValue();
-			System.out.println(value);
-			if (value > 15) {
-					glider.fullStall();
-			} else if(value == 15) {
-				glider.setInFullStall(false);
-			}
-			
-			else {
-				glider.changeSpeed(-((value - oldValue) / 3.6),
-						-((value - oldValue) / 3.6));
-				oldValue = value;
-			}
-		}
 
-		if (e.getSource().equals(maxSpeed)) {
-			Wing[] wings = glider.getWings();
+			/*if (value >= 25) {
+				value = bothSlider.getMaximum();
+			}*/
 
-			wings[0].setSpeedOptimalGliding(maxSpeed.getValue() / 3.6);
-			wings[1].setSpeedOptimalGliding(maxSpeed.getValue() / 3.6);
-		}
-
-		if (e.getSource().equals(glideRatio)) {
-			Wing[] wings = glider.getWings();
-
-			wings[0].setOptmialGlideRatio(glideRatio.getValue());
-			wings[1].setOptmialGlideRatio(glideRatio.getValue());
-		}
-
-		if (e.getSource().equals(damping)) {
-			glider.setDamping(damping.getValue());
+			glider.changeSpeed(-((value - oldValue) / 3.6),
+					-((value - oldValue) / 3.6));
+			oldValue = value;
 		}
 	}
 
@@ -465,9 +392,6 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 			leftSlider.setValue(0);
 			rightSlider.setValue(0);
 			bothSlider.setValue(0);
-			maxSpeed.setValue(35);
-			glideRatio.setValue(9);
-			damping.setValue(0);
 			backgroundLinePositions = null;
 			glider.reset();
 		}
