@@ -131,8 +131,9 @@ public final class Pilot {
 		double fg = weightOfPilot * Constants.GRAVITATIONAL_FORCE;
 		calculateRollAngle();
 		double fBackwards = fg * Math.sin(getRollAngle());
-
-		if (getCentrifugalForce(speedLeftWing, speedRightWing) <= fSideway) {
+		System.out.println(fBackwards);
+		System.out.println(getCentrifugalForce(speedLeftWing, speedRightWing));
+		if (getCentrifugalForce(speedLeftWing, speedRightWing) <= fSideway && getCentrifugalForce(speedLeftWing, speedRightWing) <= fSideway) {
 			fSideway = 0;
 		} else {
 			synchronized (fSidewayLock) {
