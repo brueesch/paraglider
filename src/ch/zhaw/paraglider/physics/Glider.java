@@ -101,6 +101,7 @@ public class Glider {
 		leftWing.changeCurrentSpeed(msLeft);
 		rightWing.changeCurrentSpeed(msRight);
 		pilot.setChangeInSpeed((msLeft+msRight)/2);
+		pilot.setChangeInSpeedY(msLeft - msRight);
 	}
 	
 	public void reset()
@@ -161,5 +162,9 @@ public class Glider {
 		leftWing.setInFullStall(state);
 		rightWing.setHorizontalSpeed(5.55);
 		leftWing.setHorizontalSpeed(5.55);
+	}
+
+	public boolean isOnRightSite() {
+		return pilot.isOnRightSite();
 	}
 }

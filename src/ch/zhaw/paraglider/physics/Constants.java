@@ -29,7 +29,7 @@ public class Constants {
 	/**
 	 * Time intervall in Seconds
 	 */
-	public static final double TIME_INTERVALL = 0.001;
+	public static final double TIME_INTERVALL = 0.01;
 	
 	/**
 	 * Constant which defines the factor of the damping in relation to the acceleration.

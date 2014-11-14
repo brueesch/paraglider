@@ -163,11 +163,11 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		Vector zeroPoint = new Vector(330, 0, 240);
 		double alpha = glider.getPitchAngle();
 		coordinatesPilot = calculateRotation(coordinatesPilot, alpha);
-		checkDirection(coordinatesPilot);
+		checkDirectionX(coordinatesPilot);
 		coordinatesPilot = moveToZeroPoint(coordinatesPilot, zeroPoint);
 
 		coordinatesParaglider = calculateRotation(coordinatesParaglider, alpha);
-		checkDirection(coordinatesParaglider);
+		checkDirectionX(coordinatesParaglider);
 		coordinatesParaglider = moveToZeroPoint(coordinatesParaglider,
 				zeroPoint);
 
@@ -186,8 +186,10 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		Vector zeroPoint = new Vector(930, 0, 240);
 		double alpha = glider.getRollAngle();
 		coordinatesPilot = calculateRotation(coordinatesPilot, alpha);
+		checkDirectionY(coordinatesPilot);
 		coordinatesPilot = moveToZeroPoint(coordinatesPilot, zeroPoint);
 		coordinatesParaglider = calculateRotation(coordinatesParaglider, alpha);
+		checkDirectionY(coordinatesParaglider);
 		coordinatesParaglider = moveToZeroPoint(coordinatesParaglider,
 				zeroPoint);
 
@@ -269,8 +271,16 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		return result;
 	}
 
-	public void checkDirection(double[][] result) {
+	private void checkDirectionX(double[][] result) {
 		if (glider.isOnPositiveSite()) {
+			for (int i = 0; i < result.length; i++) {
+				result[i][0] = -result[i][0];
+			}
+		}
+	}
+	
+	private void checkDirectionY(double[][] result) {
+		if (glider.isOnRightSite()) {
 			for (int i = 0; i < result.length; i++) {
 				result[i][0] = -result[i][0];
 			}

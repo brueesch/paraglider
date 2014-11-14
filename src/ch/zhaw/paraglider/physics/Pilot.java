@@ -17,10 +17,13 @@ public final class Pilot {
 	private final Vector ZERO_POINT = new Vector(0, 0, 0);
 	private Vector currentPosition = new Vector(ZERO_POSITION);
 	private boolean isOnPositiveSite = true;
+	private boolean isOnRightSite = true;
 	private static Pilot instance;
 	private double fForward;
+	private double fSideway;
 	private final Object fForwardLock = new Object();
 	private final Object rollAngleLock = new Object();
+	private final Object fSidewayLock = new Object();
 	private double angularVelocity;
 	private double rollAngle = 0;
 
@@ -62,6 +65,12 @@ public final class Pilot {
 		}
 	}
 
+	public void setChangeInSpeedY(double speed) {
+		synchronized (fSidewayLock) {
+			fSideway += (speed / Constants.TIME_INTERVALL) * weightOfPilot;
+		}
+	}
+
 	/**
 	 * Returns the weight of the pilot.
 	 * 
@@ -88,6 +97,9 @@ public final class Pilot {
 		synchronized (fForwardLock) {
 			fForward = 0;
 		}
+		synchronized (fSidewayLock) {
+			fSideway = 0;
+		}
 	}
 
 	/**
@@ -98,6 +110,58 @@ public final class Pilot {
 		calculateX();
 		calculateY(speedLeftWing, speedRightWing);
 		calculateZ();
+	}
+
+	private void calculateY(double speedLeftWing, double speedRightWing) {
+		calculateForcesInTheYAxis(speedLeftWing, speedRightWing);
+		calculateChangeInYAxis();
+	}
+
+	private void calculateChangeInYAxis() {
+		double acceleration = (fSideway) / weightOfPilot;
+
+		double changeY = (acceleration * Math.pow(Constants.TIME_INTERVALL, 2)) / 2;
+
+		currentPosition.setY(currentPosition.getY() - changeY);
+
+	}
+
+	private void calculateForcesInTheYAxis(double speedLeftWing,
+			double speedRightWing) {
+		double fg = weightOfPilot * Constants.GRAVITATIONAL_FORCE;
+		calculateRollAngle();
+		double fBackwards = fg * Math.sin(getRollAngle());
+
+		if (getCentrifugalForce(speedLeftWing, speedRightWing) <= fSideway) {
+			fSideway = 0;
+		} else {
+			synchronized (fSidewayLock) {
+				if (isOnRightSite) {
+					fSideway += fBackwards;
+				} else {
+					fSideway -= fBackwards;
+				}
+				fSideway += calculateDamping(fSideway);
+			}
+		}
+	}
+
+	private void calculateRollAngle() {
+		Vector2D u = new Vector2D(ZERO_POSITION.getY() - ZERO_POINT.getY(),
+				ZERO_POSITION.getZ() - ZERO_POINT.getZ());
+		Vector2D v = new Vector2D(currentPosition.getY() - ZERO_POINT.getY(),
+				currentPosition.getZ() - ZERO_POINT.getZ());
+
+		double cosAngle = u.getAngleToVector2D(v, Unit.Radian);
+
+		if (currentPosition.getY() < ZERO_POSITION.getY()) {
+			isOnRightSite = false;
+		} else {
+			isOnRightSite = true;
+		}
+
+		setRollAngle(Math.acos(cosAngle));
+
 	}
 
 	/**
@@ -129,19 +193,16 @@ public final class Pilot {
 	 * 
 	 * @return double in Radian
 	 */
-	public double calculateRollAngle(double speedLeftWing, double speedRightWing) {
-
-		if (speedLeftWing == speedRightWing) {
-			angularVelocity = 0;
-			return 0;
-		}
-
-		double fCen = getCentrifugalForce(speedLeftWing, speedRightWing);
-		double fG = Constants.GRAVITATIONAL_FORCE * weightOfPilot;
-		double resultAngle = Math.atan(fCen / fG);
-		setRollAngle(resultAngle);
-		return resultAngle;
-	}
+	/*
+	 * public double calculateRollAngle(double speedLeftWing, double
+	 * speedRightWing) {
+	 * 
+	 * if (speedLeftWing == speedRightWing) { angularVelocity = 0; return 0; }
+	 * 
+	 * double fCen = getCentrifugalForce(speedLeftWing, speedRightWing); double
+	 * fG = Constants.GRAVITATIONAL_FORCE * weightOfPilot; double resultAngle =
+	 * Math.atan(fCen / fG); setRollAngle(resultAngle); return resultAngle; }
+	 */
 
 	private double getCentrifugalForce(double speedLeftWing,
 			double speedRightWing) {
@@ -178,7 +239,7 @@ public final class Pilot {
 		double fBackwards = fg * Math.sin(getPitchAngle());
 
 		synchronized (fForwardLock) {
-			if (isOnPositiveSite()) {
+			if (isOnPositiveSite) {
 				fForward += fBackwards;
 			} else {
 				fForward -= fBackwards;
@@ -187,8 +248,8 @@ public final class Pilot {
 		}
 	}
 
-	private double calculateDamping(double fForward) {
-		double acceleration = fForward/weightOfPilot;
+	private double calculateDamping(double force) {
+		double acceleration = force / weightOfPilot;
 		return -acceleration * Constants.DAMPING_FACTOR * weightOfPilot;
 	}
 
@@ -201,14 +262,16 @@ public final class Pilot {
 		currentPosition.setZ(z);
 	}
 
-	private void calculateY(double speedLeftWing, double speedRightWing) {
-
-		double newY = Constants.LENGTH_OF_CORD
-				* Math.sin(calculateRollAngle(speedLeftWing, speedRightWing));
-
-		currentPosition.setY(newY);
-
-	}
+	/*
+	 * private void calculateY(double speedLeftWing, double speedRightWing) {
+	 * 
+	 * double newY = Constants.LENGTH_OF_CORD
+	 * Math.sin(calculateRollAngle(speedLeftWing, speedRightWing));
+	 * 
+	 * currentPosition.setY(newY);
+	 * 
+	 * }
+	 */
 
 	private double getCurveRadius(double pathLeft, double pathRight) {
 		double xa = pathRight;
@@ -222,10 +285,6 @@ public final class Pilot {
 		return angularVelocity;
 	}
 
-	public boolean isOnPositiveSite() {
-		return isOnPositiveSite;
-	}
-
 	public double getRollAngle() {
 		synchronized (rollAngleLock) {
 			return rollAngle;
@@ -236,6 +295,14 @@ public final class Pilot {
 		synchronized (rollAngleLock) {
 			this.rollAngle = rollAngle;
 		}
+	}
+
+	public boolean isOnPositiveSite() {
+		return isOnPositiveSite;
+	}
+
+	public boolean isOnRightSite() {
+		return isOnRightSite;
 	}
 
 }
