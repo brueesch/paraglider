@@ -129,13 +129,23 @@ public final class Pilot {
 	private void calculateForcesInTheYAxis(double speedLeftWing,
 			double speedRightWing) {
 		double fg = weightOfPilot * Constants.GRAVITATIONAL_FORCE;
+		boolean inChange = true;
 		calculateRollAngle();
 		double fBackwards = fg * Math.sin(getRollAngle());
 		System.out.println(fBackwards);
 		System.out.println(getCentrifugalForce(speedLeftWing, speedRightWing));
-		if (getCentrifugalForce(speedLeftWing, speedRightWing) <= fSideway && getCentrifugalForce(speedLeftWing, speedRightWing) <= fSideway) {
-			fSideway = 0;
+		if(speedLeftWing > speedRightWing) {
+			if(getCentrifugalForce(speedLeftWing, speedRightWing) <= fSideway) {
+				inChange = false;
+				fSideway = 0;
+			}	
 		} else {
+			if(getCentrifugalForce(speedLeftWing, speedRightWing) >= fSideway) {
+				inChange = false;
+				fSideway=0;
+			}			
+		}
+		if(inChange) {
 			synchronized (fSidewayLock) {
 				if (isOnRightSite) {
 					fSideway += fBackwards;
