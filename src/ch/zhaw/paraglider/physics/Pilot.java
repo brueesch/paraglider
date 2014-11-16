@@ -20,12 +20,13 @@ public final class Pilot {
 	private boolean isOnRightSite = true;
 	private static Pilot instance;
 	private double fForward;
-	private double fSideway;
+	private double fSideway = 0;
 	private final Object fForwardLock = new Object();
 	private final Object rollAngleLock = new Object();
 	private final Object fSidewayLock = new Object();
 	private double angularVelocity;
 	private double rollAngle = 0;
+	private boolean inFullStall = false;
 
 	private Pilot() {
 		super();
@@ -66,9 +67,16 @@ public final class Pilot {
 	}
 
 	public void setChangeInSpeedY(double speed) {
-		synchronized (fSidewayLock) {
-			fSideway += (speed / Constants.TIME_INTERVALL) * weightOfPilot;
+		if(speed > 0) {
+			fSideway--;
 		}
+		else {
+			fSideway++;
+		}
+		// synchronized (fSidewayLock) {
+		// fSideway -= ((speed / Constants.TIME_INTERVALL) * weightOfPilot);
+		// inChange = true;
+		// }
 	}
 
 	/**
@@ -128,33 +136,40 @@ public final class Pilot {
 
 	private void calculateForcesInTheYAxis(double speedLeftWing,
 			double speedRightWing) {
+
 		double fg = weightOfPilot * Constants.GRAVITATIONAL_FORCE;
-		boolean inChange = true;
-		calculateRollAngle();
-		double fBackwards = fg * Math.sin(getRollAngle());
-		System.out.println(fBackwards);
-		System.out.println(getCentrifugalForce(speedLeftWing, speedRightWing));
-		if(speedLeftWing > speedRightWing) {
-			if(getCentrifugalForce(speedLeftWing, speedRightWing) <= fSideway) {
-				inChange = false;
-				fSideway = 0;
-			}	
+		double centrifugalForce;
+		if (speedLeftWing == speedRightWing) {
+			centrifugalForce = 0;
 		} else {
-			if(getCentrifugalForce(speedLeftWing, speedRightWing) >= fSideway) {
-				inChange = false;
-				fSideway=0;
-			}			
+			centrifugalForce = getCentrifugalForce(speedLeftWing,
+					speedRightWing);
 		}
-		if(inChange) {
-			synchronized (fSidewayLock) {
-				if (isOnRightSite) {
-					fSideway += fBackwards;
-				} else {
-					fSideway -= fBackwards;
-				}
-				fSideway += calculateDamping(fSideway);
+		double fBackwards = fg * Math.sin(getRollAngle());
+
+		calculateRollAngle();
+//		System.out.println(speedLeftWing);
+		if(Math.round(speedLeftWing - speedRightWing) == 0) {
+			fSideway += calculateDamping(fSideway)*4;
+		}
+
+		System.out.println("fSideway: " + fSideway + " fBackward: "
+				+ fBackwards + " Zentrifugalkraft: " + centrifugalForce);
+		if(Math.round(fBackwards)==Math.round(centrifugalForce) && Math.round(fBackwards)!=0
+				|| Math.round(fBackwards)==-	Math.round(centrifugalForce) && Math.round(fBackwards)!=0) {
+			fSideway =0;
+		}
+		synchronized (fSidewayLock) {
+			if (isOnRightSite) {
+				fSideway += fBackwards;
+				fSideway += centrifugalForce;
+			} else {
+				fSideway -= fBackwards;
+				fSideway += centrifugalForce;
 			}
+			//fSideway += calculateDamping(fSideway);
 		}
+		// }
 	}
 
 	private void calculateRollAngle() {
@@ -204,16 +219,21 @@ public final class Pilot {
 	 * 
 	 * @return double in Radian
 	 */
-	/*
-	 * public double calculateRollAngle(double speedLeftWing, double
-	 * speedRightWing) {
-	 * 
-	 * if (speedLeftWing == speedRightWing) { angularVelocity = 0; return 0; }
-	 * 
-	 * double fCen = getCentrifugalForce(speedLeftWing, speedRightWing); double
-	 * fG = Constants.GRAVITATIONAL_FORCE * weightOfPilot; double resultAngle =
-	 * Math.atan(fCen / fG); setRollAngle(resultAngle); return resultAngle; }
-	 */
+
+	public double calculateAngleOfHighestPoint(double speedLeftWing,
+			double speedRightWing) {
+
+		if (speedLeftWing == speedRightWing) {
+			angularVelocity = 0;
+			return 0;
+		}
+
+		double fCen = getCentrifugalForce(speedLeftWing, speedRightWing);
+		double fG = Constants.GRAVITATIONAL_FORCE * weightOfPilot;
+		double resultAngle = Math.atan(fCen / fG);
+		setRollAngle(resultAngle);
+		return resultAngle;
+	}
 
 	private double getCentrifugalForce(double speedLeftWing,
 			double speedRightWing) {
@@ -238,6 +258,9 @@ public final class Pilot {
 
 	private void calculateChangeInXAxis() {
 		double acceleration = (fForward) / weightOfPilot;
+		if (inFullStall) {
+			acceleration = 0;
+		}
 
 		double changeX = (acceleration * Math.pow(Constants.TIME_INTERVALL, 2)) / 2;
 
@@ -316,4 +339,7 @@ public final class Pilot {
 		return isOnRightSite;
 	}
 
+	public void setInFullStall(boolean inFullStall) {
+		this.inFullStall = inFullStall;
+	}
 }
