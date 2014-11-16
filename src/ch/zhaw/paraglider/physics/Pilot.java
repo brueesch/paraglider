@@ -67,10 +67,9 @@ public final class Pilot {
 	}
 
 	public void setChangeInSpeedY(double speed) {
-		if(speed > 0) {
+		if (speed > 0) {
 			fSideway--;
-		}
-		else {
+		} else {
 			fSideway++;
 		}
 		// synchronized (fSidewayLock) {
@@ -139,25 +138,32 @@ public final class Pilot {
 
 		double fg = weightOfPilot * Constants.GRAVITATIONAL_FORCE;
 		double centrifugalForce;
+		double fBackwards;
+		calculateRollAngle();
 		if (speedLeftWing == speedRightWing) {
 			centrifugalForce = 0;
 		} else {
 			centrifugalForce = getCentrifugalForce(speedLeftWing,
 					speedRightWing);
+			
 		}
-		double fBackwards = fg * Math.sin(getRollAngle());
-
-		calculateRollAngle();
-//		System.out.println(speedLeftWing);
-		if(Math.round(speedLeftWing - speedRightWing) == 0) {
-			fSideway += calculateDamping(fSideway)*4;
+		fBackwards = fg * Math.sin(getRollAngle());
+		if(fBackwards == Double.NaN) {
+			fBackwards = 0;
+		}
+		
+		if (Math.round(speedLeftWing - speedRightWing) == 0) {
+			fSideway += calculateDamping(fSideway) * 4;
 		}
 
-		System.out.println("fSideway: " + fSideway + " fBackward: "
-				+ fBackwards + " Zentrifugalkraft: " + centrifugalForce);
-		if(Math.round(fBackwards)==Math.round(centrifugalForce) && Math.round(fBackwards)!=0
-				|| Math.round(fBackwards)==-	Math.round(centrifugalForce) && Math.round(fBackwards)!=0) {
-			fSideway =0;
+		double fBackwardsRoundedAndPositive = Math.round(Math.sqrt(Math.pow(
+				fBackwards, 2)));
+		double centrifugalForceRoundedAndPositive = Math.round(Math.sqrt(Math
+				.pow(centrifugalForce, 2)));
+		if (fBackwardsRoundedAndPositive >= centrifugalForceRoundedAndPositive
+				&& fBackwardsRoundedAndPositive <= centrifugalForceRoundedAndPositive + 5
+				&& fBackwardsRoundedAndPositive > 5) {
+			fSideway = 0;
 		}
 		synchronized (fSidewayLock) {
 			if (isOnRightSite) {
@@ -167,9 +173,7 @@ public final class Pilot {
 				fSideway -= fBackwards;
 				fSideway += centrifugalForce;
 			}
-			//fSideway += calculateDamping(fSideway);
 		}
-		// }
 	}
 
 	private void calculateRollAngle() {
