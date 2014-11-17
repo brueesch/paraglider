@@ -6,6 +6,7 @@
 
 var ge;
 var timer;
+var speedChange = 0.0001;
 
 google.load("earth", "1", false);
 
@@ -45,7 +46,7 @@ function initCamera() {
 	ge.getOptions().setFlyToSpeed(3.0);
 	camera.setLatitude(40.681682);
 	camera.setLongitude(-74.038428);
-	camera.setTilt(camera.getTilt()+ 90);
+	camera.setTilt(90);
 	camera.setAltitude(500);
 	camera.setHeading(45);
 	
@@ -56,8 +57,8 @@ function move() {
 	var camera = ge.getView().copyAsCamera(ge.ALTITUDE_RELATIVE_TO_GROUND);
 
 	// Add 25 degrees to the current latitude and longitude values.
-	camera.setLatitude(camera.getLatitude() + 0.0001);
-	camera.setLongitude(camera.getLongitude() +0.0001);
+	camera.setLatitude(camera.getLatitude() + speedChange);
+	camera.setLongitude(camera.getLongitude() +speedChange);
 
 	// Update the view in Google Earth.
 	ge.getView().setAbstractView(camera);
@@ -69,6 +70,20 @@ function stopMovement() {
 	clearTimeout(timer);	
 }
 
+function faster() {
+	speedChange += 0.0001;
+}
+
+function slower() {
+	speedChange -= 0.0001;
+	
+}
+
+function reset() {
+	stopMovement();
+	speedChange = 0.0001;
+	initCamera();
+}
 
 google.setOnLoadCallback(init);
 
