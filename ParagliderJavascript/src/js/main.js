@@ -6,7 +6,7 @@
 
 var ge;
 var timer;
-var speedChange = 0.0001;
+var speedChange = 0.00001;
 
 google.load("earth", "1", false);
 
@@ -43,27 +43,35 @@ function failureCB(errorCode) {
 function initCamera() {
 	var camera = ge.getView().copyAsCamera(ge.ALTITUDE_RELATIVE_TO_GROUND);
 
-	ge.getOptions().setFlyToSpeed(3.0);
+	ge.getOptions().setFlyToSpeed(ge.SPEED_TELEPORT);
+	ge.getOptions().setMouseNavigationEnabled (false);
 	camera.setLatitude(40.681682);
 	camera.setLongitude(-74.038428);
 	camera.setTilt(90);
 	camera.setAltitude(500);
 	camera.setHeading(45);
+	camera.setRoll(0);
 	
 	ge.getView().setAbstractView(camera);
 }
 
+
+/*
+ * -------------------------------------------------------
+ * In this section are test functions to determine how
+ * the manipulation of the camera works.
+ * -------------------------------------------------------
+ */
+
 function move() {
 	var camera = ge.getView().copyAsCamera(ge.ALTITUDE_RELATIVE_TO_GROUND);
 
-	// Add 25 degrees to the current latitude and longitude values.
 	camera.setLatitude(camera.getLatitude() + speedChange);
 	camera.setLongitude(camera.getLongitude() +speedChange);
 
-	// Update the view in Google Earth.
 	ge.getView().setAbstractView(camera);
 	
-    timer = setTimeout("move()",50); // time in milliseconds; this is 5 seconds
+    timer = setTimeout("move()",10);
 }
 
 function stopMovement() {
@@ -71,11 +79,11 @@ function stopMovement() {
 }
 
 function faster() {
-	speedChange += 0.0001;
+	speedChange += 0.00001;
 }
 
 function slower() {
-	speedChange -= 0.0001;
+	speedChange -= 0.00001;
 	
 }
 
@@ -83,6 +91,14 @@ function reset() {
 	stopMovement();
 	speedChange = 0.0001;
 	initCamera();
+}
+
+function roll(rollAngle) {
+	var camera = ge.getView().copyAsCamera(ge.ALTITUDE_RELATIVE_TO_GROUND);
+	
+	camera.setRoll(camera.getRoll() + rollAngle);
+	
+	ge.getView().setAbstractView(camera);
 }
 
 google.setOnLoadCallback(init);
