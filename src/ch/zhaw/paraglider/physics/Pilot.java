@@ -262,9 +262,6 @@ public final class Pilot {
 
 	private void calculateChangeInXAxis() {
 		double acceleration = (fForward) / weightOfPilot;
-		if (inFullStall) {
-			acceleration = 0;
-		}
 
 		double changeX = (acceleration * Math.pow(Constants.TIME_INTERVALL, 2)) / 2;
 
@@ -282,7 +279,12 @@ public final class Pilot {
 			} else {
 				fForward -= fBackwards;
 			}
-			fForward += calculateDamping(fForward);
+			if(inFullStall) {
+				fForward += calculateDamping(fForward)*8;
+			} else {
+				fForward += calculateDamping(fForward);
+			}
+			
 		}
 	}
 
