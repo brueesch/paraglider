@@ -53,6 +53,12 @@ function initCamera() {
 	camera.setRoll(0);
 	
 	ge.getView().setAbstractView(camera);
+	ge.getLayerRoot().enableLayerById(ge.LAYER_TERRAIN, true);
+	ge.getLayerRoot().enableLayerById(ge.LAYER_TREES , true);
+	ge.getLayerRoot().enableLayerById(ge.LAYER_BUILDINGS , true);
+	ge.getSun().setVisibility(true);
+	ge.getOptions().setAtmosphereVisibility(true);	
+	 
 }
 
 
