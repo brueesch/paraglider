@@ -101,6 +101,20 @@ function roll(rollAngle) {
 	ge.getView().setAbstractView(camera);
 }
 
+function showWing(){
+	var wing = new Wing("LeftWing");
+	wing.log();
+	wing.changeCurrentSpeed(3);
+	wing.log();
+	
+	var vector3D = new Vector3D(1.2,2.3,3.4);
+	vector3D.log();
+	var vec1 = new Vector3D(2,3,4);
+	vec1.log();
+	var vec2 = vector3D.sub(vec1);
+	vec2.log();
+}
+
 google.setOnLoadCallback(init);
 
 
