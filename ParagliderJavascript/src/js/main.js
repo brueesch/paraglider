@@ -15,6 +15,13 @@ function init() {
 	// Param: div id where the earth will appear, function to call by success,
 	// function to call by failure.
 	google.earth.createInstance('map3d', initCB, failureCB);
+	createNativeHTMLButton(400, 10, 108, 108, 'left',slower);
+	createNativeHTMLButton(508, 10, 108, 108, 'slower', slower);
+	createNativeHTMLButton(616, 10, 108, 108, 'play', move);
+	createNativeHTMLButton(724, 10, 108, 108, 'faster', faster);
+	createNativeHTMLButton(832, 10, 108, 108, 'right',slower);
+	createNativeHTMLButton(1048, 10, 108, 108, 'pause',stopMovement );
+	createNativeHTMLButton(1156, 10, 108, 108, 'stop',reset);
 	
 }
 
@@ -125,6 +132,7 @@ function showWing(){
 }
 
 google.setOnLoadCallback(init);
+
 
 
 

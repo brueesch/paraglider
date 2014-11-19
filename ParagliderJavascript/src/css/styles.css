@@ -1,3 +1,18 @@
+html, body
+{
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+}
+
 #map3d {
-	height: 900px;
+	width: 100%;
+	height: 100%;
+}
+
+button
+{
+	display: block:
+	background-color: none;
 }
