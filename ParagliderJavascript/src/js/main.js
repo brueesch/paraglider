@@ -113,6 +113,9 @@ function showWing(){
 	vec1.log();
 	var vec2 = vector3D.sub(vec1);
 	vec2.log();
+	
+	var pilot = new Pilot();
+	pilot.log();
 }
 
 google.setOnLoadCallback(init);

@@ -1,3 +1,4 @@
+//DRAFT, Need to doublecheck
 function Vector3D(valueX, valueY, valueZ)
 {
 	var x = null

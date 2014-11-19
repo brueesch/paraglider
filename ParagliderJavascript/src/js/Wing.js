@@ -1,16 +1,4 @@
-/*var glider = function()
-{
-	var leftWing = new Wing();
-	var childFunction = function(){
-	alert(protectedValue);
-	}
-	childFunction();
-}
-var object = new parentFunction();
-*/
-
-
-
+//DRAFT, Need to doublecheck
 function Wing(name)
 {
 	var name = name;
