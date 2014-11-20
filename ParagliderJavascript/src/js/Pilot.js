@@ -213,7 +213,8 @@ function Pilot()
 		var acceleration = force / weightOfPilot;
 		return -acceleration * Constants.DAMPING_FACTOR * weightOfPilot;
 	}
-	function calculateZ() {
+	function calculateZ() 
+	{
 		var x = currentPosition.getX() - ZERO_POSITION.getX();
 		var y = currentPosition.getY() - ZERO_POSITION.getY();
 		var a = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
