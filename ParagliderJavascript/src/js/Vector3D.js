@@ -70,14 +70,8 @@ function Vector3D(valueX, valueY, valueZ)
 		}
 	}
 	
-	this.log = function()
+	this.log = function(name)
 	{
-		console.log("<----- Logging called for Class 'Vector3D' ----->");
-		console.log("Typeof: " + typeof this);
-		console.log("X: " + x);
-		console.log("Y: " + y);
-		console.log("Z: " + z);
-		console.log("<----- End of Logging for Class 'Vector3D' ----->");
-		console.log(" ");
+		console.log("<----- Vector3D '" + name + "' = [" + x + "," + y + "," + z + "] ----->");
 	}
 }

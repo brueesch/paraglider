@@ -1,4 +1,4 @@
-function Constants
+var Constants = new function()
 {
 	//How do make those things readonly???
 	this.GLIDER_WINGSPAN = 12;

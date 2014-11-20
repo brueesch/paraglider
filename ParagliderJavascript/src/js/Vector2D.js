@@ -76,14 +76,8 @@ function Vector2D(valueX, valueZ)
 		}
 	}
 	
-	this.log = function()
+	this.log = function(name)
 	{
-		console.log("<----- Logging called for Class 'Vector2D' ----->");
-		console.log("Typeof: " + typeof this);
-		console.log("X: " + x);
-		console.log("Z: " + z);
-		console.log("Norm: " + this.getNorm());
-		console.log("<----- End of Logging for Class 'Vector2D' ----->");
-		console.log(" ");
+		console.log("<----- Vector2D '" + name + "' = [" + x + "," + z + "] ----->");
 	}
 }
