@@ -7,6 +7,7 @@
 var ge;
 var timer;
 var speedChange = 0.00001;
+var moving = false;
 
 google.load("earth", "1", false);
 
@@ -15,13 +16,17 @@ function init() {
 	// Param: div id where the earth will appear, function to call by success,
 	// function to call by failure.
 	google.earth.createInstance('map3d', initCB, failureCB);
-	createNativeHTMLButton(400, 10, 108, 108, 'left',slower);
-	createNativeHTMLButton(508, 10, 108, 108, 'slower', slower);
-	createNativeHTMLButton(616, 10, 108, 108, 'play', move);
-	createNativeHTMLButton(724, 10, 108, 108, 'faster', faster);
-	createNativeHTMLButton(832, 10, 108, 108, 'right',slower);
-	createNativeHTMLButton(1048, 10, 108, 108, 'pause',stopMovement );
-	createNativeHTMLButton(1156, 10, 108, 108, 'stop',reset);
+	
+	var buttonSize = 108;
+	var left = 550;
+	
+	createNativeHTMLButton(left + (1*buttonSize), 10, buttonSize, buttonSize, 'left', rollLeft);
+	createNativeHTMLButton(left + (2*buttonSize), 10, buttonSize, buttonSize, 'slower', slower);
+	createNativeHTMLButton(left + (3*buttonSize), 10, buttonSize, buttonSize, 'play', move);
+	createNativeHTMLButton(left + (4*buttonSize), 10, buttonSize, buttonSize, 'faster', faster);
+	createNativeHTMLButton(left + (5*buttonSize), 10, buttonSize, buttonSize, 'right', rollRight);
+	createNativeHTMLButton(left + (7*buttonSize), 10, buttonSize, buttonSize, 'pause', stopMovement);
+	createNativeHTMLButton(left + (8*buttonSize), 10, buttonSize, buttonSize, 'stop',reset);
 	
 }
 
@@ -29,7 +34,7 @@ function init() {
 function initCB(instance) {
 	   ge = instance;
 	   ge.getWindow().setVisibility(true);
-	   initCamera();
+	   initCamera();		 
 }
 
 function failureCB(errorCode) {
@@ -51,7 +56,7 @@ function initCamera() {
 	var camera = ge.getView().copyAsCamera(ge.ALTITUDE_RELATIVE_TO_GROUND);
 
 	ge.getOptions().setFlyToSpeed(ge.SPEED_TELEPORT);
-	ge.getOptions().setMouseNavigationEnabled (false);
+	ge.getOptions().setMouseNavigationEnabled (false);	   
 	camera.setLatitude(40.681682);
 	camera.setLongitude(-74.038428);
 	camera.setTilt(90);
@@ -63,9 +68,8 @@ function initCamera() {
 	ge.getLayerRoot().enableLayerById(ge.LAYER_TERRAIN, true);
 	ge.getLayerRoot().enableLayerById(ge.LAYER_TREES , true);
 	ge.getLayerRoot().enableLayerById(ge.LAYER_BUILDINGS , true);
-	ge.getSun().setVisibility(true);
-	ge.getOptions().setAtmosphereVisibility(true);	
-	 
+	//ge.getSun().setVisibility(true);
+	ge.getOptions().setAtmosphereVisibility(true);
 }
 
 
@@ -76,27 +80,39 @@ function initCamera() {
  * -------------------------------------------------------
  */
 
-function move() {
-	var camera = ge.getView().copyAsCamera(ge.ALTITUDE_RELATIVE_TO_GROUND);
-
-	camera.setLatitude(camera.getLatitude() + speedChange);
-	camera.setLongitude(camera.getLongitude() +speedChange);
-
-	ge.getView().setAbstractView(camera);
+function move()
+{
+	if(!moving)
+	{
+		nextStep();
+	}
 	
-    timer = setTimeout("move()",10);
+}
+
+function nextStep() {
+	
+		var camera = ge.getView().copyAsCamera(ge.ALTITUDE_RELATIVE_TO_GROUND);
+	
+		camera.setLatitude(camera.getLatitude() + speedChange);
+		camera.setLongitude(camera.getLongitude() +speedChange);
+	
+		ge.getView().setAbstractView(camera);
+		
+	    timer = setTimeout("nextStep()",10);  
+	    moving = true;	
 }
 
 function stopMovement() {
 	clearTimeout(timer);	
+	moving = false;	
 }
 
 function faster() {
-	speedChange += 0.00001;
+	speedChange += 0.0001;
 }
 
 function slower() {
-	speedChange -= 0.00001;
+	speedChange -= 0.0001;
 	
 }
 
@@ -104,6 +120,14 @@ function reset() {
 	stopMovement();
 	speedChange = 0.0001;
 	initCamera();
+}
+function rollLeft()
+{
+	roll(15);
+}
+function rollRight()
+{
+	roll(-15);
 }
 
 function roll(rollAngle) {
