@@ -20,9 +20,36 @@ function Pilot()
 	var rollAngle = 0;
 	var inFullStall = false;
 	
-	this.getCurrentPosition = new function()
+	this.getCurrentPosition = function()
 	{
 		return currentPosition;
+	}
+	
+	this.setChangeInSpeed = function(speed)
+	{
+		fForward += (speed/Constants.TIME_INTERVALL) * weightOfPilot;
+	}
+	
+	this.setChangeInSpeedY = new(speed)
+	{
+		if(speed > 0)
+		{
+			fSideway--;
+		}
+		else
+		{
+			fSideway++;
+		}
+	}
+	
+	this.getWeightOfPilot = function()
+	{
+		return weightOfPilot;
+	}
+	
+	this.setWeightOfPilot = function(weight)
+	{
+		weightOfPilot = weight;
 	}
 	
 	this.log = function()
