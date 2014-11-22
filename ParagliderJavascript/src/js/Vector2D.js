@@ -64,7 +64,7 @@ function Vector2D(valueX, valueZ)
 	{
 		return Math.sqrt(Math.pow(this.getX(),2) + Math.pow(this.getZ(), 2))
 	}
-	this.getAngleToVector2D(v)
+	this.getAngleToVector2D = function(v)
 	{
 		if(v instanceof Vector2D)
 		{

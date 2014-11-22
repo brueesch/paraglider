@@ -141,6 +141,7 @@ function roll(rollAngle) {
 
 function showWing(){	
 	var pilot = new Pilot();
+	alert(pilot.getPitchAngle());
 	pilot.log();
 	pilot.calculatePosition(10,10);
 	pilot.log();

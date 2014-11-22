@@ -23,4 +23,4 @@ var Constants = new function()
 	{
 		return ms / 1000;
 	}
-} 
+}

@@ -1,4 +1,4 @@
-function Pilot()
+var Pilot = function ()
 {
 	var weightOfPilot = 85;
 	
@@ -66,13 +66,13 @@ function Pilot()
 		calculateZ();
 	}
 	
-	function calculateY(speedLeftWing, speedRightWing) 
+	var calculateY = function(speedLeftWing, speedRightWing) 
 	{
 		calculateForcesInTheYAxis(speedLeftWing, speedRightWing);
 		calculateChangeInYAxis();
 	}
 	
-	function calculateForcesInTheYAxis(speedLeftWing,speedRightWing)
+	var calculateForcesInTheYAxis = function(speedLeftWing,speedRightWing)
 	{
 		var fg = weightOfPilot * Constants.GRAVITATIONAL_FORCE;
 		var centrifugalForce;
@@ -115,7 +115,7 @@ function Pilot()
 		}
 	}
 	
-	function calculateRollAngle()
+	var calculateRollAngle = function()
 	{
 		var u = new Vector2D(ZERO_POSITION.getY() - ZERO_POINT.getY(), ZERO_POSITION.getZ() - ZERO_POINT.getZ());
 		var v = new Vector2D(currentPosition.getY() - ZERO_POINT.getY(), currentPosition.getZ() - ZERO_POINT.getZ());
@@ -168,7 +168,7 @@ function Pilot()
 		return resultAngle;
 	}
 	
-	function getCentrifugalForce(speedLeftWing, speedRightWing)
+	var getCentrifugalForce = function(speedLeftWing, speedRightWing)
 	{
 		var pilotPath = (speedLeftWing + speedRightWing) / 2 * Constants.TIME_INTERVALL;
 		var radius = getCurveRadius(speedLeftWing * Constants.TIME_INTERVALL, speedRightWing * Constants.TIME_INTERVALL)- (Constants.GLIDER_WINGSPAN / 2);
@@ -178,21 +178,22 @@ function Pilot()
 
 		return weightOfPilot * Math.pow(angularVelocity, 2) * radius;
 	}
-	function calculateX() 
+	var calculateX = function() 
 	{
-		calculateForcesInTheXAxis();
+		this.calculateForcesInTheXAxis();
 		calculateChangeInXAxis();
-	}
-	function calculateChangeInXAxis() 
+	}.bind(this);
+	
+	var calculateChangeInXAxis = function() 
 	{
 		var acceleration = (fForward) / weightOfPilot;
 		var changeX = (acceleration * Math.pow(Constants.TIME_INTERVALL, 2)) / 2;
 		currentPosition.setX(currentPosition.getX() - changeX);
 	}
-	function calculateForcesInTheXAxis() 
+	var calculateForcesInTheXAxis = function() 
 	{
 		var fg = weightOfPilot * Constants.GRAVITATIONAL_FORCE;
-		var fBackwards = fg * Math.sin(getPitchAngle());
+		var fBackwards = fg * Math.sin(this.getPitchAngle());
 
 		if (isOnPositiveSite) 
 		{
@@ -208,12 +209,12 @@ function Pilot()
 			fForward += calculateDamping(fForward);
 		}
 	}
-	function calculateDamping(force) 
+	var calculateDamping = function(force) 
 	{
 		var acceleration = force / weightOfPilot;
 		return -acceleration * Constants.DAMPING_FACTOR * weightOfPilot;
 	}
-	function calculateZ() 
+	var calculateZ = function() 
 	{
 		var x = currentPosition.getX() - ZERO_POSITION.getX();
 		var y = currentPosition.getY() - ZERO_POSITION.getY();
@@ -221,7 +222,7 @@ function Pilot()
 		var z = Math.sqrt(Math.pow(Constants.LENGTH_OF_CORD, 2)- Math.pow(a, 2));
 		currentPosition.setZ(z);
 	}
-	function getCurveRadius(pathLeft, pathRight) 
+	var getCurveRadius = function(pathLeft, pathRight)
 	{
 		var xa = pathRight;
 		var xb = pathLeft;
@@ -268,6 +269,7 @@ function Pilot()
 		console.log("fSideway: " + fSideway);
 		console.log("angularVelocity: " + angularVelocity);
 		console.log("rollAngle: " + rollAngle);
+		console.log("pitchAngle: " + this.getPitchAngle());
 		console.log("inFullStall: " + inFullStall);
 		console.log("<----- End of Logging for Class 'Pilot' ----->");
 		console.log(" ");
