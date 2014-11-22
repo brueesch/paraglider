@@ -140,15 +140,11 @@ function roll(rollAngle) {
 }
 
 function showWing(){	
-	var pilot = new Pilot();
-	alert(pilot.getPitchAngle());
-	pilot.log();
-	pilot.calculatePosition(10,10);
-	pilot.log();
-	pilot.calculatePosition(20,20);
-	pilot.log();
-	pilot.reset();
-	pilot.log();
+	
+	var cat = new Mammal("Cat", "claws");
+	var dog = new Mammal("Dog", "a wet nose");
+	
+	alert(cat.species);
 	
 }
 
