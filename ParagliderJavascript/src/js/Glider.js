@@ -1,5 +1,3 @@
-	
-var pilot = new Pilot();
 var leftWing = new Wing("Left");
 var rightWing = new Wing("Right");
 var yawAngle = 0;
@@ -41,13 +39,13 @@ Glider.prototype = {
 			pilot.reset();
 		},
 		calculateYawAngle: function() {
-			var pathLeft = leftWing.getHorizontalSpeed() * Constants.TIME_INTERVALL;
-			var pathRight = rightWing.getHorizontalSpeed() * Constants.TIME_INTERVALL;
+			var pathLeft = leftWing.getHorizontalSpeed() * constants.getTimeInterval();
+			var pathRight = rightWing.getHorizontalSpeed() * constants.getTimeInterval();
 				
 			if(pathLeft != pathRight) {
 				var xa = pathLeft;
 				var xb = pathRight;
-				var rb = Constants.GLIDER_WINGSPAN;
+				var rb = constants.getGliderWingspan();
 				var ra = (xa*rb)/(xb-xa);
 				var radius = ra + rb;
 				yawAngle += Math.toDegrees(xb/radius);
@@ -68,7 +66,7 @@ Glider.prototype = {
 		isOnRightSite: function() {
 			return pilot.isOnRightSite();
 		},
-		testFunction: function() {	
-			leftWing.setHorizontalSpeed(2);
+		log: function() {	
+			pilot.log();
 		}
 };

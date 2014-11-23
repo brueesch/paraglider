@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------------------
- * Initializing Google Earth
+ * Initializing all global variables
  * -------------------------------------------------------
  */
 
@@ -9,6 +9,17 @@ var timer;
 var speedChange = 0.00001;
 var moving = false;
 var glider = new Glider();
+var constants = new Constants();
+var pilot = new Pilot();
+
+/*
+ * -------------------------------------------------------
+ * Initializing Google Earth
+ * -------------------------------------------------------
+ */
+
+
+
 
 google.load("earth", "1", false);
 
@@ -92,6 +103,9 @@ function move()
 
 function nextStep() {
 	
+		glider.makeNextStep();
+		pilot.log();
+	
 		var camera = ge.getView().copyAsCamera(ge.ALTITUDE_RELATIVE_TO_GROUND);
 	
 		camera.setLatitude(camera.getLatitude() + speedChange);
@@ -99,7 +113,7 @@ function nextStep() {
 	
 		ge.getView().setAbstractView(camera);
 		
-	    timer = setTimeout("nextStep()",10);  
+	    timer = setTimeout("nextStep()",constants.getTimeInterval());  
 	    moving = true;	
 }
 
@@ -147,6 +161,18 @@ function showWing(){
 	
 	alert(cat.species);
 	
+}
+
+function rightBreak() {
+	glider.changeSpeed(0, 3);
+}
+
+function leftBreak() {
+	glider.changeSpeed(3, 0);
+}
+
+function bothBreaks() {
+	glider.changeSpeed(3, 3);
 }
 
 google.setOnLoadCallback(init);
