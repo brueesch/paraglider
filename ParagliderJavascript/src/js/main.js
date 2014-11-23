@@ -8,6 +8,7 @@ var ge;
 var timer;
 var speedChange = 0.00001;
 var moving = false;
+var glider = new Glider();
 
 google.load("earth", "1", false);
 

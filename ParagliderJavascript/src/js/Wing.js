@@ -19,6 +19,7 @@ function Wing(name)
 	
 	this.setHorizontalSpeed = function(speed)
 	{
+		console.log("wuhu");
 		currentSpeed = speed;
 	}
 	
