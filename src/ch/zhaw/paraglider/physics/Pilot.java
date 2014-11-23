@@ -302,17 +302,6 @@ public final class Pilot {
 		currentPosition.setZ(z);
 	}
 
-	/*
-	 * private void calculateY(double speedLeftWing, double speedRightWing) {
-	 * 
-	 * double newY = Constants.LENGTH_OF_CORD
-	 * Math.sin(calculateRollAngle(speedLeftWing, speedRightWing));
-	 * 
-	 * currentPosition.setY(newY);
-	 * 
-	 * }
-	 */
-
 	private double getCurveRadius(double pathLeft, double pathRight) {
 		double xa = pathRight;
 		double xb = pathLeft;

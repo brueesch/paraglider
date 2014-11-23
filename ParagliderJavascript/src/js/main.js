@@ -11,6 +11,7 @@ var moving = false;
 var glider = new Glider();
 var constants = new Constants();
 var pilot = new Pilot();
+var currentHeading = 45;
 
 /*
  * -------------------------------------------------------
@@ -73,7 +74,7 @@ function initCamera() {
 	camera.setLongitude(-74.038428);
 	camera.setTilt(90);
 	camera.setAltitude(500);
-	camera.setHeading(45);
+	camera.setHeading(currentHeading);
 	camera.setRoll(0);
 	
 	ge.getView().setAbstractView(camera);
@@ -104,18 +105,49 @@ function move()
 function nextStep() {
 	
 		glider.makeNextStep();
-		pilot.log();
+		log();
+		
 	
 		var camera = ge.getView().copyAsCamera(ge.ALTITUDE_RELATIVE_TO_GROUND);
-	
-		camera.setLatitude(camera.getLatitude() + speedChange);
-		camera.setLongitude(camera.getLongitude() +speedChange);
+		setPosition(camera);
+		setHeading(camera);
+		setRoll(camera);
+		setTilt(camera);
+		
 	
 		ge.getView().setAbstractView(camera);
 		
 	    timer = setTimeout("nextStep()",constants.getTimeInterval());  
 	    moving = true;	
 }
+
+function setPosition(camera) {
+	var v = glider.getHorizontalSpeed();
+	var s = v / constants.getTimeInterval();
+	
+	
+	var changeLatitude = (s*Math.cos(currentHeading)) /constants.getDistanceBetweenLatitude();
+	var changeLongitude = ((s*Math.sin(currentHeading)) / constants.getDistanceBetweenLatitude());
+//	*Math.cos(camera.getLatitude)
+	console.log("change Latitude: "+ changeLatitude + " change Longitude: "+changeLongitude);
+	camera.setLatitude(camera.getLatitude() + changeLatitude);
+	camera.setLongitude(camera.getLongitude() + changeLongitude);
+	
+}
+
+function setHeading(camera) {
+	
+}
+
+function setRoll(camera) {
+	
+}
+
+function setTilt(camera) {
+	
+}
+
+
 
 function stopMovement() {
 	clearTimeout(timer);	
@@ -163,17 +195,59 @@ function showWing(){
 	
 }
 
-function rightBreak() {
-	glider.changeSpeed(0, 3);
+var rightBreak = (function() {
+	var oldValue = 0;
+	return function(value) {
+		glider.changeSpeed(-((value - oldValue) / 3.6),0);
+		oldValue = value;
+	};
+})();
+
+var leftBreak = (function() {
+	var oldValue = 0;
+	return function(value) {
+		glider.changeSpeed(0,-((value - oldValue) / 3.6));
+		oldValue = value;
+	};
+})();
+
+var bothBreaks = (function() {
+	var oldValue = 0;
+	return function(value) {
+		if(value >= 0.90*(document.getElementById("bothBreaks").max)) {
+			glider.setInFullStall(true);
+		}
+		else {
+			glider.setInFullStall(false);
+		}
+			
+			
+		glider.changeSpeed(-((value - oldValue) / 3.6),-((value - oldValue) / 3.6));
+		oldValue = value;
+	};
+})();
+
+function log() {
+	console.log("Typeof: " + typeof pilot);
+	console.log("weightOfPilot: " + pilot.weightOfPilot);
+	console.log("Zero Position: "+ pilot.ZERO_POSITION);
+	console.log("Zero Point: "+ pilot.ZERO_POINT);
+	console.log("isOnPositiveSite: " + pilot.isOnPositiveSite);
+	console.log("isOnRightSite: " + pilot.isOnRightSite);
+	console.log("fForward: " + pilot.fForward);
+	console.log("fSideway: " + pilot.fSideway);
+	console.log("angularVelocity: " + pilot.angularVelocity);
+	console.log("rollAngle: " + pilot.rollAngle);
+	console.log("pitchAngle: " + pilot.getPitchAngle());
+	console.log("inFullStall: " + pilot.inFullStall);
+	console.log("Horizontal Speed: " + glider.getHorizontalSpeed());
+	console.log("Vertical Speed: " + glider.getVerticalSpeed());
+	console.log("Gliding: "+glider.getCurrentGlideRatio());
+	console.log(" ");
 }
 
-function leftBreak() {
-	glider.changeSpeed(3, 0);
-}
 
-function bothBreaks() {
-	glider.changeSpeed(3, 3);
-}
+
 
 google.setOnLoadCallback(init);
 

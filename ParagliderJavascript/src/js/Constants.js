@@ -23,6 +23,9 @@ Constants.prototype = {
 	getDampingFactor : function() {
 		return this.DAMPING_FACTOR;
 	},
+	getDistanceBetweenLatitude: function() {
+		return 111120;
+	},
 	convertKmhToMs : function(kmh) {
 		return kmh / 3.6;
 	},

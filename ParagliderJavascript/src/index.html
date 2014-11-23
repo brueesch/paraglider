@@ -28,9 +28,12 @@
 
 	<div id="map3d"></div>
 	<button type="button" id="testButton" onclick="move();">Start</button>
-	<button type="button" id="leftBreak" onclick="leftBreak();">Left</button>
-	<button type="button" id="rightBreak" onclick="rightBreak();">Right</button>
-	<button type="button" id="bothBreaks" onclick="bothBreaks();">Both</button>
+<!--	<button type="button" id="leftBreak" onclick="leftBreak();">Left</button>-->
+<!--	<button type="button" id="rightBreak" onclick="rightBreak();">Right</button>-->
+<!--	<button type="button" id="bothBreaks" onclick="bothBreaks();">Both</button>-->
+	<input id="bothBreaks" type="range" min="0" max="34" step="1" value="0" oninput = "bothBreaks(this.value)"/>
+	<input id="leftBreak" type="range" min="0" max="34" step="1" value="0" oninput = "leftBreak(this.value)"/>
+	<input id="rightBreak" type="range" min="0" max="34" step="1" value="0" oninput = "rightBreak(this.value)"/>
 	<!--
 	<button type="button" id="faster" onclick="faster();">Faster</button>
 	<button type="button" id="slower" onclick="slower();">Slower</button>

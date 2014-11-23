@@ -136,18 +136,6 @@ Pilot.prototype = {
 
 		return Math.acos(cosAngle);
 	},
-	calculateAngleOfHighestPoint : function(speedLeftWing, speedRightWing) {
-		if (speedLeftWing == speedRightWing) {
-			this.angularVelocity = 0;
-			return 0;
-		}
-
-		var fCen = this.getCentrifugalForce(speedLeftWing, speedRightWing);
-		var fG = constants.getGravitationalForce() * this.weightOfPilot;
-		var resultAngle = Math.atan(fCen / fG);
-		this.setRollAngle(resultAngle);
-		return resultAngle;
-	},
 	getCentrifugalForce : function(speedLeftWing, speedRightWing) {
 		var pilotPath = (speedLeftWing + speedRightWing) / 2
 				* constants.getTimeInterval();
@@ -219,22 +207,5 @@ Pilot.prototype = {
 	},
 	setInFullStall: function(inFullStall) {
 		this.inFullStall = inFullStall;
-	},
-	log: function() {
-		console.log("<----- Logging called for Class 'Pilot' ----->");
-		console.log("Typeof: " + typeof this);
-		console.log("weightOfPilot: " + this.weightOfPilot);
-		console.log("Zero Position: "+ this.ZERO_POSITION);
-		console.log("Zero Point: "+ this.ZERO_POINT);
-		console.log("isOnPositiveSite: " + this.isOnPositiveSite);
-		console.log("isOnRightSite: " + this.isOnRightSite);
-		console.log("fForward: " + this.fForward);
-		console.log("fSideway: " + this.fSideway);
-		console.log("angularVelocity: " + this.angularVelocity);
-		console.log("rollAngle: " + this.rollAngle);
-		console.log("pitchAngle: " + this.getPitchAngle());
-		console.log("inFullStall: " + this.inFullStall);
-		console.log("<----- End of Logging for Class 'Pilot' ----->");
-		console.log(" ");
 	}
 };
