@@ -79,14 +79,14 @@ Pilot.prototype = {
 			this.fSideway += this.calculateDamping(this.fSideway) * 4;
 		}
 		var fBackwardsRoundedAndPositive = Math.round(Math.sqrt(Math.pow(
-				this.fBackwards, 2)));
+				fBackwards, 2)));
 		var centrifugalForceRoundedAndPositive = Math.round(Math.sqrt(Math.pow(
 				centrifugalForce, 2)));
-
+		
 		if (fBackwardsRoundedAndPositive >= centrifugalForceRoundedAndPositive
 				&& fBackwardsRoundedAndPositive <= centrifugalForceRoundedAndPositive + 5
 				&& fBackwardsRoundedAndPositive > 5) {
-			fSideway = 0;
+			this.fSideway = 0;
 		}
 		if (this.isOnRightSite) {
 			this.fSideway += fBackwards;
@@ -160,7 +160,7 @@ Pilot.prototype = {
 		if (this.inFullStall) {
 			this.fForward += this.calculateDamping(this.fForward) * 8;
 		} else {
-			this.fForward += this.calculateDamping(this.fForward);
+			this.fForward += this.calculateDamping(this.fForward)*4;
 		}
 	},
 	calculateX: function() {

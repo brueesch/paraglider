@@ -131,7 +131,7 @@ function nextStep() {
 	setHeading(camera);
 	setRoll(camera);
 	setTilt(camera);
-	log(camera);
+//	log(camera);
 	document.getElementById('data').innerHTML = 'Horizontal Speed: '+glider.getHorizontalSpeed()+' Vertical Speed: ' + glider.getVerticalSpeed();
 	
 	
@@ -182,7 +182,12 @@ function setHeading(camera) {
 }
 
 function setRoll(camera) {
+	var angle = constants.convertRadianToDegree(glider.getRollAngle());
 	
+	if(!glider.getIsOnRightSite()) {
+		angle = -angle;
+	}
+	camera.setRoll(angle);
 }
 
 function setTilt(camera) {
