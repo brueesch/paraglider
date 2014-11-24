@@ -57,14 +57,14 @@ Glider.prototype = {
 		getAnglularVelocity: function() {
 			return pilot.getAngularVelocity();
 		},
-		isOnPositiveSite: function() {
-			return pilot.isOnPositiveSite();
+		getIsOnPositiveSite: function() {
+			return pilot.getIsOnPositiveSite();
 		},
 		setInFullStall: function(inFullStall) {
 			pilot.setInFullStall(inFullStall);
 		},
-		isOnRightSite: function() {
-			return pilot.isOnRightSite();
+		getIsOnRightSite: function() {
+			return pilot.getIsOnRightSite();
 		},
 		log: function() {	
 			pilot.log();

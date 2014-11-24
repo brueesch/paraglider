@@ -44,8 +44,8 @@ Pilot.prototype = {
 		this.weightOfPilot = weight;
 	},
 	reset : function() {
-		this.currentPosition = new Vector3D(ZERO_POSITION.getX(), ZERO_POSITION
-				.getY(), ZERO_POSITION.getZ());
+		this.currentPosition = new Vector3D(this.ZERO_POSITION.getX(), this.ZERO_POSITION
+				.getY(), this.ZERO_POSITION.getZ());
 		this.fForward = 0;
 		this.fSideway = 0;
 	},
@@ -199,10 +199,10 @@ Pilot.prototype = {
 	setRollAngle: function(rollAngle) {
 		this.rollAngle = rollAngle;
 	},
-	isOnPositiveSite: function() {
+	getIsOnPositiveSite: function() {
 		return this.isOnPositiveSite;
 	},
-	isOnRightSite: function() {
+	getIsOnRightSite: function() {
 		return this.isOnRightSite;
 	},
 	setInFullStall: function(inFullStall) {

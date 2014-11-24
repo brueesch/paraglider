@@ -182,16 +182,21 @@ function setHeading(camera) {
 }
 
 function setRoll(camera) {
-
+	
 }
 
 function setTilt(camera) {
-
+	var angle = constants.convertRadianToDegree(glider.getPitchAngle());
+	if(!glider.getIsOnPositiveSite()) {
+		angle = -angle;
+	}
+	camera.setTilt(angle+90);
 }
 
 function stopMovement() {
 	clearTimeout(timer);
 	moving = false;
+	glider.reset();
 //	showWing();
 }
 
