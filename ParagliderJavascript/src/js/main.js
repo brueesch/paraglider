@@ -107,9 +107,21 @@ function initCamera() {
 		camera.setAltitude(200);
 		currentHeading = -90;
 	}
-	//Take a look at startpoint by Mollis
-	//also Hüsliberg Rufi nähe Ziegelbruck
-	
+	else if(value == "Mollis") {
+		camera.setLatitude(47.06763735);
+		camera.setLongitude(9.10409027);
+		camera.setTilt(90);
+		camera.setAltitude(2000);
+		currentHeading = -90;
+	}
+	else if(value = "Hüsliberg") {
+		camera.setLatitude(46.7714576);
+		camera.setLongitude(9.62140767);
+		camera.setTilt(90);
+		camera.setAltitude(3000);
+		currentHeading = 0;
+	}
+		
 	camera.setHeading(currentHeading);
 	camera.setRoll(0);
 
