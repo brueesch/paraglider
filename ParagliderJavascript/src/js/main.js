@@ -104,7 +104,7 @@ function initCamera() {
 		camera.setLatitude(32.5740317);
 		camera.setLongitude(34.9524011);
 		camera.setTilt(90);
-		camera.setAltitude(50);
+		camera.setAltitude(200);
 		currentHeading = -90;
 	}
 	//Take a look at startpoint by Mollis
@@ -232,7 +232,6 @@ function stopMovement() {
 	clearTimeout(timer);
 	moving = false;
 	glider.reset();
-	showWing();
 }
 
 function faster() {
