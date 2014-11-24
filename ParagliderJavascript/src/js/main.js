@@ -94,6 +94,14 @@ function initCamera() {
 		currentHeading = 75;
 		
 	}
+	else if(value == "Maagan Michael")
+	{
+		camera.setLatitude(32.5740317);
+		camera.setLongitude(34.9524011);
+		camera.setTilt(90);
+		camera.setAltitude(50);
+		currentHeading = -90;
+	}
 	
 	
 	camera.setHeading(currentHeading);
@@ -123,7 +131,6 @@ function move() {
 function nextStep() {
 
 	glider.makeNextStep();
-	 
 	
 
 	var camera = ge.getView().copyAsCamera(ge.ALTITUDE_ABSOLUTE);
@@ -183,8 +190,9 @@ function setHeading(camera) {
 
 function setRoll(camera) {
 	var angle = constants.convertRadianToDegree(glider.getRollAngle());
-	
-	if(!glider.getIsOnRightSite()) {
+
+	if(!glider.getIsOnRightSite())
+	{
 		angle = -angle;
 	}
 	camera.setRoll(angle);
