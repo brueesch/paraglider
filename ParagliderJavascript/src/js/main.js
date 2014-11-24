@@ -73,7 +73,7 @@ function initCamera() {
 //	camera.setLongitude(-74.038428);
 	camera.setLatitude(46.795046);
 	camera.setLongitude(9.631149);
-	camera.setTilt(90);
+	camera.setTilt(80);
 	camera.setAltitude(2153);
 	camera.setHeading(currentHeading);
 	camera.setRoll(0);
@@ -111,7 +111,7 @@ function nextStep() {
 	setRoll(camera);
 	setTilt(camera);
 	
-	console.log("longitude: "+camera.getLongitude() +" Latitude: "+ camera.getLatitude() +" altitude: "+ camera.getAltitude());
+	
 
 	ge.getView().setAbstractView(camera);
 
@@ -148,7 +148,15 @@ function setVerticalPosition(camera) {
 }
 
 function setHeading(camera) {
-
+	var angularVelocity = pilot.getAngularVelocity();
+	var alpha = angularVelocity * constants.getTimeInterval();
+	alpha = constants.convertRadianToDegree(alpha);
+	if(document.getElementById("leftBreak").value < 1 && document.getElementById("rightBreak").value < 1) {
+		alpha = 0;
+	}
+	camera.setHeading(camera.getHeading() + alpha);
+	currentHeading = camera.getHeading();
+	console.log("leftBreak: "+ document.getElementById("leftBreak").value + " rightBreak: "+ document.getElementById("rightBreak").value + " alpha: "+alpha);
 }
 
 function setRoll(camera) {
@@ -250,6 +258,9 @@ function log() {
 	console.log("Horizontal Speed: " + glider.getHorizontalSpeed());
 	console.log("Vertical Speed: " + glider.getVerticalSpeed());
 	console.log("Gliding: " + glider.getCurrentGlideRatio());
+	console.log("longitude: "+camera.getLongitude());
+	console.log("Latitude: "+ camera.getLatitude() +" altitude: "+ camera.getAltitude());
+	console.log("Heading: "+ camera.getHeading());
 	console.log(" ");
 }
 
