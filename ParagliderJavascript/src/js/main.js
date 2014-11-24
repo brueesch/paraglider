@@ -131,7 +131,6 @@ function move() {
 function nextStep() {
 
 	glider.makeNextStep();
-	 
 	
 
 	var camera = ge.getView().copyAsCamera(ge.ALTITUDE_ABSOLUTE);
@@ -190,7 +189,12 @@ function setHeading(camera) {
 }
 
 function setRoll(camera) {
-	
+	var angle = constants.convertRadianToDegree(glider.getRollAngle());
+	if(!glider.getIsOnRightSite())
+	{
+		angle = -angle;
+	}
+	camera.setRoll(angle);
 }
 
 function setTilt(camera) {
