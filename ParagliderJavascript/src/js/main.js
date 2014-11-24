@@ -66,15 +66,36 @@ function failureCB(errorCode) {
 // COordinates of Weisshorn: Latitude: 46.789676 Longitude: 9.638993
 function initCamera() {
 	var camera = ge.getView().copyAsCamera(ge.ALTITUDE_ABSOLUTE);
-
+	var value = document.getElementById("selectBox").value;
+	
 	ge.getOptions().setFlyToSpeed(ge.SPEED_TELEPORT);
 	ge.getOptions().setMouseNavigationEnabled(false);
-//	camera.setLatitude(40.681682);
-//	camera.setLongitude(-74.038428);
-	camera.setLatitude(46.795046);
-	camera.setLongitude(9.631149);
-	camera.setTilt(80);
-	camera.setAltitude(2153);
+
+	if(value=="NewYork") {
+		camera.setLatitude(40.697130);
+		camera.setLongitude(-74.024031);
+		camera.setTilt(90);
+		camera.setAltitude(187);
+		currentHeading=45;
+		
+	}
+	else if (value == "Tschiertschen") {
+		camera.setLatitude(46.795046);
+		camera.setLongitude(9.631149);
+		camera.setTilt(80);
+		camera.setAltitude(2153);
+		currentHeading = -45;
+	}
+	else if (value == "Hamptons") {
+		camera.setLatitude(40.816297);
+		camera.setLongitude(-72.563624);
+		camera.setTilt(90);
+		camera.setAltitude(50);
+		currentHeading = 75;
+		
+	}
+	
+	
 	camera.setHeading(currentHeading);
 	camera.setRoll(0);
 
@@ -102,7 +123,7 @@ function move() {
 function nextStep() {
 
 	glider.makeNextStep();
-	// log();
+	 
 	
 
 	var camera = ge.getView().copyAsCamera(ge.ALTITUDE_ABSOLUTE);
@@ -110,6 +131,8 @@ function nextStep() {
 	setHeading(camera);
 	setRoll(camera);
 	setTilt(camera);
+	log(camera);
+	document.getElementById('data').innerHTML = 'Horizontal Speed: '+glider.getHorizontalSpeed()+' Vertical Speed: ' + glider.getVerticalSpeed();
 	
 	
 
@@ -156,7 +179,6 @@ function setHeading(camera) {
 	}
 	camera.setHeading(camera.getHeading() + alpha);
 	currentHeading = camera.getHeading();
-	console.log("leftBreak: "+ document.getElementById("leftBreak").value + " rightBreak: "+ document.getElementById("rightBreak").value + " alpha: "+alpha);
 }
 
 function setRoll(camera) {
@@ -170,7 +192,7 @@ function setTilt(camera) {
 function stopMovement() {
 	clearTimeout(timer);
 	moving = false;
-	showWing();
+//	showWing();
 }
 
 function faster() {
@@ -242,7 +264,7 @@ var bothBreaks = (function() {
 	};
 })();
 
-function log() {
+function log(camera) {
 	console.log("Typeof: " + typeof pilot);
 	console.log("weightOfPilot: " + pilot.weightOfPilot);
 	console.log("Zero Position: " + pilot.ZERO_POSITION);
@@ -259,9 +281,15 @@ function log() {
 	console.log("Vertical Speed: " + glider.getVerticalSpeed());
 	console.log("Gliding: " + glider.getCurrentGlideRatio());
 	console.log("longitude: "+camera.getLongitude());
-	console.log("Latitude: "+ camera.getLatitude() +" altitude: "+ camera.getAltitude());
+	console.log("Latitude: "+ camera.getLatitude());
+	console.log("Altitude: "+ camera.getAltitude());
 	console.log("Heading: "+ camera.getHeading());
 	console.log(" ");
+}
+
+function initStartPosition(value) {
+	stopMovement();
+	initCamera();
 }
 
 google.setOnLoadCallback(init);
