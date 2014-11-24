@@ -13,6 +13,11 @@ var constants = new Constants();
 var pilot = new Pilot();
 var currentHeading = -45;
 
+var gamepad = undefined;
+var leftStick = 0;
+var rightStick = 0;
+var maxSpeed = 34;
+
 /*
  * ------------------------------------------------------- Initializing Google
  * Earth -------------------------------------------------------
@@ -102,7 +107,8 @@ function initCamera() {
 		camera.setAltitude(50);
 		currentHeading = -90;
 	}
-	
+	//Take a look at startpoint by Mollis
+	//also Hüsliberg Rufi nähe Ziegelbruck
 	
 	camera.setHeading(currentHeading);
 	camera.setRoll(0);
@@ -131,7 +137,23 @@ function move() {
 function nextStep() {
 
 	glider.makeNextStep();
-	
+	/*setController();
+	if(leftStick > 0)
+	{
+		leftBreak(leftStick*maxSpeed);
+	}
+	else
+	{
+		leftBreak(0);
+	}
+	if(rightStick > 0)
+	{
+		rightBreak(rightStick*maxSpeed);
+	}
+	else
+	{
+		rightBreak(0);
+	}*/
 
 	var camera = ge.getView().copyAsCamera(ge.ALTITUDE_ABSOLUTE);
 	setPosition(camera);
@@ -210,7 +232,7 @@ function stopMovement() {
 	clearTimeout(timer);
 	moving = false;
 	glider.reset();
-//	showWing();
+	showWing();
 }
 
 function faster() {
@@ -240,15 +262,6 @@ function roll(rollAngle) {
 	camera.setRoll(camera.getRoll() + rollAngle);
 
 	ge.getView().setAbstractView(camera);
-}
-
-function showWing() {
-
-	var cat = new Mammal("Cat", "claws");
-	var dog = new Mammal("Dog", "a wet nose");
-
-	alert(cat.species);
-
 }
 
 var rightBreak = (function() {
@@ -308,6 +321,15 @@ function log(camera) {
 function initStartPosition(value) {
 	stopMovement();
 	initCamera();
+}
+function setController() {
+
+	gamepad = navigator.getGamepads && navigator.getGamepads()[0];
+	if(gamepad != undefined)
+	{
+		leftStick = Math.round(10*gamepad.axes[1])/10;
+		rightStick = Math.round(10*gamepad.axes[3])/10;
+	}
 }
 
 google.setOnLoadCallback(init);
