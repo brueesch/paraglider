@@ -30,25 +30,6 @@ function init() {
 	// Param: div id where the earth will appear, function to call by success,
 	// function to call by failure.
 	google.earth.createInstance('map3d', initCB, failureCB);
-
-	var buttonSize = 108;
-	var left = 550;
-
-	createNativeHTMLButton(left + (1 * buttonSize), 10, buttonSize, buttonSize,
-			'left', rollLeft);
-	createNativeHTMLButton(left + (2 * buttonSize), 10, buttonSize, buttonSize,
-			'slower', slower);
-	createNativeHTMLButton(left + (3 * buttonSize), 10, buttonSize, buttonSize,
-			'play', move);
-	createNativeHTMLButton(left + (4 * buttonSize), 10, buttonSize, buttonSize,
-			'faster', faster);
-	createNativeHTMLButton(left + (5 * buttonSize), 10, buttonSize, buttonSize,
-			'right', rollRight);
-	createNativeHTMLButton(left + (7 * buttonSize), 10, buttonSize, buttonSize,
-			'pause', stopMovement);
-	createNativeHTMLButton(left + (8 * buttonSize), 10, buttonSize, buttonSize,
-			'stop', reset);
-
 }
 
 // initialises google earth and set it's visibility to true.
@@ -74,7 +55,7 @@ function initCamera() {
 	var value = document.getElementById("selectBox").value;
 	
 	ge.getOptions().setFlyToSpeed(ge.SPEED_TELEPORT);
-	ge.getOptions().setMouseNavigationEnabled(false);
+	ge.getOptions().setMouseNavigationEnabled(true);
 
 	if(value=="NewYork") {
 		camera.setLatitude(40.697130);
@@ -114,7 +95,7 @@ function initCamera() {
 		camera.setAltitude(2000);
 		currentHeading = -90;
 	}
-	else if(value = "Hüsliberg") {
+	else if(value = "Huesliberg") {
 		camera.setLatitude(46.7714576);
 		camera.setLongitude(9.62140767);
 		camera.setTilt(90);
@@ -140,6 +121,8 @@ function initCamera() {
  */
 
 function move() {
+
+	ge.getOptions().setMouseNavigationEnabled(false);
 	if (!moving) {
 		nextStep();
 	}
@@ -215,9 +198,6 @@ function setHeading(camera) {
 	var angularVelocity = pilot.getAngularVelocity();
 	var alpha = angularVelocity * constants.getTimeInterval();
 	alpha = constants.convertRadianToDegree(alpha);
-	if(document.getElementById("leftBreak").value < 1 && document.getElementById("rightBreak").value < 1) {
-		alpha = 0;
-	}
 	camera.setHeading(camera.getHeading() + alpha);
 	currentHeading = camera.getHeading();
 }
@@ -243,7 +223,6 @@ function setTilt(camera) {
 function stopMovement() {
 	clearTimeout(timer);
 	moving = false;
-	glider.reset();
 }
 
 function faster() {
@@ -260,13 +239,6 @@ function reset() {
 	speedChange = 0.0001;
 	initCamera();
 }
-function rollLeft() {
-	roll(15);
-}
-function rollRight() {
-	roll(-15);
-}
-
 function roll(rollAngle) {
 	var camera = ge.getView().copyAsCamera(ge.ALTITUDE_ABSOLUTE);
 
@@ -288,13 +260,14 @@ var leftBreak = (function() {
 	return function(value) {
 		glider.changeSpeed(0, -((value - oldValue) / 3.6));
 		oldValue = value;
+		console.log(value);
 	};
 })();
 
 var bothBreaks = (function() {
 	var oldValue = 0;
 	return function(value) {
-		if (value >= 0.90 * (document.getElementById("bothBreaks").max)) {
+		if (value >= 0.90 * $( "#slider-both" ).slider( "option", "max" )) {
 			glider.setInFullStall(true);
 		} else {
 			glider.setInFullStall(false);

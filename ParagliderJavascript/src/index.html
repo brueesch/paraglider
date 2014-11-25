@@ -11,46 +11,43 @@
 <link rel="stylesheet" href="css/styles.css">
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type='text/javascript' src="js/jquery-2.1.1.min.js"></script>
 <script type='text/javascript' src="js/Constants.js"></script>
 <script type='text/javascript' src="js/Vector2D.js"></script>
 <script type='text/javascript' src="js/Vector3D.js"></script>
 <script type='text/javascript' src="js/Pilot.js"></script>
 <script type='text/javascript' src="js/Wing.js"></script>
 <script type='text/javascript' src="js/Glider.js"></script>
-<script type='text/javascript' src="js/init.js"></script>
 <script type='text/javascript' src="js/main.js"></script>
-
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<script src="js/UI.js"></script>
 </head>
 
 <body>
-
-<div id="map3d"></div>
-<button type="button" id="testButton" onclick="move();">Start</button>
-<!--	<button type="button" id="leftBreak" onclick="leftBreak();">Left</button>-->
-<!--	<button type="button" id="rightBreak" onclick="rightBreak();">Right</button>-->
-<!--	<button type="button" id="bothBreaks" onclick="bothBreaks();">Both</button>-->
-<input id="bothBreaks" type="range" min="0" max="34" step="1" value="0"
-	oninput="bothBreaks(this.value)" />
-<input id="leftBreak" type="range" min="0" max="34" step="1" value="0"
-	oninput="leftBreak(this.value)" />
-<input id="rightBreak" type="range" min="0" max="34" step="1" value="0"
-	oninput="rightBreak(this.value)" />
-<select id="selectBox" oninput="initStartPosition(this.value);">
-	<option value="NewYork">New York</option>
-	<option value="Tschiertschen">Tschiertschen</option>
-	<option value="Hamptons">Hamptons</option>
-	<option value="Maagan Michael">Ma'agan Micha'el</option>
-	<option value="Mollis">Mollis</option>
-	<option value="Hüsliberg">Hüsliberg</option>
-</select>
-<div id="data"></div>
-<!--
-	<button type="button" id="faster" onclick="faster();">Faster</button>
-	<button type="button" id="slower" onclick="slower();">Slower</button>
-	<button type="button" id="rollLeft" onclick="roll(15);">Roll Left</button>
-	<button type="button" id="rollLeft" onclick="roll(-15);">Roll Right</button>
-	<button type="button" id="reset" onclick="reset();">Reset</button>
-	<button type="button" id="wing" onclick="showWing();">showWing</button> -->
+	<div id="map3d"></div>
+	<div class="console">
+		<select id="selectBox" oninput="initStartPosition(this.value);">
+			<option value="NewYork">New York</option>
+			<option value="Tschiertschen">Tschiertschen</option>
+			<option value="Hamptons">Hamptons</option>
+			<option value="Maagan Michael">Ma'agan Micha'el</option>
+			<option value="Mollis">Mollis</option>
+			<option value="Huesliberg">HÃ¼sliberg</option>
+		</select>
+		<br />
+		<button type="button" id="startButton" onclick="move();">Start</button>
+		<button type="button" id="stopButton" onclick="reset();">Stop</button><br />
+		<!--<input id="bothBreaks" type="range" min="0" max="34" step="1" value="0"	oninput="bothBreaks(this.value)" /><br />
+		<input id="leftBreak" type="range" min="0" max="34" step="1" value="0"	oninput="leftBreak(this.value)" /><br />
+		<input id="rightBreak" type="range" min="0" max="34" step="1" value="0"	oninput="rightBreak(this.value)" /><br />
+		-->
+		<div id="slider-left" style="height:200px;"></div>
+		<div id="slider-both" style="height:200px;"></div>
+		<div id="slider-right" style="height:200px;"></div>
+		<img id="vario" src="http://pa.jgschwend.ch/img/vario.png">
+		
+		<div id="data"></div>
+	</div>
 </body>
 </html>
