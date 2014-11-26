@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="de">
+	<head>
+		<meta charset="utf-8">
+		<meta name="description" content="Paragliding in Google Earth">
+		<meta name="author" content="Christian Brüesch / Jonas Gschwend">
+		<title>Paraglider Google Earth</title>
+		<style type="text/css">
+			html, body, #map-canvas
+			{
+				height: 100%;
+				padding: 0px;
+				margin: 0px;
+			}
+		</style>
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+		<script src="http://geoxml3.googlecode.com/svn/branches/polys/geoxml3.js"></script>
+		<script src="http://geoxml3.googlecode.com/svn/trunk/ProjectedOverlay.js"></script>
+		<script type="text/javascript">
+			window.onload = function () {    
+				var myLatlng = new google.maps.LatLng(46.797655, 8.236315);
+			
+				var mapOptions = {
+			      center: myLatlng,
+			      zoom: 9,
+			      mapTypeId: google.maps.MapTypeId.TERRAIN,
+			      disableDefaultUI: true
+			    }
+			    var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+				var parser = new geoXML3.parser({map: map, processStyles: true});
+	            parser.parse("GPS-Data/FlylandAll.kml");
+				
+				
+				var position = new google.maps.LatLng(46.797655, 8.236315);
+				var marker = new google.maps.Marker({
+				      position: position,
+				      map: map
+				    });
+				marker.setTitle("This is the title");
+				var infowindow = new google.maps.InfoWindow({
+				    
+				  });
+				google.maps.event.addListener(marker, 'click', function() {
+				    infowindow.open(marker.get('map'), marker);
+				  });
+				
+				attachMessage(marker);
+			    /*var marker = new google.maps.Marker({
+			        position: myLatlng,
+			        map: map,
+			        title: 'Niederdorfstrasse 77'
+			    });*/
+		  }
+			function attachMessage(marker) {
+				  var infowindow = new google.maps.InfoWindow({
+					  content: "check this out: <a href='http://www.jgschwend.ch' target='_blank'>bla</a>"
+				  });
+			
+				  google.maps.event.addListener(marker, 'click', function() {
+				    infowindow.open(marker.get('map'), marker);
+				  });
+				}
+  
+
+
+</script>
+</head>
+<body>
+	<div id="map-canvas"></div>
+</body>
+</html>

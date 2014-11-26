@@ -56,6 +56,15 @@ function initCamera() {
 	
 	ge.getOptions().setFlyToSpeed(ge.SPEED_TELEPORT);
 	ge.getOptions().setMouseNavigationEnabled(true);
+	
+	
+	var latitude = GetURLParameter('Latitude');
+	var longitude = GetURLParameter('Longitude');
+	
+	if(latitude !== undefined && longitude !== undefined)
+	{
+		
+	}
 
 	if(value=="NewYork") {
 		camera.setLatitude(40.697130);
