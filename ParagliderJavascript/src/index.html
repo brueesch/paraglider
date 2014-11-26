@@ -19,35 +19,46 @@
 <script type='text/javascript' src="js/Glider.js"></script>
 <script type='text/javascript' src="js/main.js"></script>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
-<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
 <script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
 <script src="js/UI.js"></script>
 </head>
 
 <body>
 	<div id="map3d"></div>
-	<div class="console">
-		<select id="selectBox" oninput="initStartPosition(this.value);">
-			<option value="NewYork">New York</option>
-			<option value="Tschiertschen">Tschiertschen</option>
-			<option value="Hamptons">Hamptons</option>
-			<option value="Maagan Michael">Ma'agan Micha'el</option>
-			<option value="Mollis">Mollis</option>
-			<option value="Huesliberg">Hüsliberg</option>
-		</select>
-		<br />
-		<button type="button" id="startButton" onclick="move();">Start</button>
-		<button type="button" id="stopButton" onclick="reset();">Stop</button><br />
-		<!--<input id="bothBreaks" type="range" min="0" max="34" step="1" value="0"	oninput="bothBreaks(this.value)" /><br />
-		<input id="leftBreak" type="range" min="0" max="34" step="1" value="0"	oninput="leftBreak(this.value)" /><br />
-		<input id="rightBreak" type="range" min="0" max="34" step="1" value="0"	oninput="rightBreak(this.value)" /><br />
-		-->
-		<div id="slider-left" style="height:200px;"></div>
-		<div id="slider-both" style="height:200px;"></div>
-		<div id="slider-right" style="height:200px;"></div>
-		<img id="vario" src="http://pa.jgschwend.ch/img/vario.png">
-		
-		<div id="data"></div>
+	<div class="cockpit">
+		<div class="control">
+			<select id="selectBox" oninput="initStartPosition(this.value);">
+				<option value="NewYork">New York</option>
+				<option value="Tschiertschen">Tschiertschen</option>
+				<option value="Hamptons">Hamptons</option>
+				<option value="Maagan Michael">Ma'agan Micha'el</option>
+				<option value="Mollis">Mollis</option>
+				<option value="Huesliberg">Hüsliberg</option>
+			</select>
+			<br />
+			<button type="button" id="startButton" onclick="move();">Start</button>
+			<button type="button" id="stopButton" onclick="reset();">Stop</button><br />
+			<div id="slider-left"></div>
+			<div id="slider-both"></div>
+			<div id="slider-right"></div>
+		</div>
+		<div class="compass">
+			<canvas id="compasscanvas"></canvas>
+		</div>
+		<div class="vario">				
+			<p class="label" id="alt1_label">ALT 1</p>
+			<p class="digital" id="alt1">687</p>
+			<p class="label" id="alt1_unit">m</p>
+			<p class="digital" id="verticalspeed">0.0</p>
+			<p class="label" id="verticalspeed_unit">m/s</p>
+			<p class="digital" id="horizontalspeed">0</p>
+			<p class="label" id="horizontalspeed_unit">km/h</p>
+			<p class="label" id="alt2_label">ALT 3</p>
+			<p class="digital" id="alt2">43</p>	
+			<p class="label" id="alt2_unit">m</p>
+			<div id="data"></div>
+		</div>		
 	</div>
 </body>
 </html>

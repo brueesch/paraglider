@@ -1,78 +1,169 @@
-html, body
-{
-	margin: 0 auto;
-	padding: 0;
-	width: 100%;
-	height: 100%;
-	overflow:hidden;
+@font-face {
+    font-family: Digital;
+    src: url(digital-7.ttf);
+}
+*{
+	margin: 0px;
+	padding: 0px;
 }
 
+html, body, #map3d, .cockpit
+{
+	height: 100%;
+	position: relative;
+}
 
 #map3d {
 	width: -moz-calc(100% - 300px);
     width: -webkit-calc(100% - 300px);
     width: calc(100% - 300px);
-	height: 100%;
+    position: relative;
 	float: left;
 }
-.console{
-	width: 278px;	
-	height: 100%;
-	padding: 10px;
-	float: left;	
-	/*background: url("../img/Pattern.jpg") x-repeat;*/
-	border: 1px solid #333333;
-	
-	background: -webkit-linear-gradient(#333333,#999999);
-  	background: -o-linear-gradient(#333333,#999999);
-  	background: -moz-linear-gradient(#333333,#999999);
-  	background: linear-gradient(#333333,#999999);
-	
+.cockpit{
+	width: 299px;
+	float: left;
+	border-left: 1px solid #333333;	
+	position: relative;
 }
-#startButton,#stopButton,#resetButton{
-	width: 112px;
-	height: 112px;	
-	margin: 12px;
-	border: 1px solid #333333;
-	border-radius: 112px;
+.control{
+	height: 420px;
+	position: relative;
+	background: -webkit-linear-gradient(#444444,#000000);
+  	background: -o-linear-gradient(#444444,#000000);
+  	background: -moz-linear-gradient(#444444,#000000);
+  	background: linear-gradient(#444444,#000000);
 }
-
-#startButton{
-	background: url("../img/play.png") no-repeat;
-	background-color: #007800;
-}
-#stopButton{	
-	background: url("../img/stop.png") no-repeat;
-	background-color: #a00000;
-}
-#startButton:hover{
-	background-color: #ffffff;
-}
-#stopButton:hover{	
-	background-color: #ffffff;
-}
-#startButton:active{
-	background-color: #ffffff;
-}
-#stopButton:active{	
-	background-color: #ffffff;
-}
-
-
-
 #selectBox
 {
 	margin: 10px;
 	width: 252px;
 	height: 30px;
 }
+#startButton,#stopButton,#resetButton{
+	width: 108px;
+	height: 108px;	
+	margin: 14px;
+	borderc: 1px solid #cccccc;
+	border-radius: 108px;
+}
+#startButton{
+	background: url("../img/play_grey.png") no-repeat;
 
+}
+#startButton:hover{
+	background: url("../img/play_gold.png") no-repeat;
+}
+#stopButton{	
+	background: url("../img/stop_grey.png") no-repeat;
+}
+
+#stopButton:hover{	
+	background: url("../img/stop_gold.png") no-repeat;
+}
+#startButton:active{
+	background: url("../img/play_gold.png") no-repeat;
+	border: 1px solid #cccccc;
+	border-radius: 108px;
+}
+#stopButton:active{	
+	background: url("../img/stop_gold.png") no-repeat;
+	border: 1px solid #cccccc;
+	border-radius: 108px;
+}
 #slider-left,#slider-right,#slider-both{
-	float: left;
+	height: 170px;
 	margin: 38px;
+	float: left;
+}
+.compass{	
+	min-height: 200px;
+	height: -moz-calc(100% - 798px);
+    height: -webkit-calc(100% - 798px);
+    height: calc(100% - 798px);	
+	padding: 0px;
+	margin: 0px;
+	position: relative;
+	background-color: #000000;
+}
+#compasscanvas{
+	height: 150px;
+	width: 150px;
+	left: 75px;
+	top: 25%;
+	position: absolute;
+	background: url("../img/Compass.png") no-repeat;
+	background-size: 150px 150px;
+	background-color: #000000;
 }
 
-#vario{
-	margin: 12px;
+.vario{
+	height: 378px;
+	background: url("../img/vario_small.png");
+	background-color: #bbccbe;
+	position: relative;
 }
+.vario p{
+	padding: 0px;
+	margin: 0px;
+	position: absolute;	
+	color: #000618;
+	line-height: 50px;
+}
+.vario .digital {
+	
+	right: 50px;
+	align: right;	
+	font-family: Digital;
+	font-size: 50px;
+}
+.vario .label{	
+	font-family: arial;
+	font-weight: bold;
+	align: left;	
+}
+.vario #alt1_label{
+	font-size: 12px;
+	left: 225px;
+	top: 30px;
+}
+.vario #alt1{
+	top: 55px;
+}
+.vario #alt1_unit
+{
+	left: 252px;
+	top: 63px;
+	font-size: 22px;
+}
+.vario #verticalspeed{
+	top: 110px;
+}
+.vario #verticalspeed_unit{
+	left: 252px;
+	top: 121px;
+	font-size: 12px;
+}
+.vario #horizontalspeed{
+	top: 170px;
+}
+.vario #horizontalspeed_unit{
+	left: 252px;
+	top: 182px;
+	font-size: 12px;
+}
+.vario #alt2_label{
+	font-size: 12px;
+	left: 225px;
+	top: 203px;
+}
+.vario #alt2{
+	top: 228px;
+}
+.vario #alt2_unit{
+	left: 252px;
+	top: 239px;
+	font-size: 12px;
+}
+
 

@@ -49,3 +49,14 @@ $(function() {
 	    });
 	    $( "#amount" ).val( $( "#slider-both" ).slider( "value" ) );
 	  });
+  function setCompass(degree)
+  {
+	  $('#compasscanvas').css({  
+          '-webkit-transform': 'rotate(' + degree + 'deg)',  //Safari 3.1+, Chrome  
+          '-moz-transform': 'rotate(' + degree + 'deg)',     //Firefox 3.5-15  
+          '-ms-transform': 'rotate(' + degree + 'deg)',      //IE9+  
+          '-o-transform': 'rotate(' + degree + 'deg)',       //Opera 10.5-12.00  
+          'transform': 'rotate(' + degree + 'deg)',
+      })  
+  }
+  

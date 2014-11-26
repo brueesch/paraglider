@@ -156,8 +156,8 @@ function nextStep() {
 	setRoll(camera);
 	setTilt(camera);
 //	log(camera);
-	document.getElementById('data').innerHTML = 'Horizontal Speed: '+glider.getHorizontalSpeed()+' Vertical Speed: ' + glider.getVerticalSpeed();
-	
+	document.getElementById('horizontalspeed').innerHTML = Math.round(3.6 *glider.getHorizontalSpeed());
+	document.getElementById('verticalspeed').innerHTML = -Math.round(glider.getVerticalSpeed()*10)/10;
 	
 
 	ge.getView().setAbstractView(camera);
@@ -200,6 +200,7 @@ function setHeading(camera) {
 	alpha = constants.convertRadianToDegree(alpha);
 	camera.setHeading(camera.getHeading() + alpha);
 	currentHeading = camera.getHeading();
+	setCompass(-camera.getHeading());	
 }
 
 function setRoll(camera) {
