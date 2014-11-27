@@ -51,66 +51,34 @@ function failureCB(errorCode) {
 // Coordinates of New York City: Latitude: 40.681682 Longitude: -74.038428
 // COordinates of Weisshorn: Latitude: 46.789676 Longitude: 9.638993
 function initCamera() {
-	var camera = ge.getView().copyAsCamera(ge.ALTITUDE_ABSOLUTE);
-	var value = document.getElementById("selectBox").value;
-	
+	var camera = ge.getView().copyAsCamera(ge.ALTITUDE_ABSOLUTE);	
 	ge.getOptions().setFlyToSpeed(ge.SPEED_TELEPORT);
 	ge.getOptions().setMouseNavigationEnabled(true);
 	
+	var name = unescape(GetURLParameter('Name'));
+	var latitude = parseFloat(GetURLParameter('Latitude'));
+	var longitude = parseFloat(GetURLParameter('Longitude'));
 	
-	var latitude = GetURLParameter('Latitude');
-	var longitude = GetURLParameter('Longitude');
 	
-	if(latitude !== undefined && longitude !== undefined)
+	if(!isNaN(latitude) && !isNaN(longitude) && name !== 'undefined')
 	{
-		
-	}
-
-	if(value=="NewYork") {
-		camera.setLatitude(40.697130);
-		camera.setLongitude(-74.024031);
+		camera.setLatitude(latitude);
+		camera.setLongitude(longitude);
+		document.getElementById('startPoint').innerHTML = name;
 		camera.setTilt(90);
 		camera.setAltitude(187);
 		currentHeading=45;
 		
-	}
-	else if (value == "Tschiertschen") {
+	}else{
 		camera.setLatitude(46.795046);
 		camera.setLongitude(9.631149);
+		document.getElementById('startPoint').innerHTML = "Tschiertschen";
 		camera.setTilt(80);
 		camera.setAltitude(2153);
 		currentHeading = -45;
 	}
-	else if (value == "Hamptons") {
-		camera.setLatitude(40.816297);
-		camera.setLongitude(-72.563624);
-		camera.setTilt(90);
-		camera.setAltitude(50);
-		currentHeading = 75;
-		
-	}
-	else if(value == "Maagan Michael")
-	{
-		camera.setLatitude(32.5740317);
-		camera.setLongitude(34.9524011);
-		camera.setTilt(90);
-		camera.setAltitude(200);
-		currentHeading = -90;
-	}
-	else if(value == "Mollis") {
-		camera.setLatitude(47.06763735);
-		camera.setLongitude(9.10409027);
-		camera.setTilt(90);
-		camera.setAltitude(2000);
-		currentHeading = -90;
-	}
-	else if(value = "Huesliberg") {
-		camera.setLatitude(46.7714576);
-		camera.setLongitude(9.62140767);
-		camera.setTilt(90);
-		camera.setAltitude(3000);
-		currentHeading = 0;
-	}
+
+	
 		
 	camera.setHeading(currentHeading);
 	camera.setRoll(0);
@@ -232,16 +200,8 @@ function setTilt(camera) {
 
 function stopMovement() {
 	clearTimeout(timer);
+	glider.reset();
 	moving = false;
-}
-
-function faster() {
-	speedChange += 0.0001;
-}
-
-function slower() {
-	speedChange -= 0.0001;
-
 }
 
 function reset() {
@@ -277,7 +237,8 @@ var leftBreak = (function() {
 var bothBreaks = (function() {
 	var oldValue = 0;
 	return function(value) {
-		if (value >= 0.90 * $( "#slider-both" ).slider( "option", "max" )) {
+		var slidervalue = document.getElementById('slider-both').value;
+		if (value >= 0.90 * slidervalue) {
 			glider.setInFullStall(true);
 		} else {
 			glider.setInFullStall(false);
@@ -312,7 +273,7 @@ function log(camera) {
 	console.log(" ");
 }
 
-function initStartPosition(value) {
+function initStartPosition() {
 	stopMovement();
 	initCamera();
 }

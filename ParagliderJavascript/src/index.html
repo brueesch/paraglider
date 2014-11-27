@@ -26,25 +26,18 @@
 
 <body>
 	<div id="map3d"></div>
-	<div class="cockpit">
-		<div class="control">
-			<select id="selectBox" oninput="initStartPosition(this.value);">
-				<option value="NewYork">New York</option>
-				<option value="Tschiertschen">Tschiertschen</option>
-				<option value="Hamptons">Hamptons</option>
-				<option value="Maagan Michael">Ma'agan Micha'el</option>
-				<option value="Mollis">Mollis</option>
-				<option value="Huesliberg">Hüsliberg</option>
-			</select>
-			<br />
+	<div class="cockpit">	
+		<div class="control">	
+			<a href="Splashscreen.html" id="startPoint">bla</a>		
 			<button type="button" id="startButton" onclick="move();">Start</button>
 			<button type="button" id="stopButton" onclick="reset();">Stop</button><br />
-			<div id="slider-left"></div>
-			<div id="slider-both"></div>
-			<div id="slider-right"></div>
+			<input type="range" id="slider-left" min="0" max="34" value="0" oninput="leftBreak(this.value);"><br />
+			<input type="range" id="slider-both" min="0" max="34" value="0" oninput="bothBreaks(this.value);"><br />
+			<input type="range" id="slider-right" min="0" max="34" value="0" oninput="rightBreak(this.value);"><br />
+			<canvas id="compasscanvas"></canvas>
 		</div>
 		<div class="compass">
-			<canvas id="compasscanvas"></canvas>
+			
 		</div>
 		<div class="vario">				
 			<p class="label" id="alt1_label">ALT 1</p>

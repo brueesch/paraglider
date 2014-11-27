@@ -1,16 +1,22 @@
+@import url(http://fonts.googleapis.com/css?family=Exo:100,200,400);
+@import url(http://fonts.googleapis.com/css?family=Oswald);
 @font-face {
     font-family: Digital;
     src: url(digital-7.ttf);
 }
+
+
 *{
 	margin: 0px;
 	padding: 0px;
 }
 
-html, body, #map3d, .cockpit
-{
+html, body, #map3d, .cockpit{
 	height: 100%;
 	position: relative;
+}
+a{
+	text-decoration: none;
 }
 
 #map3d {
@@ -27,7 +33,9 @@ html, body, #map3d, .cockpit
 	position: relative;
 }
 .control{
-	height: 420px;
+	height: -moz-calc(100% - 378px);
+    height: -webkit-calc(100% - 378px);
+    height: calc(100% - 378px);
 	position: relative;
 	background: -webkit-linear-gradient(#444444,#000000);
   	background: -o-linear-gradient(#444444,#000000);
@@ -39,6 +47,17 @@ html, body, #map3d, .cockpit
 	margin: 10px;
 	width: 252px;
 	height: 30px;
+}
+#startPoint{
+	margin-left: 20px;
+	display: block;
+	line-height: 50px;
+	font-size: 30px;
+	color: #ffffff;
+	font-family: 'Oswald', sans-serif;
+}
+#startPoint:hover{
+	color: #fdb833;
 }
 #startButton,#stopButton,#resetButton{
 	width: 108px;
@@ -72,29 +91,16 @@ html, body, #map3d, .cockpit
 	border-radius: 108px;
 }
 #slider-left,#slider-right,#slider-both{
-	height: 170px;
-	margin: 38px;
-	float: left;
+	margin-top: 10px;
+	margin-left: 38px;
+	width: 220px;
 }
-.compass{	
-	min-height: 200px;
-	height: -moz-calc(100% - 798px);
-    height: -webkit-calc(100% - 798px);
-    height: calc(100% - 798px);	
-	padding: 0px;
-	margin: 0px;
-	position: relative;
-	background-color: #000000;
-}
+
 #compasscanvas{
 	height: 150px;
 	width: 150px;
-	left: 75px;
-	top: 25%;
-	position: absolute;
 	background: url("../img/Compass.png") no-repeat;
 	background-size: 150px 150px;
-	background-color: #000000;
 }
 
 .vario{

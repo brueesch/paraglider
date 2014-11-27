@@ -17,6 +17,7 @@
 		<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 		<script src="http://geoxml3.googlecode.com/svn/branches/polys/geoxml3.js"></script>
 		<script src="http://geoxml3.googlecode.com/svn/trunk/ProjectedOverlay.js"></script>
+		<script src="js/Startpoints.js"></script>
 		<script type="text/javascript">
 			window.onload = function () {    
 				var myLatlng = new google.maps.LatLng(46.797655, 8.236315);
@@ -27,34 +28,39 @@
 			      mapTypeId: google.maps.MapTypeId.TERRAIN,
 			      disableDefaultUI: true
 			    }
-			    var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-				var parser = new geoXML3.parser({map: map, processStyles: true});
-	            parser.parse("GPS-Data/SPLP.kml");
+			    var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);				
 				
 				
-				var position = new google.maps.LatLng(46.797655, 8.236315);
-				var marker = new google.maps.Marker({
-				      position: position,
-				      map: map
-				    });
-				marker.setTitle("This is the title");
-				var infowindow = new google.maps.InfoWindow({
-				    
-				  });
-				google.maps.event.addListener(marker, 'click', function() {
-				    infowindow.open(marker.get('map'), marker);
-				  });
 				
-				attachMessage(marker);
+				for(key in placemarkList)
+				{
+					var point = placemarkList[key];
+					var position = new google.maps.LatLng(point.latitude, point.longitude);
+					var marker = new google.maps.Marker({
+					      position: position,
+					      map: map
+					    });
+					marker.setTitle(point.name);
+					var infowindow = new google.maps.InfoWindow({
+					    
+					  });
+					google.maps.event.addListener(marker, 'click', function() {
+					    infowindow.open(marker.get('map'), marker);
+					  });
+					
+					attachMessage(marker,point);
+				}		
+				
+				
 			    /*var marker = new google.maps.Marker({
 			        position: myLatlng,
 			        map: map,
 			        title: 'Niederdorfstrasse 77'
 			    });*/
 		  }
-			function attachMessage(marker) {
+			function attachMessage(marker,point) {
 				  var infowindow = new google.maps.InfoWindow({
-					  content: "check this out: <a href='http://www.jgschwend.ch' target='_blank'>bla</a>"
+					  content: "<p><strong>" + point.name + "</strong></p> <p><a href='index.html?Name=" + escape(point.name) + "&Latitude=" + point.latitude + "&Longitude=" + point.longitude + "'>Hier starten!</a></p>"
 				  });
 			
 				  google.maps.event.addListener(marker, 'click', function() {
