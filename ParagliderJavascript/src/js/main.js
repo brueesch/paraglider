@@ -167,7 +167,7 @@ function nextStep() {
 //	log(camera);
 	document.getElementById('horizontalspeed').innerHTML = Math.round(3.6 *glider.getHorizontalSpeed());
 	document.getElementById('verticalspeed').innerHTML = -Math.round(glider.getVerticalSpeed()*10)/10;
-	
+	document.getElementById('alt1').innerHTML = Math.round(camera.getAltitude());
 
 	ge.getView().setAbstractView(camera);
 

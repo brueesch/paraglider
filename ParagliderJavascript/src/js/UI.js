@@ -11,6 +11,7 @@ $(function() {
         var max = $( "#slider-left" ).slider( "option", "max" );
   	  	var value = $( "#slider-left" ).slider( "value" );
   	  	leftBreak((max-value));
+	    document.getElementById('alt2').innerHTML = value;
       }
     });
     $( "#amount" ).val( $( "#slider-left" ).slider( "value" ) );
