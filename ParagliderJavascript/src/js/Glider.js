@@ -68,5 +68,8 @@ Glider.prototype = {
 		},
 		log: function() {	
 			pilot.log();
+		},
+		simulateFullStall: function() {
+			pilot.simulateFullStall();
 		}
 };

@@ -207,5 +207,10 @@ Pilot.prototype = {
 	},
 	setInFullStall: function(inFullStall) {
 		this.inFullStall = inFullStall;
+		
+	},
+	simulateFullStall: function() {
+			this.fForward -= 100;
+			this.fSideway -= 100;
 	}
 };

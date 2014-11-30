@@ -12,10 +12,11 @@ var glider = new Glider();
 var constants = new Constants();
 var pilot = new Pilot();
 var currentHeading = -45;
+var fullStall = false;
 
 var gamepad = undefined;
-var leftStick = 0;
-var rightStick = 0;
+var leftStick = -1;
+var rightStick = -1;
 var maxSpeed = 34;
 
 /*
@@ -30,6 +31,7 @@ function init() {
 	// Param: div id where the earth will appear, function to call by success,
 	// function to call by failure.
 	google.earth.createInstance('map3d', initCB, failureCB);
+	
 }
 
 // initialises google earth and set it's visibility to true.
@@ -107,27 +109,17 @@ function move() {
 }
 
 function nextStep() {
+	var camera = ge.getView().copyAsCamera(ge.ALTITUDE_ABSOLUTE);
 
 	glider.makeNextStep();
-	/*setController();
-	if(leftStick > 0)
-	{
-		leftBreak(leftStick*maxSpeed);
+	if(fullStall) {
+		glider.simulateFullStall();
 	}
-	else
-	{
-		leftBreak(0);
-	}
-	if(rightStick > 0)
-	{
-		rightBreak(rightStick*maxSpeed);
-	}
-	else
-	{
-		rightBreak(0);
-	}*/
+	//setController();
+	
 
-	var camera = ge.getView().copyAsCamera(ge.ALTITUDE_ABSOLUTE);
+
+	
 	setPosition(camera);
 	setHeading(camera);
 	setRoll(camera);
@@ -146,6 +138,7 @@ function nextStep() {
 function setPosition(camera) {
 	setHorizontalPosition(camera);
 	setVerticalPosition(camera);
+	
 }
 
 function setHorizontalPosition(camera) {
@@ -158,8 +151,6 @@ function setHorizontalPosition(camera) {
 			.convertDegreeToRadian(currentHeading)))
 			/ (constants.getDistanceBetweenLatitude() * Math.cos(constants
 					.convertDegreeToRadian(camera.getLatitude())));
-//	changeLatitude *= 10;
-//	changeLongitude *= 10;
 	camera.setLatitude(camera.getLatitude() + changeLatitude);
 	camera.setLongitude(camera.getLongitude() + changeLongitude);
 }
@@ -167,7 +158,6 @@ function setHorizontalPosition(camera) {
 function setVerticalPosition(camera) {
 	var v = glider.getVerticalSpeed();
 	var s = v * constants.getTimeInterval();
-//	s *= 10;
 	camera.setAltitude(camera.getAltitude() - s);
 }
 
@@ -230,7 +220,6 @@ var leftBreak = (function() {
 	return function(value) {
 		glider.changeSpeed(0, -((value - oldValue) / 3.6));
 		oldValue = value;
-		console.log(value);
 	};
 })();
 
@@ -238,10 +227,12 @@ var bothBreaks = (function() {
 	var oldValue = 0;
 	return function(value) {
 		var slidervalue = document.getElementById('slider-both').value;
-		if (value >= 0.90 * slidervalue) {
+		if (value >= 0.90 * maxSpeed) {
 			glider.setInFullStall(true);
+			fullStall = true;
 		} else {
 			glider.setInFullStall(false);
+			fullStall = false;
 		}
 
 		glider.changeSpeed(-((value - oldValue) / 3.6),
@@ -279,12 +270,21 @@ function initStartPosition() {
 }
 function setController() {
 
-	gamepad = navigator.getGamepads && navigator.getGamepads()[0];
+	
+	gamepad = navigator.getGamepads()[0];
+	
 	if(gamepad != undefined)
 	{
 		leftStick = Math.round(10*gamepad.axes[1])/10;
 		rightStick = Math.round(10*gamepad.axes[3])/10;
 	}
 }
+
+window.addEventListener("gamepadconnected", function(e) {
+	  console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.",
+	    e.gamepad.index, e.gamepad.id,
+	    e.gamepad.buttons.length, e.gamepad.axes.length);
+	  
+});
 
 google.setOnLoadCallback(init);
