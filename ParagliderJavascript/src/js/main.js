@@ -13,6 +13,7 @@ var constants = new Constants();
 var pilot = new Pilot();
 var currentHeading = -45;
 var fullStall = false;
+var direction = true;
 
 var gamepad = undefined;
 var leftStick = -1;
@@ -112,18 +113,41 @@ function nextStep() {
 	var camera = ge.getView().copyAsCamera(ge.ALTITUDE_ABSOLUTE);
 
 	glider.makeNextStep();
-	if(fullStall) {
-		glider.simulateFullStall();
-	}
+	
 	//setController();
 	
-
-
 	
-	setPosition(camera);
+
+	if(fullStall) {
+		glider.simulateFullStall();
+//		var rollAngle = Math.round(camera.getRoll());
+//		if(rollAngle==1) {
+//			direction = false;
+//			
+//		} else if(rollAngle == -1) {
+//			direction = true;
+//		}
+//		if(direction) {
+//			camera.setRoll(camera.getRoll()+0.5);
+//			camera.setHeading(camera.getHeading()+0.5);
+//		} else {
+//			camera.setRoll(camera.getRoll()-0.5);
+//			camera.setHeading(camera.getHeading()-0.5);
+//		}
+		
+		
+	}
+//	else {
+//		setHeading(camera);
+//		setRoll(camera);
+		
+//	}
 	setHeading(camera);
 	setRoll(camera);
 	setTilt(camera);
+	setPosition(camera);
+	
+	
 //	log(camera);
 	document.getElementById('horizontalspeed').innerHTML = Math.round(3.6 *glider.getHorizontalSpeed());
 	document.getElementById('verticalspeed').innerHTML = -Math.round(glider.getVerticalSpeed()*10)/10;
@@ -230,7 +254,7 @@ var bothBreaks = (function() {
 		if (value >= 0.90 * maxSpeed) {
 			glider.setInFullStall(true);
 			fullStall = true;
-		} else {
+		} else if(fullStall) {
 			glider.setInFullStall(false);
 			fullStall = false;
 		}

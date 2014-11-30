@@ -13,6 +13,7 @@ function Pilot() {
 	this.isOnRightSite = true;
 	this.fForward = 0;
 	this.fSideway = 0;
+	this.timeCounter = 0;
 
 	// Javascript is singlethreaded anyway, no need for locks
 
@@ -207,10 +208,49 @@ Pilot.prototype = {
 	},
 	setInFullStall: function(inFullStall) {
 		this.inFullStall = inFullStall;
+		if(!inFullStall) {
+			this.fForward += 45000;
+		}
 		
 	},
 	simulateFullStall: function() {
-			this.fForward -= 100;
-			this.fSideway -= 100;
+		this.timeCounter += 1;
+		if(this.timeCounter <20) {
+			this.fForward -= 3000;
+		} else if( this.timeCounter >=20 && this.timeCounter < 50) {
+			this.fForward += 3000;
+		} else if(this.timeCounter >= 50 && this.timeCounter < 80) {
+			this.fForward -= 3000;
+		}
+		else if (this.timeCounter >=80 && this.timeCounter <100 ) {
+			this.fForward += 3000;
+		}
+		
+		
+		if(this.timeCounter <30) {
+			this.fSideway += 5000;
+		} else if( this.timeCounter >=30 && this.timeCounter < 70) {
+			this.fSideway -= 5000;
+		} else if(this.timeCounter >= 70 && this.timeCounter < 110) {
+			this.fSideway += 5000;
+		}
+		else if (this.timeCounter >=110 && this.timeCounter <140 ) {
+			this.fSideway -= 5000;
+		}		
+		else {
+			this.timeCounter = 0;
+		}
+		console.log(this.timeCounter);
+//		if(this.fForward >-20000) {
+//			this.fForward -= 10000;
+//			console.log("back");
+//		}else {
+//			this.fForward += 10000;
+//			console.log("for");
+//		}
+//		console.log(this.fForward);
+//			this.fForward -= 1000;
+//			this.fSideway -= 1000;
+//			console.log(this.fForward);
 	}
 };
