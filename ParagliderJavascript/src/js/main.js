@@ -92,6 +92,8 @@ function initCamera() {
 	ge.getLayerRoot().enableLayerById(ge.LAYER_BUILDINGS, true);
 	// ge.getSun().setVisibility(true);
 	ge.getOptions().setAtmosphereVisibility(true);
+	
+	initModel();
 }
 
 /*
@@ -119,34 +121,14 @@ function nextStep() {
 	
 
 	if(fullStall) {
-		glider.simulateFullStall();
-//		var rollAngle = Math.round(camera.getRoll());
-//		if(rollAngle==1) {
-//			direction = false;
-//			
-//		} else if(rollAngle == -1) {
-//			direction = true;
-//		}
-//		if(direction) {
-//			camera.setRoll(camera.getRoll()+0.5);
-//			camera.setHeading(camera.getHeading()+0.5);
-//		} else {
-//			camera.setRoll(camera.getRoll()-0.5);
-//			camera.setHeading(camera.getHeading()-0.5);
-//		}
-		
-		
+		glider.simulateFullStall();		
 	}
-//	else {
-//		setHeading(camera);
-//		setRoll(camera);
-		
-//	}
+
 	setHeading(camera);
 	setRoll(camera);
 	setTilt(camera);
 	setPosition(camera);
-	
+	updateModel();
 	
 //	log(camera);
 	document.getElementById('horizontalspeed').innerHTML = Math.round(3.6 *glider.getHorizontalSpeed());
@@ -310,5 +292,39 @@ window.addEventListener("gamepadconnected", function(e) {
 	    e.gamepad.buttons.length, e.gamepad.axes.length);
 	  
 });
+
+/*
+ * -------------------------------------------------------
+ * Test importing a 3d model into Google Earth
+ * -------------------------------------------------------
+ */
+function initModel() {
+	var placemark = ge.createPlacemark('');
+	placemark.setName('model');
+	var model = ge.createModel('');
+	ge.getFeatures().appendChild(placemark);
+	var loc = ge.createLocation('');
+	model.setLocation(loc);
+	var link = ge.createLink('');
+
+	// A textured model created in Sketchup and exported as Collada.
+	link.setHref('http://earth-api-samples.googlecode.com/svn/trunk/examples/' +
+	             'static/splotchy_box.dae');
+	model.setLink(link);
+
+	var la = ge.getView().copyAsCamera(ge.ALTITUDE_ABSOLUTE);
+	loc.setLatitude(la.getLatitude());
+	loc.setLongitude(la.getLongitude());
+
+	placemark.setGeometry(model);
+
+	la.setTilt(45);
+	ge.getView().setAbstractView(la);
+}
+
+function updateModel() {
+	
+}
+
 
 google.setOnLoadCallback(init);
