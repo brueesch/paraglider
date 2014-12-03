@@ -97,79 +97,76 @@ a{
 }
 
 #compasscanvas{
-	height: 150px;
-	width: 150px;
+	height: 280px;
+	width: 280px;
 	background: url("../img/Compass.png") no-repeat;
-	background-size: 150px 150px;
+	background-size: 280px 280px;
 }
 
 .vario{
 	height: 378px;
-	background: url("../img/vario_small.png");
-	background-color: #bbccbe;
+	/*background: url("../img/vario_small.png");
+	background-color: #bbccbe;*/
+	background-color: #000000;
 	position: relative;
 }
 .vario p{
 	padding: 0px;
 	margin: 0px;
 	position: absolute;	
-	color: #000618;
-	line-height: 50px;
+	/*color: #000618;*/
+	color: #ffffff;
+	line-height: 50px;	
+	
 }
 .vario .digital {
 	
-	right: 50px;
+	right: 80px;
 	align: right;	
 	font-family: Digital;
 	font-size: 50px;
+	color: #ffffff;
 }
 .vario .label{	
+	font-size: 30px;	
+	font-family: 'Oswald', sans-serif;
+	align: left;	
+	left: 20px;
+}
+.vario .unit{
 	font-family: arial;
 	font-weight: bold;
 	align: left;	
+	font-size: 22px;
+	left: 230px;
 }
-.vario #alt1_label{
-	font-size: 12px;
-	left: 225px;
-	top: 30px;
+.vario #alt_label{
+	top: 58px;
 }
-.vario #alt1{
+.vario #alt{
 	top: 55px;
 }
-.vario #alt1_unit
+.vario #alt_unit
 {
-	left: 252px;
-	top: 63px;
-	font-size: 22px;
+	top: 64px;
+}
+.vario #verticalspeed_label{
+	top: 113px;
 }
 .vario #verticalspeed{
 	top: 110px;
 }
 .vario #verticalspeed_unit{
-	left: 252px;
-	top: 121px;
-	font-size: 12px;
+	top: 119px;
+}
+.vario #horizontalspeed_label{
+	top: 173px;
 }
 .vario #horizontalspeed{
 	top: 170px;
 }
 .vario #horizontalspeed_unit{
-	left: 252px;
-	top: 182px;
-	font-size: 12px;
-}
-.vario #alt2_label{
-	font-size: 12px;
-	left: 225px;
-	top: 203px;
-}
-.vario #alt2{
-	top: 228px;
-}
-.vario #alt2_unit{
-	left: 252px;
-	top: 239px;
-	font-size: 12px;
+	top: 179px;
 }
 
 
