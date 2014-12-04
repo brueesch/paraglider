@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+
+<!--
+  Copyright 2012 Google Inc. All Rights Reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+
+  @author mwichary@google.com (Marcin Wichary)
+-->
+
+<title>Gamepad Tester</title>
+<meta charset='utf-8'>
+
+<script src='main.js'></script>
+<script src='Gamepad.js'></script>
+<script src='Tester.js'></script>
+<link href='Gamepad.css' rel='stylesheet'></link>
+
+<h1>
+  Gamepad Tester
+</h1>
+
+<div id='start-to-continue'>
+<h2>
+  Bitte Start Drücken um fortzufahren.
+</h2>
+</div>
+
+<div id='no-gamepad-support'>
+  Ihr Browser scheint die Gamepad API nicht zu unterstützen, oder es wurde kein Gamepad erkannt. Sorry!
+</div>
+<div id='no-gamepads-connected'>
+  Es scheint kein Gamepad angeschlossen zu sein.<br />
+  Stellen Sie sicher, dass ein Gamepad angeschlossen ist und drücken Sie anschliessend einen beliebigen Knopf um ihn zu aktivieren.
+</div>
+
+<ul id='gamepads'>
+  <li class='template'>
+    <div class='buttons'>
+      <div class='face' name='button-1'></div>
+      <div class='face' name='button-2'></div>
+      <div class='face' name='button-3'></div>
+      <div class='face' name='button-4'></div>
+
+      <div class='top-shoulder' name='button-left-shoulder-top'></div>
+      <div class='top-shoulder' name='button-right-shoulder-top'></div>
+      <div class='bottom-shoulder' name='button-left-shoulder-bottom'></div>
+      <div class='bottom-shoulder' name='button-right-shoulder-bottom'></div>
+
+      <div class='select-start' name='button-select'></div>
+      <div class='select-start' name='button-start'></div>
+
+      <div class='stick' name='stick-1'></div>
+      <div class='stick' name='stick-2'></div>
+
+      <div class='face' name='button-dpad-top'></div>
+      <div class='face' name='button-dpad-bottom'></div>
+      <div class='face' name='button-dpad-left'></div>
+      <div class='face' name='button-dpad-right'></div>
+    </div>
+
+    <div class='index'></div>
+    <marquee class='name' scrolldelay='50' scrollamount='2'></marquee>
+  </li>
+</ul>
+
+<script>
+  // Switch visuals if in an iframe
+  if (window !== top) {
+    document.body.classList.add('iframe');
+  }
+  tester.init();
+  gamepadSupport.init();
+</script>
