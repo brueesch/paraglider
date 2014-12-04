@@ -16,9 +16,10 @@ var fullStall = false;
 var direction = true;
 
 var gamepad = undefined;
-var leftStick = -1;
-var rightStick = -1;
+var leftStick = 0;
+var rightStick = 0;
 var maxSpeed = 34;
+var myAudio = undefined;
 
 /*
  * ------------------------------------------------------- Initializing Google
@@ -32,6 +33,28 @@ function init() {
 	// Param: div id where the earth will appear, function to call by success,
 	// function to call by failure.
 	google.earth.createInstance('map3d', initCB, failureCB);
+	
+	$( "#slider-left" ).on( "oninput", function() {
+		
+		leftBreak($( "#slider-left" ).val());
+	});
+	$( "#slider-right" ).on( "oninput", function() {
+		
+		rightBreak($( "#slider-right" ).val());
+	});
+	
+	myAudio = new Audio('audio/wind.mp3'); 
+	  if (typeof myAudio.loop == 'boolean')
+	  {
+	      myAudio.loop = true;
+	  }
+	  else
+	  {
+	      myAudio.addEventListener('ended', function() {
+	          this.currentTime = 0;
+	          this.play();
+	      }, false);
+	  }
 	
 }
 
@@ -104,6 +127,7 @@ function initCamera() {
 
 function move() {
 
+	myAudio.play();
 	ge.getOptions().setMouseNavigationEnabled(false);
 	if (!moving) {
 		nextStep();
@@ -116,10 +140,18 @@ function nextStep() {
 
 	glider.makeNextStep();
 	
-	//setController();
+	setController();
 	
-	
+	$( "#slider-left" ).val(Math.round(leftStick));
+	$( "#slider-right" ).val(Math.round(rightStick));
+		
+	$( "#slider-left" ).trigger( "oninput" );
+	$( "#slider-right" ).trigger( "oninput" );
 
+	if(leftStick >= 0.9 * maxSpeed && rightStick >= 0.9)
+	{
+		glider.simulateFullStall();
+	}
 	if(fullStall) {
 		glider.simulateFullStall();		
 	}
@@ -204,6 +236,8 @@ function reset() {
 	stopMovement();
 	speedChange = 0.0001;
 	initCamera();
+	myAudio.pause();
+	myAudio.currentTime = 0
 }
 function roll(rollAngle) {
 	var camera = ge.getView().copyAsCamera(ge.ALTITUDE_ABSOLUTE);
@@ -225,7 +259,7 @@ var leftBreak = (function() {
 	var oldValue = 0;
 	return function(value) {
 		glider.changeSpeed(0, -((value - oldValue) / 3.6));
-		oldValue = value;
+		oldValue = value;		
 	};
 })();
 
@@ -281,8 +315,22 @@ function setController() {
 	
 	if(gamepad != undefined)
 	{
-		leftStick = Math.round(10*gamepad.axes[1])/10;
-		rightStick = Math.round(10*gamepad.axes[3])/10;
+		if(gamepad.axes[1] > 0.05)
+		{
+			leftStick = Math.round(10*gamepad.axes[1])/10*maxSpeed;
+		}
+		else
+		{
+			leftStick = 0;
+		}
+		if(gamepad.axes[3] > 0.05)
+		{
+			rightStick = Math.round(10*gamepad.axes[3])/10*maxSpeed;
+		}
+		else
+		{
+			rightStick = 0;
+		}
 	}
 }
 

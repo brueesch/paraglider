@@ -1,4 +1,5 @@
-  function setCompass(degree)
+
+function setCompass(degree)
   {
 	  $('#compasscanvas').css({  
           '-webkit-transform': 'rotate(' + degree + 'deg)',  //Safari 3.1+, Chrome  
@@ -21,3 +22,5 @@
           }
       }
   }
+  
+  
