@@ -1,83 +1,66 @@
-//DRAFT, Need to doublecheck
-function Vector2D(valueX, valueZ)
-{
-	var x = null
+function Vector2D(valueX, valueZ) {
+	var x = null;
 	var z = null;
-	
-	if(valueX == undefined || valueZ == undefined)
-	{
+
+	if(valueX == undefined || valueZ == undefined) {
 		x = 0;
 		z = 0;
 	}
-	else
-	{
+	else {
 		x = valueX;
 		z = valueZ;
 	}
-	
-	this.getX = function()
-	{
+
+	this.getX = function() {
 		return x;
 	}
-	
-	this.setX = function(value)
-	{
+
+	this.setX = function(value)	{
 		x = value;
 	}
-	
-	this.getZ = function()
-	{
+
+	this.getZ = function() {
 		return z;
 	}
-	
-	this.setZ = function(value)
-	{
+
+	this.setZ = function(value)	{
 		z = value;
 	}
-	this.add = function(v)
-	{
-		if(v instanceof Vector2D)
-		{			
+
+	this.add = function(v) {
+		if(v instanceof Vector2D)	{
 			return new Vector2D(this.getX() + v.getX(), this.getZ() + v.getZ());
 		}
-		else
-		{
+		else {
 			return null;
 		}
 	}
-	this.sub = function(v)
-	{
-		if(v instanceof Vector2D)
-		{			
+
+	this.sub = function(v) {
+		if(v instanceof Vector2D)	{
 			return new Vector2D(this.getX() - v.getX(), this.getZ() - v.getZ());
 		}
-		else
-		{
+		else {
 			return null;
 		}
 	}
-	this.getScalarProduct = function(v)
-	{
+
+	this.getScalarProduct = function(v)	{
 		return this.getX() * v.getX() + this.getZ() * v.getZ();
 	}
-	this.getNorm = function()
-	{
+	this.getNorm = function()	{
 		return Math.sqrt(Math.pow(this.getX(),2) + Math.pow(this.getZ(), 2))
 	}
-	this.getAngleToVector2D = function(v)
-	{
-		if(v instanceof Vector2D)
-		{
+	this.getAngleToVector2D = function(v)	{
+		if(v instanceof Vector2D)	{
 			return this.getScalarProduct(v) / (this.getNorm() * v.getNorm());
 		}
-		else
-		{
+		else	{
 			return null;
 		}
 	}
-	
-	this.log = function(name)
-	{
+
+	this.log = function(name)	{
 		console.log("<----- Vector2D '" + name + "' = [" + x + "," + z + "] ----->");
 	}
 }
