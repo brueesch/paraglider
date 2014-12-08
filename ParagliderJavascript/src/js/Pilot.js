@@ -9,7 +9,6 @@ function Pilot() {
 	this.fForward = 0;
 	this.fSideway = 0;
 	this.timeCounter = 0;
-
 	this.angularVelocity = 0;
 	this.rollAngle = 0;
 	this.inFullStall = false;
@@ -41,15 +40,22 @@ Pilot.prototype = {
 	calculateForcesInTheXAxis: function() {
 		var fg = this.weightOfPilot * constants.getGravitationalForce();
 		var fBackwards = fg * Math.sin(this.getPitchAngle());
-		this.addForces();
+		this.addForces(fBackwards);
 		this.addDamping();
 	},
-	addForces : function() {
+	addForces : function(fBackwards) {
 		this.determinePositiveSite();
 		if (this.isOnPositiveSite) {
 			this.fForward += fBackwards;
 		} else {
 			this.fForward -= fBackwards;
+		}
+	},
+	determinePositiveSite : function() {
+		if (this.currentPosition.getX() < this.ZERO_POSITION.getX()) {
+			this.isOnPositiveSite = false;
+		} else {
+			this.isOnPositiveSite = true;
 		}
 	},
 	addDamping : function() {
@@ -170,13 +176,6 @@ Pilot.prototype = {
 		var cosAngle = u.getAngleToVector2D(v);
 
 		return Math.acos(cosAngle);
-	},
-	determinePositiveSite : function() {
-		if (this.currentPosition.getX() < this.ZERO_POSITION.getX()) {
-			this.isOnPositiveSite = false;
-		} else {
-			this.isOnPositiveSite = true;
-		}
 	},
 	getCentrifugalForce : function(speedLeftWing, speedRightWing) {
 		var pilotPath = (speedLeftWing + speedRightWing) / 2
