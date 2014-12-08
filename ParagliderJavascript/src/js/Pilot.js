@@ -83,7 +83,7 @@ Pilot.prototype = {
 	calculateForcesInTheYAxis : function(speedLeftWing, speedRightWing) {
 		var fg = this.weightOfPilot * constants.getGravitationalForce();
 		var centrifugalForce = this.determineCentrifugalForce(speedLeftWing, speedRightWing);
-		var fBackwards = this.determineFBackwards();
+		var fBackwards = this.determineFBackwards(fg);
 
 		if (Math.round(speedLeftWing - speedRightWing) == 0) {
 			this.fSideway += this.calculateDamping(this.fSideway) * 6;
@@ -121,7 +121,7 @@ Pilot.prototype = {
 		}
 		return result;
 	},
-	determineFBackwards : function() {
+	determineFBackwards : function(fg) {
 		this.calculateRollAngle();
 		var result = fg * Math.sin(this.getRollAngle());
 		if (isNaN(result)) {
