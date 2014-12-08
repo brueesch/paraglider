@@ -82,8 +82,8 @@ Pilot.prototype = {
 	},
 	calculateForcesInTheYAxis : function(speedLeftWing, speedRightWing) {
 		var fg = this.weightOfPilot * constants.getGravitationalForce();
-		var centrifugalForce = determineCentrifugalForce(speedLeftWing, speedRightWing);
-		var fBackwards = determineFBackwards();
+		var centrifugalForce = this.determineCentrifugalForce(speedLeftWing, speedRightWing);
+		var fBackwards = this.determineFBackwards();
 
 		if (Math.round(speedLeftWing - speedRightWing) == 0) {
 			this.fSideway += this.calculateDamping(this.fSideway) * 6;
