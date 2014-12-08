@@ -177,7 +177,7 @@ Pilot.prototype = {
 		} else {
 			this.isOnPositiveSite = true;
 		}
-	}
+	},
 	getCentrifugalForce : function(speedLeftWing, speedRightWing) {
 		var pilotPath = (speedLeftWing + speedRightWing) / 2
 				* constants.getTimeInterval();
@@ -229,7 +229,7 @@ Pilot.prototype = {
 		else {
 			this.timeCounter = 0;
 		}
-	}
+	},
 
 	/*
 	********************************************************************
