@@ -55,7 +55,8 @@ function init() {
 	          this.play();
 	      }, false);
 	  }
-	
+	  
+	  gamepad = navigator.getGamepads()[0];
 }
 
 // initialises google earth and set it's visibility to true.
@@ -125,6 +126,14 @@ function initCamera() {
  * -------------------------------------------------------
  */
 
+function waiting()
+{
+	while(gamepad.buttons[9].value != 1)
+	{
+	}
+	move();
+}
+
 function move() {
 
 	myAudio.play();
@@ -139,8 +148,6 @@ function nextStep() {
 	var camera = ge.getView().copyAsCamera(ge.ALTITUDE_ABSOLUTE);
 
 	glider.makeNextStep();
-	
-	setController();
 	
 	$( "#slider-left" ).val(Math.round(leftStick));
 	$( "#slider-right" ).val(Math.round(rightStick));
@@ -170,7 +177,8 @@ function nextStep() {
 	ge.getView().setAbstractView(camera);
 
 	timer = setTimeout("nextStep()", constants.getTimeInterval());
-	moving = true;
+	moving = true;	
+	setController();
 }
 
 function setPosition(camera) {
@@ -309,7 +317,6 @@ function initStartPosition() {
 	initCamera();
 }
 function setController() {
-
 	
 	gamepad = navigator.getGamepads()[0];
 	
@@ -330,6 +337,12 @@ function setController() {
 		else
 		{
 			rightStick = 0;
+		}
+		
+		if(gamepad.buttons[8].value == 1)
+		{
+			moving = false;
+			reset();
 		}
 	}
 }
