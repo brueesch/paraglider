@@ -53,16 +53,17 @@
 					attachMessage(marker,point);
 				}		
 				
-				
-			    /*var marker = new google.maps.Marker({
-			        position: myLatlng,
-			        map: map,
-			        title: 'Niederdorfstrasse 77'
-			    });*/
 		  }
 			function attachMessage(marker,point) {
 				  var infowindow = new google.maps.InfoWindow({
-					  content: "<p><strong>" + point.name + "</strong></p> <p><a href='../Gamepad/Gamepad.html?Name=" + escape(point.name) + "&Latitude=" + point.latitude + "&Longitude=" + point.longitude + "'>Hier starten!</a></p>"
+					  content: '<div id="content">'+
+					  '<div id="siteNotice">'+
+				      '</div>'+
+				      '<h1 id="firstHeading" class="firstHeading">' + point.name + '</h1>'+
+				      '<div id="bodyContent">'+
+				      '<p><a href="../Gamepad/Gamepad.html?Name=' + escape(point.name) + '&Latitude=' + point.latitude + '&Longitude=' + point.longitude + '">Hier starten!</a></div>'+
+				      '</div>'+
+				  	  '</div>'
 				  });
 			
 				  google.maps.event.addListener(marker, 'click', function() {
