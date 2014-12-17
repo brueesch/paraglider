@@ -30,7 +30,7 @@ Pilot.prototype = {
 
 	/*
 	********************************************************************
-											Calculation of the x-axis
+	Calculation of the x-axis
 	********************************************************************
 	*/
 	calculateX: function() {
@@ -85,6 +85,7 @@ Pilot.prototype = {
 		var centrifugalForce = this.determineCentrifugalForce(speedLeftWing, speedRightWing);
 		var fBackwards = this.determineFBackwards(fg);
 
+//		console.log(Math.round(speedLeftWing - speedRightWing));
 		if (Math.round(speedLeftWing - speedRightWing) == 0) {
 			this.fSideway += this.calculateDamping(this.fSideway) * 6;
 		}
@@ -257,9 +258,6 @@ Pilot.prototype = {
 		}
 
 	},
-	getCurrentPosition : function() {
-		return this.currentPosition;
-	},
 	setChangeInSpeed : function(speed) {
 		this.fForward += (speed / constants.getTimeInterval())
 		* this.weightOfPilot;
@@ -270,11 +268,5 @@ Pilot.prototype = {
 		} else {
 			this.fSideway++;
 		}
-	},
-	getWeightOfPilot : function() {
-		return this.weightOfPilot;
-	},
-	setWeightOfPilot : function(weight) {
-		this.weightOfPilot = weight;
 	},
 };
