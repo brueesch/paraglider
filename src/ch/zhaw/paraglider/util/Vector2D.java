@@ -19,8 +19,8 @@ public class Vector2D extends Object {
 	/**
 	 * Creates a Vector with two dimensions x,z
 	 * 
-	 * @param double x
-	 * @param double z
+	 * @param x
+	 * @param z
 	 */
 	public Vector2D(double x, double z) {
 		this.setX(x);
@@ -30,7 +30,7 @@ public class Vector2D extends Object {
 	/**
 	 * Creates a Vector which is equal to the Vector given
 	 * 
-	 * @param Vector v
+	 * @param v
 	 */
 	public Vector2D(Vector2D v) {
 		this.setX(v.getX());
@@ -81,7 +81,7 @@ public class Vector2D extends Object {
 
 	/**
 	 * Calculates and returns the Scalar Product between two Vectors.
-	 * @param Vector2D v
+	 * @param v
 	 * @return result Vector
 	 */
 	public double getScalarProduct(Vector2D v) {

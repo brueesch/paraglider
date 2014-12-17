@@ -20,9 +20,9 @@ public class Vector extends Object {
 	/**
 	 * Creates a Vector with three dimensions x,y,z
 	 * 
-	 * @param double x
-	 * @param double y
-	 * @param double z
+	 * @param x
+	 * @param y
+	 * @param z
 	 */
 	public Vector(double x, double y, double z) {
 		this.setX(x);
@@ -33,7 +33,7 @@ public class Vector extends Object {
 	/**
 	 * Creates a Vector which is equal to the Vector given
 	 * 
-	 * @param Vector v
+	 * @param v
 	 */
 	public Vector(Vector v) {
 		this.setX(v.getX());
