@@ -47,15 +47,6 @@ public final class Pilot {
 	}
 
 	/**
-	 * Returns the current position of the pilot.
-	 * 
-	 * @return Vector
-	 */
-	public Vector getCurrentPosition() {
-		return currentPosition;
-	}
-
-	/**
 	 * Sets the new speed change.
 	 * 
 	 * @param speed
@@ -66,34 +57,12 @@ public final class Pilot {
 		}
 	}
 
-	public void setChangeInSpeedY(double speed) {
+	public void setChangeInSidewaySpeed(double speed) {
 		if (speed > 0) {
 			fSideway--;
 		} else {
 			fSideway++;
 		}
-		// synchronized (fSidewayLock) {
-		// fSideway -= ((speed / Constants.TIME_INTERVALL) * weightOfPilot);
-		// inChange = true;
-		// }
-	}
-
-	/**
-	 * Returns the weight of the pilot.
-	 * 
-	 * @return int
-	 */
-	public int getWeightOfPilot() {
-		return weightOfPilot;
-	}
-
-	/**
-	 * Sets the new weight of the pilot.
-	 * 
-	 * @param weight
-	 */
-	public void setWeightOfPilot(int weight) {
-		weightOfPilot = weight;
 	}
 
 	/**
@@ -117,6 +86,59 @@ public final class Pilot {
 		calculateX();
 		calculateY(speedLeftWing, speedRightWing);
 		calculateZ();
+	}
+	
+
+	/**
+	 * Returns the current PitchAngle of the Glider. The Pitch Angle is the
+	 * angle of the x -axis in relationship to the ground.
+	 * 
+	 * @return double in Radian
+	 */
+	public synchronized double getPitchAngle() {
+		Vector2D u = new Vector2D(ZERO_POSITION.getX() - ZERO_POINT.getX(),
+				ZERO_POSITION.getZ() - ZERO_POINT.getZ());
+		Vector2D v = new Vector2D(currentPosition.getX() - ZERO_POINT.getX(),
+				currentPosition.getZ() - ZERO_POINT.getZ());
+
+		double cosAngle = u.getAngleToVector2D(v, Unit.Radian);
+
+		if (currentPosition.getX() < ZERO_POSITION.getX()) {
+			isOnPositiveSite = false;
+		} else {
+			isOnPositiveSite = true;
+		}
+
+		return Math.acos(cosAngle);
+	}
+	
+
+	public double getAngularVelocity() {
+		return angularVelocity;
+	}
+
+	public double getRollAngle() {
+		synchronized (rollAngleLock) {
+			return rollAngle;
+		}
+	}
+
+	public void setRollAngle(double rollAngle) {
+		synchronized (rollAngleLock) {
+			this.rollAngle = rollAngle;
+		}
+	}
+
+	public boolean isOnPositiveSite() {
+		return isOnPositiveSite;
+	}
+
+	public boolean isOnRightSite() {
+		return isOnRightSite;
+	}
+
+	public void setInFullStall(boolean inFullStall) {
+		this.inFullStall = inFullStall;
 	}
 
 	private void calculateY(double speedLeftWing, double speedRightWing) {
@@ -194,50 +216,6 @@ public final class Pilot {
 
 	}
 
-	/**
-	 * Returns the current PitchAngle of the Glider. The Pitch Angle is the
-	 * angle of the x -axis in relationship to the ground.
-	 * 
-	 * @return double in Radian
-	 */
-	public synchronized double getPitchAngle() {
-		Vector2D u = new Vector2D(ZERO_POSITION.getX() - ZERO_POINT.getX(),
-				ZERO_POSITION.getZ() - ZERO_POINT.getZ());
-		Vector2D v = new Vector2D(currentPosition.getX() - ZERO_POINT.getX(),
-				currentPosition.getZ() - ZERO_POINT.getZ());
-
-		double cosAngle = u.getAngleToVector2D(v, Unit.Radian);
-
-		if (currentPosition.getX() < ZERO_POSITION.getX()) {
-			isOnPositiveSite = false;
-		} else {
-			isOnPositiveSite = true;
-		}
-
-		return Math.acos(cosAngle);
-	}
-
-	/**
-	 * Returns the current Roll Angle of the Glider. The Roll Angle is the angle
-	 * of the y - axis in relationship to the ground.
-	 * 
-	 * @return double in Radian
-	 */
-
-	public double calculateAngleOfHighestPoint(double speedLeftWing,
-			double speedRightWing) {
-
-		if (speedLeftWing == speedRightWing) {
-			angularVelocity = 0;
-			return 0;
-		}
-
-		double fCen = getCentrifugalForce(speedLeftWing, speedRightWing);
-		double fG = Constants.GRAVITATIONAL_FORCE * weightOfPilot;
-		double resultAngle = Math.atan(fCen / fG);
-		setRollAngle(resultAngle);
-		return resultAngle;
-	}
 
 	private double getCentrifugalForce(double speedLeftWing,
 			double speedRightWing) {
@@ -310,31 +288,4 @@ public final class Pilot {
 		return (ra + rb);
 	}
 
-	public double getAngularVelocity() {
-		return angularVelocity;
-	}
-
-	public double getRollAngle() {
-		synchronized (rollAngleLock) {
-			return rollAngle;
-		}
-	}
-
-	public void setRollAngle(double rollAngle) {
-		synchronized (rollAngleLock) {
-			this.rollAngle = rollAngle;
-		}
-	}
-
-	public boolean isOnPositiveSite() {
-		return isOnPositiveSite;
-	}
-
-	public boolean isOnRightSite() {
-		return isOnRightSite;
-	}
-
-	public void setInFullStall(boolean inFullStall) {
-		this.inFullStall = inFullStall;
-	}
 }

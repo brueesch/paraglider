@@ -18,7 +18,7 @@ public class Constants {
 	public static final double LENGTH_OF_CORD = 7.68;
 	
 	/**
-	 * Time interval in Seconds,
+	 * Time interval in Seconds.
 	 */
 	public static final double TIME_INTERVALL = 0.01;
 

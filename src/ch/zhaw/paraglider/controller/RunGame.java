@@ -13,14 +13,8 @@ import ch.zhaw.paraglider.view.Main;
  */
 public class RunGame implements Runnable {
 	
-	/**
-	 * Variable for the pilot Instance.
-	 */
-	private Glider glider;
 
-	/**
-	 * Variable for the main Instance
-	 */
+	private Glider glider;
 	private Main main;
 
 	/**
@@ -45,7 +39,6 @@ public class RunGame implements Runnable {
 			try {
 				Thread.sleep((int)(Constants.TIME_INTERVALL*1000));
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 

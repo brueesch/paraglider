@@ -34,8 +34,6 @@ public class Wing {
 	 */
 	private double currentSpeed = SPEED_OPTIMAL_GLIDING;
 
-	private boolean inFullStall = false;
-
 	/**
 	 * Variable contains the Name of the wing. Wing name either: left or right
 	 */
@@ -57,10 +55,6 @@ public class Wing {
 	 */
 	public double getHorizontalSpeed() {
 		return currentSpeed;
-	}
-
-	public void setHorizontalSpeed(double speed) {
-		currentSpeed = speed;
 	}
 
 	/**
@@ -103,13 +97,5 @@ public class Wing {
 	 */
 	public String getName() {
 		return name;
-	}
-
-	public boolean isInFullStall() {
-		return inFullStall;
-	}
-
-	public void setInFullStall(boolean inFullStall) {
-		this.inFullStall = inFullStall;
 	}
 }

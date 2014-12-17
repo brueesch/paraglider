@@ -11,7 +11,6 @@ public class Glider {
 	private Wing leftWing = new Wing("Left");
 	private Wing rightWing = new Wing("Right");
 	private Pilot pilot = Pilot.getInstance();
-	private double yawAngle = 0;
 	
 	private static Glider instance;
 	private Glider() {}
@@ -26,15 +25,6 @@ public class Glider {
 		}
 		
 		return instance;
-	}
-	
-	/**
-	 * Returns the current Position of the Pilot in a Vector (x,y,z).
-	 * @return Vector
-	 */
-	public Vector getPilotPosition()
-	{
-		return pilot.getCurrentPosition();
 	}
 
 	/**
@@ -53,16 +43,6 @@ public class Glider {
 	 */
 	public double getRollAngle() {
 		return pilot.getRollAngle();
-	}
-
-	/**
-	 * Returns the current Yaw Angle of the Glider.
-	 * The Yawn Angle is the angle between the direction of the previous flying direction and the direction of the curve.
-	 * @return double in Degree
-	 */
-	public double getYawAngle() {
-		calculateYawAngle();
-		return yawAngle;
 	}
 	
 	/**
@@ -100,30 +80,12 @@ public class Glider {
 		leftWing.changeCurrentSpeed(msLeft);
 		rightWing.changeCurrentSpeed(msRight);
 		pilot.setChangeInSpeed((msLeft+msRight)/2);
-		pilot.setChangeInSpeedY(msLeft - msRight);
+		pilot.setChangeInSidewaySpeed(msLeft - msRight);
 	}
 	
 	public void reset()
 	{
-		yawAngle = 0;
 		pilot.reset();
-	}
-	
-	//TODO: Formel korrigieren, siehe getCurveRadius in Pilot
-	private void calculateYawAngle()
-	{		
-		
-		double pathLeft = leftWing.getHorizontalSpeed() * Constants.TIME_INTERVALL;
-		double pathRight = rightWing.getHorizontalSpeed() * Constants.TIME_INTERVALL;
-			
-		if(pathLeft != pathRight) {
-			double xa = pathLeft;
-			double xb = pathRight;
-			double rb = Constants.GLIDER_WINGSPAN;
-			double ra = (xa*rb)/(xb-xa);
-			double radius = ra + rb;
-			yawAngle += Math.toDegrees(xb/radius);
-		}
 	}
 
 	public void makeNextStep() {
@@ -136,11 +98,6 @@ public class Glider {
 
 	public boolean isOnPositiveSite() {
 		return pilot.isOnPositiveSite();
-	}
-	
-	//Method just for the sliders.
-	public Wing[] getWings() {
-		return new Wing[] {rightWing, leftWing};
 	}
 	
 	public void setInFullStall(boolean inFullStall) {
