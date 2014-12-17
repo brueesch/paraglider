@@ -1,12 +1,13 @@
 package ch.zhaw.paraglider.physics;
 
-import ch.zhaw.paraglider.physics.Vector2D.Unit;
+import ch.zhaw.paraglider.util.Vector;
+import ch.zhaw.paraglider.util.Vector2D;
+import ch.zhaw.paraglider.util.Vector2D.Unit;
 
 /**
- * This Class handles the physics and the position of the pilot. In addition it
- * includes a method which animates the pilot.
+ * This Class handles the physics and the position of the pilot.
  * 
- * @author Christian Brüesch
+ * @author Christian Brüesch / Jonas Gschwend
  * 
  */
 public final class Pilot {
@@ -33,8 +34,7 @@ public final class Pilot {
 	}
 
 	/**
-	 * Method returns the instance of the Pilot. If there is no Pilot initiated
-	 * yet, it will be done.
+	 * Method returns the instance of the Pilot.
 	 * 
 	 * @return Pilot
 	 */
@@ -47,7 +47,7 @@ public final class Pilot {
 	}
 
 	/**
-	 * Sets the new speed change.
+	 * Sets the new speed impulse.
 	 * 
 	 * @param speed
 	 */
@@ -57,6 +57,10 @@ public final class Pilot {
 		}
 	}
 
+	/**
+	 * Sets the new speed impulse to the side.
+	 * @param speed
+	 */
 	public void setChangeInSidewaySpeed(double speed) {
 		if (speed > 0) {
 			fSideway--;
@@ -66,7 +70,7 @@ public final class Pilot {
 	}
 
 	/**
-	 * Resets all position and forces to the start position.
+	 * Resets all position and forces to the initial values.
 	 */
 	public void reset() {
 		currentPosition = new Vector(ZERO_POSITION);
@@ -79,8 +83,10 @@ public final class Pilot {
 	}
 
 	/**
-	 * Calculates the next step of the animation of the pilot and sets the
-	 * current position of the x and y - axis to the calculated values.
+	 * Calculates the and sets the new position of the pilot in the x, y and z axis.
+	 * 
+	 * @param speedLeftWing double
+	 * @param speedRightWing double
 	 */
 	public void calculatePosition(double speedLeftWing, double speedRightWing) {
 		calculateX();
@@ -88,13 +94,6 @@ public final class Pilot {
 		calculateZ();
 	}
 	
-
-	/**
-	 * Returns the current PitchAngle of the Glider. The Pitch Angle is the
-	 * angle of the x -axis in relationship to the ground.
-	 * 
-	 * @return double in Radian
-	 */
 	public synchronized double getPitchAngle() {
 		Vector2D u = new Vector2D(ZERO_POSITION.getX() - ZERO_POINT.getX(),
 				ZERO_POSITION.getZ() - ZERO_POINT.getZ());

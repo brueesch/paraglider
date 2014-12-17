@@ -9,7 +9,7 @@ import ch.zhaw.paraglider.view.Main;
 
 /**
  * This Class handles the input from a XBox Controller.
- * @author Christian Brüesch
+ * @author Christian Brüesch / Jonas Gschwend
  */
 public class XBoxController implements Runnable {
 
@@ -42,7 +42,7 @@ public class XBoxController implements Runnable {
 	}
 
 	/**
-	 * Run Method Handles all inputs from the controller.
+	 * Run Method handles all inputs from the controller.
 	 */
 	@Override
 	public void run() {

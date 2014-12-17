@@ -28,7 +28,7 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 
 	public static JSlider leftSlider, rightSlider;
 	private JSlider bothSlider;
-	
+
 	private static final long serialVersionUID = -1624980403895301036L;
 	private static final int FRAME_HEIGHT = 700;
 	private static final int FRAME_WIDTH = 1300;
@@ -54,7 +54,9 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 	}
 
 	/**
-	 * Constructor. Initializes various objects and starts the runGame Thread.
+	 * Constructor. Initializes the Glider, the DrawView, the sliders and the
+	 * buttons. Then it will start the RunGame Thread and the XBoxController if
+	 * one is connected.
 	 */
 	public Main() {
 		glider = Glider.getInstance();
@@ -68,7 +70,7 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 			new Thread(xBoxController).start();
 		}
 	}
-	
+
 	/**
 	 * Main paint method. Paints all components on the view.
 	 */
@@ -79,7 +81,7 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		drawView.drawView(g);
 		g.setColor(color);
 	}
-	
+
 	@Override
 	public void stateChanged(ChangeEvent e) {
 
@@ -96,10 +98,9 @@ public class Main extends JPanel implements ChangeListener, ActionListener {
 		if (e.getSource().equals(bothSlider)) {
 			double value = bothSlider.getValue();
 
-			if(value >= 0.90*bothSlider.getMaximum()) {
+			if (value >= 0.90 * bothSlider.getMaximum()) {
 				glider.setInFullStall(true);
-			}
-			else {
+			} else {
 				glider.setInFullStall(false);
 			}
 

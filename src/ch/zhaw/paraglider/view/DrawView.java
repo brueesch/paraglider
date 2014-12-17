@@ -6,27 +6,41 @@ import java.awt.Graphics;
 import Jama.Matrix;
 import ch.zhaw.paraglider.physics.Constants;
 import ch.zhaw.paraglider.physics.Glider;
-import ch.zhaw.paraglider.physics.Vector;
+import ch.zhaw.paraglider.util.Vector;
 
+/**
+ * This Class handles all the drawing done in this program.
+ * 
+ * @author Christian Brüesch / Jonas Gschwend
+ * 
+ */
 public class DrawView {
-	
+
 	public double[][] backgroundLinePositions;
 	private Glider glider;
-	
+
 	public DrawView() {
 		glider = Glider.getInstance();
 	}
-	
-	
+
+	/**
+	 * This Method will draw the complete View.
+	 * 
+	 * @param g
+	 */
 	public void drawView(Graphics g) {
 		drawLeftView(g);
 		drawRightView(g);
 	}
-	
+
+	/**
+	 * Resets the Array, in which the Positions of the moving Background lines
+	 * are stored.
+	 */
 	public void resetBackgroundLinePositions() {
 		backgroundLinePositions = null;
 	}
-	
+
 	private void drawLeftView(Graphics g) {
 		double[][] coordinatesParaglider = { { -100, 0 }, { 0, -60 },
 				{ 100, 0 } };
@@ -152,7 +166,7 @@ public class DrawView {
 			}
 		}
 	}
-	
+
 	private void checkDirectionY(double[][] result) {
 		if (glider.isOnRightSite()) {
 			for (int i = 0; i < result.length; i++) {

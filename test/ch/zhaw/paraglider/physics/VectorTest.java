@@ -8,6 +8,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ch.zhaw.paraglider.util.Vector;
+
 public class VectorTest {
 
 	Vector v = null;

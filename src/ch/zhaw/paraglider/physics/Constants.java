@@ -1,5 +1,12 @@
 package ch.zhaw.paraglider.physics;
 
+/**
+ * This Class contains all important Constants, which are used
+ * throughout the program.
+ *   
+ * @author Christian Brüesch / Jonas Gschwend
+ *
+ */
 public class Constants {
 
 	/**

@@ -5,10 +5,10 @@ import ch.zhaw.paraglider.physics.Glider;
 import ch.zhaw.paraglider.view.Main;
 
 /**
- * This class handles the runtime game. It contains the method run, which tells
- * the pilot to calculate his new position. And then tells the View to repaint.
+ * This class controls the game. It contains the method run, in which first the new
+ * Positions are calculated and then view repainted.
  * 
- * @author Christian Brüesch
+ * @author Christian Brüesch / Jonas Gschwend
  * 
  */
 public class RunGame implements Runnable {
@@ -17,19 +17,16 @@ public class RunGame implements Runnable {
 	private Glider glider;
 	private Main main;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param main
-	 */
+
 	public RunGame(Main main) {
 		this.main = main;
 		glider = Glider.getInstance();
 	}
 
 	/**
-	 * The Method handles all the things that should happen every Interval. -
-	 * makeNextStep - repaint
+	 * The Method handles all the things that should happen every Interval.
+	 *  - makeNextStep
+	 *  - repaint
 	 */
 	@Override
 	public void run() {

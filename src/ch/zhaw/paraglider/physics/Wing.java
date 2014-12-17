@@ -3,47 +3,21 @@ package ch.zhaw.paraglider.physics;
 /**
  * The wing class contains the physical basics for the wing movements. It
  * calculates the absolute speed, the vertical speed and the glide ratio. This
- * is calculated with the help of a polar.
+ * is calculated with the help of a polar curve.
  * 
- * @author Christian Brüesch
+ * @author Christian Brüesch / Jonas Gschwend
  * 
  */
 public class Wing {
 
-	/**
-	 * Constant for the optimal glide ratio. Default = 9;
-	 */
 	private double OPTIMAL_GLIDE_RATIO = 9;
-	/**
-	 * Constant for the speed when flying with the optimal glide ratio. Default
-	 * = 9,72 m/s
-	 */
 	private double SPEED_OPTIMAL_GLIDING = 9.722;
-	/**
-	 * Mathematical constant for calculations.
-	 */
 	private double constant1 = 1 / (2 * Math.pow(SPEED_OPTIMAL_GLIDING, 2) * OPTIMAL_GLIDE_RATIO);
-	/**
-	 * Mathematical constant for calculations.
-	 */
 	private double constant2 = Math.pow(SPEED_OPTIMAL_GLIDING, 2)
 			/ (2 * OPTIMAL_GLIDE_RATIO);
-	/**
-	 * Variable for the current speed. Initialized with the speed by optimal
-	 * gliding.
-	 */
 	private double currentSpeed = SPEED_OPTIMAL_GLIDING;
-
-	/**
-	 * Variable contains the Name of the wing. Wing name either: left or right
-	 */
 	private String name;
 
-	/**
-	 * Constructor. Sets the name of the Wing.
-	 * 
-	 * @param name
-	 */
 	public Wing(String name) {
 		this.name = name;
 	}
@@ -81,20 +55,15 @@ public class Wing {
 	}
 
 	/**
-	 * Returns the current glide ratio.
+	 * This Method calculates and returns the current glide ratio. 
 	 * 
-	 * @return double
+	 * @return double glideRatio
 	 */
 	public double getCurrentGlideRatio() {
 		return 1 / ((constant1 * Math.pow(currentSpeed, 2)) + (constant2 / Math
 				.pow(currentSpeed, 2)));
 	}
 
-	/**
-	 * returns the name of the glider.
-	 * 
-	 * @return String
-	 */
 	public String getName() {
 		return name;
 	}
